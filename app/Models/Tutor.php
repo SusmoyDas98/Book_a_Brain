@@ -18,15 +18,18 @@ class Tutor extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'tutor_id',
-        'nid_card',
-        'cv_pdf',
-        'student_id_card',
-        'total_earning',
-        'ratings',
-        'review'
+    'user_id',
+    'bio',
+    'subjects',
+    'classes_taught',
+    'medium',
+    'teaching_mode',
+    'expected_salary',
+    'availability',
+    'cv_path',
+    'is_verified',
+    'verification_badge'
     ];
-
     // Relationship with User
     public function user()
     {

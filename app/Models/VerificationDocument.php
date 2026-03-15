@@ -6,14 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class VerificationDocument extends Model
 {
-    protected $primaryKey = 'docId';
-
     protected $fillable = [
-        'tutorId',
-        'docType',
-        'filePath',
+        'tutor_id',
+        'doc_type',
+        'file_path',
         'status',
-        'reviewedBy',
-        'reviewNote'
+        'reviewed_by',
+        'review_note',
+        'uploaded_at'
     ];
 }
