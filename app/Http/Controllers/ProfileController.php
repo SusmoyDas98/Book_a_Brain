@@ -14,10 +14,10 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
-        $tutor = Tutor::where('userId', $user->userId)->first();
-        $guardian = Guardian::where('userId', $user->userId)->first();
-        $tutorProfile = TutorProfile::where('tutorId', $user->userId)->first();
-        $verificationDocuments = VerificationDocument::where('tutorId', $user->userId)->get();
+        $tutor = Tutor::where('user_id', $user->id)->first();
+        $guardian = Guardian::where('user_id', $user->id)->first();
+        $tutorProfile = TutorProfile::where('tutor_id', $user->id)->first();
+        $verificationDocuments = VerificationDocument::where('tutor_id', $user->id)->get();
 
         $completionPercentage = 0;
 
@@ -25,21 +25,16 @@ class ProfileController extends Controller
             $fields = [
                 $user->name,
                 $user->email,
-                $user->phone,
-                optional($tutor)->bio,
-                optional($tutor)->subjects,
-                optional($tutor)->classesTaught,
-                optional($tutor)->medium,
-                optional($tutor)->teachingMode,
-                optional($tutor)->expectedSalary,
-                optional($tutor)->availability,
-                optional($tutor)->cvPath,
-                optional($tutorProfile)->institution,
-                optional($tutorProfile)->degree,
-                optional($tutorProfile)->passingYear,
-                optional($tutorProfile)->result,
-                optional($tutorProfile)->experience,
-                optional($tutorProfile)->currentOccupation
+                optional($tutorProfile)->profile_picture,
+                optional($tutorProfile)->contact_no,
+                optional($tutorProfile)->cv,
+                optional($tutorProfile)->educational_institutions,
+                optional($tutorProfile)->work_experience,
+                optional($tutorProfile)->teaching_method,
+                optional($tutorProfile)->availability,
+                optional($tutorProfile)->preferred_mediums,
+                optional($tutorProfile)->preferred_subjects,
+                optional($tutorProfile)->expected_salary
             ];
 
             $filled = collect($fields)->filter(function ($value) {
@@ -62,10 +57,10 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = Auth::user();
-        $tutor = Tutor::where('userId', $user->userId)->first();
-        $guardian = Guardian::where('userId', $user->userId)->first();
-        $tutorProfile = TutorProfile::where('tutorId', $user->userId)->first();
-        $verificationDocuments = VerificationDocument::where('tutorId', $user->userId)->get()->keyBy('docType');
+        $tutor = Tutor::where('user_id', $user->id)->first();
+        $guardian = Guardian::where('user_id', $user->id)->first();
+        $tutorProfile = TutorProfile::where('tutor_id', $user->id)->first();
+        $verificationDocuments = VerificationDocument::where('tutor_id', $user->id)->get()->keyBy('doc_type');
 
         return view('profile.edit', compact('user', 'tutor', 'guardian', 'tutorProfile', 'verificationDocuments'));
     }
@@ -77,7 +72,8 @@ class ProfileController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'nullable|string|max:50',
+            'contact_no' => 'nullable|string|max:50',
+            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'cv' => 'nullable|mimes:pdf|max:2048',
             'nid_document' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
             'occupation_document' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048'
@@ -85,53 +81,50 @@ class ProfileController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->phone = $request->phone;
         $user->save();
 
         if ($user->role === 'TUTOR') {
-            $tutor = Tutor::where('userId', $user->userId)->first();
+            $tutor = Tutor::where('user_id', $user->id)->first();
 
-            if ($tutor) {
-                $tutor->bio = $request->bio;
-                $tutor->subjects = $request->subjects;
-                $tutor->classesTaught = $request->classesTaught;
-                $tutor->medium = $request->medium;
-                $tutor->teachingMode = $request->teachingMode;
-                $tutor->expectedSalary = $request->expectedSalary;
-                $tutor->availability = $request->availability;
-
-                if ($request->hasFile('cv')) {
-                    $cvPath = $request->file('cv')->store('cv_uploads', 'public');
-                    $tutor->cvPath = $cvPath;
-                }
-
-                $tutor->save();
+            if (!$tutor) {
+                $tutor = new Tutor();
+                $tutor->user_id = $user->id;
             }
 
-            $tutorProfile = TutorProfile::firstOrNew(['tutorId' => $user->userId]);
-            $tutorProfile->institution = $request->institution;
-            $tutorProfile->degree = $request->degree;
-            $tutorProfile->passingYear = $request->passingYear;
-            $tutorProfile->result = $request->result;
-            $tutorProfile->experience = $request->experience;
-            $tutorProfile->currentOccupation = $request->currentOccupation;
+            $tutorProfile = TutorProfile::firstOrNew(['tutor_id' => $user->id]);
+
+            if ($request->hasFile('profile_picture')) {
+                $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
+                $tutorProfile->profile_picture = $profilePicturePath;
+            }
 
             if ($request->hasFile('cv')) {
                 $cvPath = $request->file('cv')->store('cv_uploads', 'public');
-                $tutorProfile->cvFilePath = $cvPath;
+                $tutorProfile->cv = $cvPath;
             }
 
+            $tutorProfile->tutor_id = $user->id;
+            $tutorProfile->name = $request->name;
+            $tutorProfile->email = $request->email;
+            $tutorProfile->contact_no = $request->contact_no;
+            $tutorProfile->educational_institutions = $request->educational_institutions;
+            $tutorProfile->work_experience = $request->work_experience;
+            $tutorProfile->teaching_method = $request->teaching_method;
+            $tutorProfile->availability = $request->availability;
+            $tutorProfile->preferred_mediums = $request->preferred_mediums;
+            $tutorProfile->preferred_subjects = $request->preferred_subjects;
+            $tutorProfile->expected_salary = $request->expected_salary;
             $tutorProfile->save();
 
             if ($request->hasFile('nid_document')) {
                 $nidPath = $request->file('nid_document')->store('verification_documents', 'public');
 
                 VerificationDocument::updateOrCreate(
-                    ['tutorId' => $user->userId, 'docType' => 'NID'],
+                    ['tutor_id' => $user->id, 'doc_type' => 'NID'],
                     [
-                        'filePath' => $nidPath,
+                        'file_path' => $nidPath,
                         'status' => 'PENDING',
-                        'reviewNote' => null
+                        'review_note' => null
                     ]
                 );
             }
@@ -140,27 +133,24 @@ class ProfileController extends Controller
                 $occupationPath = $request->file('occupation_document')->store('verification_documents', 'public');
 
                 VerificationDocument::updateOrCreate(
-                    ['tutorId' => $user->userId, 'docType' => 'OCCUPATION_CARD'],
+                    ['tutor_id' => $user->id, 'doc_type' => 'OCCUPATION_CARD'],
                     [
-                        'filePath' => $occupationPath,
+                        'file_path' => $occupationPath,
                         'status' => 'PENDING',
-                        'reviewNote' => null
+                        'review_note' => null
                     ]
                 );
             }
         }
 
         if ($user->role === 'GUARDIAN') {
-            $guardian = Guardian::where('userId', $user->userId)->first();
-
-            if ($guardian) {
-                $guardian->address = $request->address;
-                $guardian->latitude = $request->latitude;
-                $guardian->longitude = $request->longitude;
-                $guardian->numberOfChildren = $request->numberOfChildren;
-                $guardian->preferredSubjects = $request->preferredSubjects;
-                $guardian->save();
-            }
+            $guardian = Guardian::firstOrNew(['user_id' => $user->id]);
+            $guardian->address = $request->address;
+            $guardian->latitude = $request->latitude;
+            $guardian->longitude = $request->longitude;
+            $guardian->number_of_children = $request->number_of_children;
+            $guardian->preferred_subjects = $request->preferred_subjects;
+            $guardian->save();
         }
 
         return redirect()->route('profile.show')->with('success', 'Profile updated successfully.');

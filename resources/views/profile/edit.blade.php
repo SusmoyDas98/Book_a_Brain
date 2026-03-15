@@ -19,19 +19,19 @@
                 <div class="grid gap-6 md:grid-cols-2">
                     <div>
                         <label class="mb-2 block text-sm text-slate-300">Name</label>
-                        <input type="text" name="name" value="{{ $user->name }}"
+                        <input type="text" name="name" value="{{ old('name', $user->name) }}"
                                class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                     </div>
 
                     <div>
                         <label class="mb-2 block text-sm text-slate-300">Email</label>
-                        <input type="email" name="email" value="{{ $user->email }}"
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}"
                                class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                     </div>
 
                     <div>
                         <label class="mb-2 block text-sm text-slate-300">Phone</label>
-                        <input type="text" name="phone" value="{{ $user->phone }}"
+                        <input type="text" name="contact_no" value="{{ old('contact_no', $tutorProfile->contact_no ?? '') }}"
                                class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                     </div>
                 </div>
@@ -42,86 +42,58 @@
                     <h2 class="mb-4 text-xl font-semibold">Tutor Details</h2>
                     <div class="grid gap-6 md:grid-cols-2">
                         <div>
-                            <label class="mb-2 block text-sm text-slate-300">Bio</label>
-                            <input type="text" name="bio" value="{{ $tutor->bio ?? '' }}"
+                            <label class="mb-2 block text-sm text-slate-300">Profile Picture</label>
+                            <input type="file" name="profile_picture" accept=".jpg,.jpeg,.png"
+                                   class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-300 outline-none file:mr-4 file:rounded-xl file:border-0 file:bg-cyan-400 file:px-4 file:py-2 file:font-semibold file:text-slate-950 hover:file:bg-cyan-300">
+                        </div>
+
+                        <div>
+                            <label class="mb-2 block text-sm text-slate-300">Teaching Method</label>
+                            <input type="text" name="teaching_method" value="{{ old('teaching_method', $tutorProfile->teaching_method ?? '') }}"
                                    class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                         </div>
 
                         <div>
-                            <label class="mb-2 block text-sm text-slate-300">Subjects</label>
-                            <input type="text" name="subjects" value="{{ $tutor->subjects ?? '' }}"
+                            <label class="mb-2 block text-sm text-slate-300">Availability</label>
+                            <input type="text" name="availability" value="{{ old('availability', $tutorProfile->availability ?? '') }}"
                                    class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                         </div>
 
                         <div>
-                            <label class="mb-2 block text-sm text-slate-300">Classes Taught</label>
-                            <input type="text" name="classesTaught" value="{{ $tutor->classesTaught ?? '' }}"
+                            <label class="mb-2 block text-sm text-slate-300">Preferred Mediums</label>
+                            <input type="text" name="preferred_mediums" value="{{ old('preferred_mediums', $tutorProfile->preferred_mediums ?? '') }}"
                                    class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                         </div>
 
                         <div>
-                            <label class="mb-2 block text-sm text-slate-300">Medium</label>
-                            <input type="text" name="medium" value="{{ $tutor->medium ?? '' }}"
-                                   class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
-                        </div>
-
-                        <div>
-                            <label class="mb-2 block text-sm text-slate-300">Teaching Mode</label>
-                            <input type="text" name="teachingMode" value="{{ $tutor->teachingMode ?? '' }}"
+                            <label class="mb-2 block text-sm text-slate-300">Preferred Subjects</label>
+                            <input type="text" name="preferred_subjects" value="{{ old('preferred_subjects', $tutorProfile->preferred_subjects ?? '') }}"
                                    class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                         </div>
 
                         <div>
                             <label class="mb-2 block text-sm text-slate-300">Expected Salary</label>
-                            <input type="text" name="expectedSalary" value="{{ $tutor->expectedSalary ?? '' }}"
-                                   class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <label class="mb-2 block text-sm text-slate-300">Availability</label>
-                            <input type="text" name="availability" value="{{ $tutor->availability ?? '' }}"
+                            <input type="text" name="expected_salary" value="{{ old('expected_salary', $tutorProfile->expected_salary ?? '') }}"
                                    class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <h2 class="mb-4 text-xl font-semibold">Academic Background</h2>
+                    <h2 class="mb-4 text-xl font-semibold">Background</h2>
                     <div class="grid gap-6 md:grid-cols-2">
-                        <div>
-                            <label class="mb-2 block text-sm text-slate-300">Institution</label>
-                            <input type="text" name="institution" value="{{ $tutorProfile->institution ?? '' }}"
-                                   class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
+                        <div class="md:col-span-2">
+                            <label class="mb-2 block text-sm text-slate-300">Educational Institutions</label>
+                            <textarea name="educational_institutions"
+                                      class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400"
+                                      rows="4">{{ old('educational_institutions', $tutorProfile->educational_institutions ?? '') }}</textarea>
                         </div>
 
-                        <div>
-                            <label class="mb-2 block text-sm text-slate-300">Degree</label>
-                            <input type="text" name="degree" value="{{ $tutorProfile->degree ?? '' }}"
-                                   class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
-                        </div>
-
-                        <div>
-                            <label class="mb-2 block text-sm text-slate-300">Passing Year</label>
-                            <input type="text" name="passingYear" value="{{ $tutorProfile->passingYear ?? '' }}"
-                                   class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
-                        </div>
-
-                        <div>
-                            <label class="mb-2 block text-sm text-slate-300">Result</label>
-                            <input type="text" name="result" value="{{ $tutorProfile->result ?? '' }}"
-                                   class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
-                        </div>
-
-                        <div>
-                            <label class="mb-2 block text-sm text-slate-300">Experience</label>
-                            <input type="text" name="experience" value="{{ $tutorProfile->experience ?? '' }}"
-                                   class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
-                        </div>
-
-                        <div>
-                            <label class="mb-2 block text-sm text-slate-300">Current Occupation</label>
-                            <input type="text" name="currentOccupation" value="{{ $tutorProfile->currentOccupation ?? '' }}"
-                                   class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
+                        <div class="md:col-span-2">
+                            <label class="mb-2 block text-sm text-slate-300">Work Experience</label>
+                            <textarea name="work_experience"
+                                      class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400"
+                                      rows="4">{{ old('work_experience', $tutorProfile->work_experience ?? '') }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -156,31 +128,31 @@
                     <div class="grid gap-6 md:grid-cols-2">
                         <div>
                             <label class="mb-2 block text-sm text-slate-300">Address</label>
-                            <input type="text" name="address" value="{{ $guardian->address ?? '' }}"
+                            <input type="text" name="address" value="{{ old('address', $guardian->address ?? '') }}"
                                    class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                         </div>
 
                         <div>
                             <label class="mb-2 block text-sm text-slate-300">Latitude</label>
-                            <input type="text" name="latitude" value="{{ $guardian->latitude ?? '' }}"
+                            <input type="text" name="latitude" value="{{ old('latitude', $guardian->latitude ?? '') }}"
                                    class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                         </div>
 
                         <div>
                             <label class="mb-2 block text-sm text-slate-300">Longitude</label>
-                            <input type="text" name="longitude" value="{{ $guardian->longitude ?? '' }}"
+                            <input type="text" name="longitude" value="{{ old('longitude', $guardian->longitude ?? '') }}"
                                    class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                         </div>
 
                         <div>
                             <label class="mb-2 block text-sm text-slate-300">Number of Children</label>
-                            <input type="text" name="numberOfChildren" value="{{ $guardian->numberOfChildren ?? '' }}"
+                            <input type="text" name="number_of_children" value="{{ old('number_of_children', $guardian->number_of_children ?? '') }}"
                                    class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                         </div>
 
                         <div class="md:col-span-2">
                             <label class="mb-2 block text-sm text-slate-300">Preferred Subjects</label>
-                            <input type="text" name="preferredSubjects" value="{{ $guardian->preferredSubjects ?? '' }}"
+                            <input type="text" name="preferred_subjects" value="{{ old('preferred_subjects', $guardian->preferred_subjects ?? '') }}"
                                    class="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400">
                         </div>
                     </div>
