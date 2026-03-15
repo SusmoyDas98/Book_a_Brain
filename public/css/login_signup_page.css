@@ -1,0 +1,176 @@
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css');
+
+:root {
+            --brand-primary: #6366f1;
+            --brand-dark: #0f172a;
+            --brand-soft: #f1f2ff;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a; /* Darker elite theme */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- Animated Background Elements --- */
+        .bg-blob {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float 20s infinite alternate;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(-10%, -10%) scale(1); }
+            100% { transform: translate(20%, 20%) scale(1.2); }
+        }
+
+        /* --- The Card --- */
+        .auth-card {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 48px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .brand-logo {
+            height: 32px;
+            display: block;
+            margin: 0 auto 32px;
+            transition: transform 0.3s ease;
+        }
+        .brand-logo:hover { transform: scale(1.05); }
+
+        /* --- Modern Tab Styling --- */
+        .nav-tabs-custom {
+            display: flex;
+            background: var(--brand-soft);
+            padding: 5px;
+            border-radius: 14px;
+            margin-bottom: 32px;
+        }
+        
+        .nav-tabs-custom .btn-tab {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--brand-dark);
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .nav-tabs-custom .btn-tab.active {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            color: var(--brand-primary);
+        }
+
+        /* --- Input Animation --- */
+        .input-group-elite {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .input-group-elite input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            outline: none;
+            transition: 0.3s;
+            background: #f8fafc;
+        }
+
+        .input-group-elite input:focus {
+            border-color: var(--brand-primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        /* --- The "Elite" Button Animation --- */
+        .btn-submit {
+            width: 100%;
+            background: var(--brand-dark);
+            color: white;
+            padding: 16px;
+            border-radius: 14px;
+            border: none;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+
+        .btn-submit:hover {
+            background: var(--brand-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-submit::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+            transition: 0.5s;
+            opacity: 0;
+        }
+
+        .btn-submit:hover::after {
+            left: 120%;
+            opacity: 1;
+        }
+
+        /* --- Utility --- */
+        .social-grid {
+            display: grid;
+            /* grid-template-columns: 1fr 1fr; */
+            /* gap: 12px; */
+        }
+
+        .btn-social {
+            border: 2px solid #97b9e5;
+            padding: 10px;
+            border-radius: 12px;
+            background: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .btn-social:hover { background: #6fadff; color:white; border: 2px solid #6fadff }
+
+        /* Smooth fade for content */
+        .form-content {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }

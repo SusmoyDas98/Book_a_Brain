@@ -16,7 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable(); // nullable for Google login
+            $table->string('google_id')->unique()->nullable(); // Google OAuth ID
+            $table->text('google_token')->nullable(); // Google OAuth token (changed from string to text)
+            $table->text('google_refresh_token')->nullable(); // Google OAuth refresh token (changed from string to text)
+            $table->text('avatar')->nullable();    // profile picture
+            $table->string('role')->default('user'); // user/admin role
             $table->rememberToken();
             $table->timestamps();
         });
@@ -42,8 +47,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };
