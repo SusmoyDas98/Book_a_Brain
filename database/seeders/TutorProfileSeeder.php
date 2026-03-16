@@ -30,6 +30,7 @@ class TutorProfileSeeder extends Seeder
             'availability' => ['Mon-Fri 5-8pm', 'Sat 10am-2pm'],
             'preferred_mediums' => ['English', 'Bangla'],
             'preferred_subjects' => ['Math', 'Physics', 'Programming'],
+            'preferred_classes' => ['10', '2'],
             'expected_salary' => 2500.00,
         ]);
 
@@ -54,6 +55,7 @@ class TutorProfileSeeder extends Seeder
             'availability' => ['Tue-Thu 4-7pm'],
             'preferred_mediums' => ['English'],
             'preferred_subjects' => ['English', 'Literature'],
+            'preferred_classes' => ['4', '3'],
             'expected_salary' => 2000.00,
         ]);
 
@@ -78,6 +80,7 @@ class TutorProfileSeeder extends Seeder
             'availability' => ['Mon-Fri 6-9pm', 'Sat 9am-1pm'],
             'preferred_mediums' => ['Bangla'],
             'preferred_subjects' => ['Math', 'Computer Science'],
+            'preferred_classes' => ['12'],
             'expected_salary' => 1800.00,
         ]);
     }
