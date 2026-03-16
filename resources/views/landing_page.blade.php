@@ -22,8 +22,8 @@
             </a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link px-3" href="#">Tutors</a></li>
-                    <li class="nav-item"><a class="nav-link px-3" href="#">Process</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="{{route('tutor_search_redirect')}}">Tutors</a></li>
+                    {{-- <li class="nav-item"><a class="nav-link px-3" href="#">Process</a></li> --}}
                     <li class="nav-item ms-lg-4"><a href="{{ route('login_or_signup_page_redirect')}}"><button class="btn btn-elite">Join Now</button></a></li>
                 </ul>
             </div>

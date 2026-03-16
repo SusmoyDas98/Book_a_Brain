@@ -34,6 +34,7 @@ return new class extends Migration
             $table->json('availability')->nullable();
             $table->json('preferred_mediums')->nullable();
             $table->json('preferred_subjects')->nullable();
+            $table->json('preferred_classes')->nullable();
 
             // expected salary
             $table->decimal('expected_salary', 10, 2)->nullable();

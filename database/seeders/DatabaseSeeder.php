@@ -24,6 +24,9 @@ class DatabaseSeeder extends Seeder
         // Call your custom UserSeeder
         $this->call([
             UserSeeder::class,
+            TutorSeeder::class,
+            TutorProfileSeeder::class,            
         ]);
+        
     }
 }

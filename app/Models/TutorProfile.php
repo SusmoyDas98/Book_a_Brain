@@ -26,6 +26,7 @@ class TutorProfile extends Model
         'availability',
         'preferred_mediums',
         'preferred_subjects',
+        'preferred_classes',
         'expected_salary'
     ];
 
@@ -37,6 +38,7 @@ class TutorProfile extends Model
         'availability' => 'array',
         'preferred_mediums' => 'array',
         'preferred_subjects' => 'array',
+        'preferred_classes' => 'array',
     ];
 
     // Relation to User
@@ -47,6 +49,6 @@ class TutorProfile extends Model
     public function tutor()
     {
         // One profile belongs to one tutor
-        return $this->belongsTo(Tutor::class, 'tutor_id', 'id');
+        return $this->belongsTo(Tutor::class, 'tutor_id');
     }    
 }

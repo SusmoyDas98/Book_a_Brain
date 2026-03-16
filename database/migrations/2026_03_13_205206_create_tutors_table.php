@@ -12,6 +12,9 @@ return new class extends Migration
 
             // tutor_id (FK -> users.id)
             $table->unsignedBigInteger('tutor_id')->primary();
+            
+            // Gender
+            $table->enum('gender',['Male','Female','Not Specified'])->default('Not Specified')->nullable();
 
             // National ID card image path
             $table->text('nid_card')->nullable();
