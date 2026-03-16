@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\Tutor;
 use App\Models\Guardian;
 use App\Models\TutorProfile;
@@ -13,146 +14,206 @@ class ProfileController extends Controller
 {
     public function show()
     {
-        $user = Auth::user();
-        $tutor = Tutor::where('user_id', $user->id)->first();
-        $guardian = Guardian::where('user_id', $user->id)->first();
-        $tutorProfile = TutorProfile::where('tutor_id', $user->id)->first();
+        $user                 = Auth::user();
+        $tutor                = Tutor::where('user_id', $user->id)->first();
+        $guardian             = Guardian::where('user_id', $user->id)->first();
+        $tutorProfile         = TutorProfile::where('tutor_id', $user->id)->first();
         $verificationDocuments = VerificationDocument::where('tutor_id', $user->id)->get();
-
         $completionPercentage = 0;
 
-        if ($user->role === 'TUTOR') {
-            $fields = [
-                $user->name,
-                $user->email,
-                optional($tutorProfile)->profile_picture,
-                optional($tutorProfile)->contact_no,
-                optional($tutorProfile)->cv,
-                optional($tutorProfile)->educational_institutions,
-                optional($tutorProfile)->work_experience,
-                optional($tutorProfile)->teaching_method,
-                optional($tutorProfile)->availability,
-                optional($tutorProfile)->preferred_mediums,
-                optional($tutorProfile)->preferred_subjects,
-                optional($tutorProfile)->expected_salary
-            ];
-
-            $filled = collect($fields)->filter(function ($value) {
-                return !is_null($value) && $value !== '';
-            })->count();
-
-            $completionPercentage = round(($filled / count($fields)) * 100);
+        if (strtolower($user->role) === 'tutor') {
+            $completionPercentage = $this->calculateTutorCompletion($user, $tutorProfile, $verificationDocuments);
+        }
+        if (strtolower($user->role) === 'guardian') {
+            $completionPercentage = $this->calculateGuardianCompletion($user, $guardian);
         }
 
         return view('profile.show', compact(
-            'user',
-            'tutor',
-            'guardian',
-            'tutorProfile',
-            'verificationDocuments',
-            'completionPercentage'
+            'user', 'tutor', 'guardian', 'tutorProfile', 'verificationDocuments', 'completionPercentage'
         ));
     }
 
     public function edit()
     {
-        $user = Auth::user();
-        $tutor = Tutor::where('user_id', $user->id)->first();
-        $guardian = Guardian::where('user_id', $user->id)->first();
-        $tutorProfile = TutorProfile::where('tutor_id', $user->id)->first();
+        $user                  = Auth::user();
+        $tutor                 = Tutor::where('user_id', $user->id)->first();
+        $guardian              = Guardian::where('user_id', $user->id)->first();
+        $tutorProfile          = TutorProfile::where('tutor_id', $user->id)->first();
         $verificationDocuments = VerificationDocument::where('tutor_id', $user->id)->get()->keyBy('doc_type');
+        $completionPercentage  = 0;
 
-        return view('profile.edit', compact('user', 'tutor', 'guardian', 'tutorProfile', 'verificationDocuments'));
+        if (strtolower($user->role) === 'tutor') {
+            $completionPercentage = $this->calculateTutorCompletion($user, $tutorProfile, $verificationDocuments->values());
+        }
+        if (strtolower($user->role) === 'guardian') {
+            $completionPercentage = $this->calculateGuardianCompletion($user, $guardian);
+        }
+
+        return view('profile.edit', compact(
+            'user', 'tutor', 'guardian', 'tutorProfile', 'verificationDocuments', 'completionPercentage'
+        ));
     }
 
     public function update(Request $request)
     {
         $user = Auth::user();
+        // LOG 1: Check if the request is even hitting the controller
+        Log::info('Update method reached for user: ' . $user->id);
 
+        
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'contact_no' => 'nullable|string|max:50',
-            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'cv' => 'nullable|mimes:pdf|max:2048',
-            'nid_document' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
-            'occupation_document' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048'
+            'name'                => 'required|string|max:255',
+            'email'               => 'required|email|max:255',
+            'contact_no'          => 'nullable|string|max:50',
+            'gender'              => 'nullable|string|in:Male,Female,Other,Prefer not to say',
+            'profile_picture'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'cv'                  => 'nullable|mimes:pdf|max:2048',
+            'nid_document'        => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
+            'occupation_document' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        $user->name = $request->name;
+        $user->name  = $request->name;
         $user->email = $request->email;
         $user->save();
 
-        if ($user->role === 'TUTOR') {
-            $tutor = Tutor::where('user_id', $user->id)->first();
-
-            if (!$tutor) {
-                $tutor = new Tutor();
-                $tutor->user_id = $user->id;
-            }
-
+        if (strtolower($user->role) === 'tutor') {
             $tutorProfile = TutorProfile::firstOrNew(['tutor_id' => $user->id]);
 
             if ($request->hasFile('profile_picture')) {
-                $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
-                $tutorProfile->profile_picture = $profilePicturePath;
+                $tutorProfile->profile_picture = $request->file('profile_picture')
+                    ->store('profile_pictures', 'public');
             }
-
             if ($request->hasFile('cv')) {
-                $cvPath = $request->file('cv')->store('cv_uploads', 'public');
-                $tutorProfile->cv = $cvPath;
+                $tutorProfile->cv = $request->file('cv')->store('cv_uploads', 'public');
             }
 
-            $tutorProfile->tutor_id = $user->id;
-            $tutorProfile->name = $request->name;
-            $tutorProfile->email = $request->email;
-            $tutorProfile->contact_no = $request->contact_no;
+            $tutorProfile->tutor_id                 = $user->id;
+            $tutorProfile->name                     = $request->name;
+            $tutorProfile->email                    = $request->email;
+            $tutorProfile->contact_no               = $request->contact_no;
+            $tutorProfile->gender                   = $request->gender;
             $tutorProfile->educational_institutions = $request->educational_institutions;
-            $tutorProfile->work_experience = $request->work_experience;
-            $tutorProfile->teaching_method = $request->teaching_method;
-            $tutorProfile->availability = $request->availability;
-            $tutorProfile->preferred_mediums = $request->preferred_mediums;
-            $tutorProfile->preferred_subjects = $request->preferred_subjects;
-            $tutorProfile->expected_salary = $request->expected_salary;
+            $tutorProfile->work_experience          = $request->work_experience;
+            $tutorProfile->teaching_method          = $request->teaching_method;
+            $tutorProfile->availability             = $request->availability;
+            $tutorProfile->preferred_mediums        = $request->preferred_mediums;
+            $tutorProfile->preferred_subjects       = $request->preferred_subjects;
+            $tutorProfile->expected_salary          = $request->expected_salary;
             $tutorProfile->save();
 
             if ($request->hasFile('nid_document')) {
-                $nidPath = $request->file('nid_document')->store('verification_documents', 'public');
-
                 VerificationDocument::updateOrCreate(
                     ['tutor_id' => $user->id, 'doc_type' => 'NID'],
-                    [
-                        'file_path' => $nidPath,
-                        'status' => 'PENDING',
-                        'review_note' => null
-                    ]
+                    ['file_path' => $request->file('nid_document')->store('verification_documents', 'public'),
+                     'status' => 'PENDING', 'review_note' => null]
                 );
             }
-
             if ($request->hasFile('occupation_document')) {
-                $occupationPath = $request->file('occupation_document')->store('verification_documents', 'public');
-
                 VerificationDocument::updateOrCreate(
                     ['tutor_id' => $user->id, 'doc_type' => 'OCCUPATION_CARD'],
-                    [
-                        'file_path' => $occupationPath,
-                        'status' => 'PENDING',
-                        'review_note' => null
-                    ]
+                    ['file_path' => $request->file('occupation_document')->store('verification_documents', 'public'),
+                     'status' => 'PENDING', 'review_note' => null]
                 );
             }
         }
 
-        if ($user->role === 'GUARDIAN') {
+        if (strtolower($user->role) === 'guardian') {
             $guardian = Guardian::firstOrNew(['user_id' => $user->id]);
-            $guardian->address = $request->address;
-            $guardian->latitude = $request->latitude;
-            $guardian->longitude = $request->longitude;
+
+            if ($request->hasFile('profile_picture')) {
+                $guardian->profile_picture = $request->file('profile_picture')
+                    ->store('profile_pictures', 'public');
+            }
+
+            $guardian->user_id            = $user->id;
+            $guardian->gender             = $request->gender;
+            $guardian->address            = $request->address;
+            $guardian->latitude           = $request->latitude;
+            $guardian->longitude          = $request->longitude;
             $guardian->number_of_children = $request->number_of_children;
             $guardian->preferred_subjects = $request->preferred_subjects;
             $guardian->save();
         }
 
         return redirect()->route('profile.show')->with('success', 'Profile updated successfully.');
+    }
+    public function saveRole(Request $request)
+    {
+        $request->validate([
+            'role' => 'required|in:tutor,guardian',
+        ]);
+
+        $user = Auth::user();
+        $user->role = $request->role;
+        $user->save();
+
+        // After picking role, always go to edit page
+        return redirect()->route('profile.edit');
+    }
+
+    public function confirmProfile()
+    {
+        $user                 = Auth::user();
+        $tutorProfile         = \App\Models\TutorProfile::where('tutor_id', $user->id)->first();
+        $guardian             = \App\Models\Guardian::where('user_id', $user->id)->first();
+        $verificationDocuments = \App\Models\VerificationDocument::where('tutor_id', $user->id)->get();
+
+        if (strtolower($user->role) === 'tutor') {
+            $completion = $this->calculateTutorCompletion($user, $tutorProfile, $verificationDocuments);
+        } else {
+            $completion = $this->calculateGuardianCompletion($user, $guardian);
+        }
+
+        if ($completion < 100) {
+            return redirect()->route('profile.edit')
+                ->with('error', 'You must complete 100% of your profile before confirming.');
+        }
+
+        // Teammate will build the dashboard — route is ready
+        return redirect()->route('dashboard');
+    }
+    private function calculateTutorCompletion($user, $tutorProfile, $verificationDocuments)
+    {
+        $nidDoc        = $verificationDocuments->firstWhere('doc_type', 'NID');
+        $occupationDoc = $verificationDocuments->firstWhere('doc_type', 'OCCUPATION_CARD');
+
+        $fields = [
+            $user->name,
+            $user->email,
+            optional($tutorProfile)->contact_no,
+            optional($tutorProfile)->gender,
+            optional($tutorProfile)->profile_picture,
+            optional($tutorProfile)->cv,
+            optional($tutorProfile)->educational_institutions,
+            optional($tutorProfile)->work_experience,
+            optional($tutorProfile)->teaching_method,
+            optional($tutorProfile)->availability,
+            optional($tutorProfile)->preferred_mediums,
+            optional($tutorProfile)->preferred_subjects,
+            optional($tutorProfile)->expected_salary,
+            optional($nidDoc)->file_path,
+            optional($occupationDoc)->file_path,
+        ];
+
+        $filled = collect($fields)->filter(fn($v) => !is_null($v) && $v !== '')->count();
+        return round(($filled / count($fields)) * 100);
+    }
+
+    private function calculateGuardianCompletion($user, $guardian)
+    {
+        $fields = [
+            $user->name,
+            $user->email,
+            optional($guardian)->gender,
+            optional($guardian)->profile_picture,
+            optional($guardian)->address,
+            optional($guardian)->latitude,
+            optional($guardian)->longitude,
+            optional($guardian)->number_of_children,
+            optional($guardian)->preferred_subjects,
+        ];
+
+        $filled = collect($fields)->filter(fn($v) => !is_null($v) && $v !== '')->count();
+        return round(($filled / count($fields)) * 100);
     }
 }

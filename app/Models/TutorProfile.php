@@ -18,7 +18,7 @@ class TutorProfile extends Model
         'profile_picture',
         'name',
         'email',
-        'contact_no',
+        'contact_no','gender',
         'cv',
         'educational_institutions',
         'work_experience',

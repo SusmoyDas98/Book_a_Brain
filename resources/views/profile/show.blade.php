@@ -1,146 +1,230 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-slate-950 px-6 py-10 text-white">
-    <div class="mx-auto max-w-6xl">
+
+{{-- TOP BANNER --}}
+<div style="background: rgba(255,255,255,0.6); border-bottom: 1px solid #1e293b; padding: 2.5rem 0 2rem;">
+    <div class="container">
+
         @if(session('success'))
-            <div class="mb-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-emerald-300">
-                {{ session('success') }}
-            </div>
+        <div class="mb-4 px-4 py-3" style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color: #86efac; border-radius: 16px;">
+            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+        </div>
         @endif
 
-        <div class="mb-8">
-            <p class="text-sm uppercase tracking-[0.3em] text-cyan-400">Book-a-Brain</p>
-            <h1 class="mt-2 text-4xl font-semibold">Your Academic Profile</h1>
-            <p class="mt-3 max-w-2xl text-slate-300">
-                Manage your identity, academic depth, and professional presence with precision.
-            </p>
+        {{-- COMPLETION BAR --}}
+        <div class="bab-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.25em; color: #6366f1; font-weight: 600;">
+                    Profile Completion
+                </span>
+                <span style="font-weight: 700; font-size: 1rem; color: {{ $completionPercentage == 100 ? '#6366f1' : '#1e293b' }};">
+                    @if($completionPercentage == 100)
+                        <i class="bi bi-patch-check-fill me-1"></i>100% Complete
+                    @else
+                        {{ $completionPercentage }}%
+                    @endif
+                </span>
+            </div>
+            <div style="height: 8px; background: #e2e8f0; border-radius: 999px; overflow: hidden;">
+                <div style="height: 100%; width: {{ $completionPercentage }}%; background: linear-gradient(90deg,#06b6d4,#6366f1); border-radius: 999px; transition: width 0.6s ease;"></div>
+            </div>
+            @if($completionPercentage < 100)
+                <p class="mt-2 mb-0" style="color: #64748b; font-size: 0.8rem;">
+                    Fill in all sections to reach 100% &mdash;
+                    <a href="{{ route('profile.edit') }}" style="color: #6366f1; text-decoration: none;">complete your profile →</a>
+                </p>
+            @endif
         </div>
 
-        <div class="grid gap-6 md:grid-cols-3">
-            <div class="rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-xl md:col-span-2">
-                <h2 class="mb-4 text-xl font-semibold">Core Information</h2>
-                <div class="grid gap-4 text-slate-300 md:grid-cols-2">
-                    <p><span class="font-medium text-white">Name:</span> {{ $user->name }}</p>
-                    <p><span class="font-medium text-white">Email:</span> {{ $user->email }}</p>
-                    <p><span class="font-medium text-white">Phone:</span> {{ $tutorProfile->contact_no ?? 'Not added' }}</p>
-                    <p><span class="font-medium text-white">Role:</span> {{ $user->role }}</p>
-                </div>
-            </div>
-
-            <div class="rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-xl">
-                <h2 class="mb-4 text-xl font-semibold">Profile Actions</h2>
-                <p class="mb-5 text-slate-300">Keep your profile polished and trusted.</p>
-                <a href="{{ route('profile.edit') }}"
-                   class="inline-flex items-center rounded-2xl bg-cyan-400 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300">
-                    Edit Profile
-                </a>
-
-                @if($user->role === 'TUTOR')
-                    <div class="mt-6">
-                        <p class="mb-2 text-sm uppercase tracking-[0.2em] text-cyan-400">Completion</p>
-                        <div class="h-3 w-full rounded-full bg-slate-800">
-                            <div class="h-3 rounded-full bg-cyan-400" style="width: {{ $completionPercentage }}%"></div>
-                        </div>
-                        <p class="mt-2 text-slate-300">{{ $completionPercentage }}% complete</p>
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        @if($user->role === 'TUTOR' && $tutorProfile)
-            <div class="mt-8 rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-xl">
-                <h2 class="mb-4 text-xl font-semibold">Tutor Details</h2>
-                <div class="grid gap-4 text-slate-300 md:grid-cols-2">
-                    <p>
-                        <span class="font-medium text-white">Profile Picture:</span>
-                        @if($tutorProfile->profile_picture)
-                            <a href="{{ asset('storage/' . $tutorProfile->profile_picture) }}" target="_blank" class="text-cyan-400 hover:text-cyan-300">
-                                View Profile Picture
-                            </a>
-                        @else
-                            Not uploaded
-                        @endif
-                    </p>
-                    <p><span class="font-medium text-white">Teaching Method:</span> {{ $tutorProfile->teaching_method ?? 'Not added' }}</p>
-                    <p><span class="font-medium text-white">Availability:</span> {{ $tutorProfile->availability ?? 'Not added' }}</p>
-                    <p><span class="font-medium text-white">Preferred Mediums:</span> {{ $tutorProfile->preferred_mediums ?? 'Not added' }}</p>
-                    <p><span class="font-medium text-white">Preferred Subjects:</span> {{ $tutorProfile->preferred_subjects ?? 'Not added' }}</p>
-                    <p><span class="font-medium text-white">Expected Salary:</span> {{ $tutorProfile->expected_salary ?? 'Not added' }}</p>
-                    <p>
-                        <span class="font-medium text-white">CV:</span>
-                        @if($tutorProfile->cv)
-                            <a href="{{ asset('storage/' . $tutorProfile->cv) }}" target="_blank" class="text-cyan-400 hover:text-cyan-300">
-                                View Uploaded CV
-                            </a>
-                        @else
-                            Not uploaded
-                        @endif
-                    </p>
-                </div>
-
-                <div class="mt-6 border-t border-slate-800 pt-6">
-                    <h3 class="mb-4 text-lg font-semibold">Background</h3>
-                    <div class="grid gap-4 text-slate-300 md:grid-cols-2">
-                        <p class="md:col-span-2">
-                            <span class="font-medium text-white">Educational Institutions:</span>
-                            {{ $tutorProfile->educational_institutions ?? 'Not added' }}
-                        </p>
-                        <p class="md:col-span-2">
-                            <span class="font-medium text-white">Work Experience:</span>
-                            {{ $tutorProfile->work_experience ?? 'Not added' }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-8 rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-xl">
-                <h2 class="mb-4 text-xl font-semibold">Verification Documents</h2>
-                <div class="grid gap-4 md:grid-cols-2">
-                    @php
-                        $nidDoc = $verificationDocuments->firstWhere('doc_type', 'NID');
-                        $occupationDoc = $verificationDocuments->firstWhere('doc_type', 'OCCUPATION_CARD');
-                    @endphp
-
-                    <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
-                        <p class="font-medium text-white">NID Document</p>
-                        <p class="mt-2 text-slate-300">
-                            Status: {{ $nidDoc->status ?? 'Not uploaded' }}
-                        </p>
-                        @if($nidDoc)
-                            <a href="{{ asset('storage/' . $nidDoc->file_path) }}" target="_blank" class="mt-3 inline-block text-cyan-400 hover:text-cyan-300">
-                                View NID File
-                            </a>
-                        @endif
-                    </div>
-
-                    <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
-                        <p class="font-medium text-white">Occupation Verification Card</p>
-                        <p class="mt-2 text-slate-300">
-                            Status: {{ $occupationDoc->status ?? 'Not uploaded' }}
-                        </p>
-                        @if($occupationDoc)
-                            <a href="{{ asset('storage/' . $occupationDoc->file_path) }}" target="_blank" class="mt-3 inline-block text-cyan-400 hover:text-cyan-300">
-                                View Occupation File
-                            </a>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        @if($user->role === 'GUARDIAN' && $guardian)
-            <div class="mt-8 rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-xl">
-                <h2 class="mb-4 text-xl font-semibold">Guardian Details</h2>
-                <div class="grid gap-4 text-slate-300 md:grid-cols-2">
-                    <p><span class="font-medium text-white">Address:</span> {{ $guardian->address ?? 'Not added' }}</p>
-                    <p><span class="font-medium text-white">Latitude:</span> {{ $guardian->latitude ?? 'Not added' }}</p>
-                    <p><span class="font-medium text-white">Longitude:</span> {{ $guardian->longitude ?? 'Not added' }}</p>
-                    <p><span class="font-medium text-white">Number of Children:</span> {{ $guardian->number_of_children ?? 'Not added' }}</p>
-                    <p><span class="font-medium text-white">Preferred Subjects:</span> {{ $guardian->preferred_subjects ?? 'Not added' }}</p>
-                </div>
-            </div>
-        @endif
+        <p style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.3em; color: #6366f1; font-weight: 600;">Book-a-Brain</p>
+        <h1 style="color: #0f172a; font-size: 2rem; font-weight: 700; margin-top: 0.3rem; margin-bottom: 0.4rem;">Your Academic Profile</h1>
+        <p style="color: #64748b; max-width: 520px; margin: 0;">Manage your identity, academic depth, and professional presence.</p>
     </div>
 </div>
+
+{{-- BODY --}}
+<div style="min-height: 100vh; padding: 2.5rem 0 5rem;">
+    <div class="container">
+        <div class="row g-4">
+
+            {{-- ── LEFT COLUMN: Identity card ── --}}
+            <div class="col-lg-4">
+                <div class="bab-card h-100 text-center">
+
+                    {{-- Profile Picture --}}
+                    @php
+                        $pic = null;
+                        if (strtolower($user->role) === 'tutor'    && optional($tutorProfile)->profile_picture)
+                            $pic = asset('storage/' . $tutorProfile->profile_picture);
+                        elseif (strtolower($user->role) === 'guardian' && optional($guardian)->profile_picture)
+                            $pic = asset('storage/' . $guardian->profile_picture);
+                    @endphp
+
+                    @if($pic)
+                        <img src="{{ $pic }}" alt="Profile Picture"
+                             style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid #6366f1;margin-bottom:1rem;">
+                    @else
+                        <img src="{{ asset('images/default_avatar.png') }}" alt="Default Avatar"
+                             style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid #334155;margin-bottom:1rem;opacity:0.7;">
+                    @endif
+
+                    <h5 style="color:#0f172a;font-weight:700;margin-bottom:0.2rem;">{{ $user->name }}</h5>
+                    <span style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2em;color:#6366f1;font-weight:600;">
+                        {{ $user->role }}
+                    </span>
+
+                    <hr style="border-color:#e2e8f0;margin:1.25rem 0;">
+
+                    {{-- Core Info --}}
+                    <div class="text-start">
+                        <p class="bab-meta-label"><i class="bi bi-envelope me-1"></i>Email</p>
+                        <p class="bab-meta-value mb-3" style="word-break:break-all;">{{ $user->email }}</p>
+
+                        @if(strtolower($user->role) === 'tutor')
+                            <p class="bab-meta-label"><i class="bi bi-telephone me-1"></i>Phone</p>
+                            <p class="bab-meta-value mb-3">{{ optional($tutorProfile)->contact_no ?: '—' }}</p>
+                        @endif
+
+                        <p class="bab-meta-label"><i class="bi bi-person me-1"></i>Gender</p>
+                        <p class="bab-meta-value mb-0">
+                            @if(strtolower($user->role) === 'tutor')
+                                {{ optional($tutorProfile)->gender ?: '—' }}
+                            @else
+                                {{ optional($guardian)->gender ?: '—' }}
+                            @endif
+                        </p>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="{{ route('profile.edit') }}" class="bab-btn-primary w-100 text-center">
+                            <i class="bi bi-pencil me-2"></i>Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ── RIGHT COLUMN: Details ── --}}
+            <div class="col-lg-8">
+
+                @if(strtolower($user->role) === 'tutor')
+
+                    {{-- Teaching Details --}}
+                    <div class="bab-card">
+                        <p class="bab-section-title"><i class="bi bi-journal-text me-2" style="color:#6366f1;"></i>Teaching Details</p>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <p class="bab-meta-label">Teaching Method</p>
+                                <p class="bab-meta-value">{{ optional($tutorProfile)->teaching_method ?: '—' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="bab-meta-label">Availability</p>
+                                <p class="bab-meta-value">{{ optional($tutorProfile)->availability ?: '—' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="bab-meta-label">Preferred Mediums</p>
+                                <p class="bab-meta-value">{{ optional($tutorProfile)->preferred_mediums ?: '—' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="bab-meta-label">Preferred Subjects</p>
+                                <p class="bab-meta-value">{{ optional($tutorProfile)->preferred_subjects ?: '—' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="bab-meta-label">Expected Salary</p>
+                                <p class="bab-meta-value">
+                                    {{ optional($tutorProfile)->expected_salary ? '৳ ' . number_format($tutorProfile->expected_salary) : '—' }}
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="bab-meta-label">CV</p>
+                                @if(optional($tutorProfile)->cv)
+                                    <a href="{{ asset('storage/' . $tutorProfile->cv) }}" target="_blank" style="color:#6366f1;font-size:0.9rem;">
+                                        <i class="bi bi-file-earmark-pdf me-1"></i>View CV ↗
+                                    </a>
+                                @else
+                                    <p class="bab-meta-value">—</p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Background --}}
+                    <div class="bab-card">
+                        <p class="bab-section-title"><i class="bi bi-mortarboard me-2" style="color:#6366f1;"></i>Background</p>
+                        <p class="bab-meta-label">Educational Institutions</p>
+                        <p class="bab-meta-value mb-3">{{ optional($tutorProfile)->educational_institutions ?: '—' }}</p>
+                        <p class="bab-meta-label">Work Experience</p>
+                        <p class="bab-meta-value mb-0">{{ optional($tutorProfile)->work_experience ?: '—' }}</p>
+                    </div>
+
+                    {{-- Verification Documents --}}
+                    <div class="bab-card">
+                        <p class="bab-section-title"><i class="bi bi-shield-check me-2" style="color:#6366f1;"></i>Verification Documents</p>
+                        @php
+                            $nidDoc        = $verificationDocuments->firstWhere('doc_type', 'NID');
+                            $occupationDoc = $verificationDocuments->firstWhere('doc_type', 'OCCUPATION_CARD');
+                        @endphp
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div style="background:#f1f0ff; border:1px solid #e0e7ff; border-radius:16px; padding:1rem;">
+                                    <p style="color:#f1f5f9; font-weight:600; margin-bottom:0.6rem; background:#6366f1; display:inline-flex; align-items:center; gap:0.4rem; padding:0.25rem 0.75rem; border-radius:8px; font-size:0.85rem;">
+                                        <i class="bi bi-card-text"></i>NID Document
+                                    </p>
+                                    <p style="font-size:0.82rem; color:#64748b; margin-bottom:0.5rem; margin-top:0.25rem;">
+                                        Status: <span style="color:{{ $nidDoc ? '#6366f1' : '#94a3b8' }}; font-weight:600;">{{ $nidDoc->status ?? 'Not uploaded' }}</span>
+                                    </p>
+                                    @if($nidDoc)
+                                        <a href="{{ asset('storage/' . $nidDoc->file_path) }}" target="_blank" style="color:#6366f1; font-size:0.85rem; font-weight:500;">
+                                            View File ↗
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div style="background:#f1f0ff; border:1px solid #e0e7ff; border-radius:16px; padding:1rem;">
+                                    <p style="color:#f1f5f9; font-weight:600; margin-bottom:0.6rem; background:#6366f1; display:inline-flex; align-items:center; gap:0.4rem; padding:0.25rem 0.75rem; border-radius:8px; font-size:0.85rem;">
+                                        <i class="bi bi-person-badge"></i>Job/Student ID
+                                    </p>
+                                    <p style="font-size:0.82rem; color:#64748b; margin-bottom:0.5rem; margin-top:0.25rem;">
+                                        Status: <span style="color:{{ $occupationDoc ? '#6366f1' : '#94a3b8' }}; font-weight:600;">{{ $occupationDoc->status ?? 'Not uploaded' }}</span>
+                                    </p>
+                                    @if($occupationDoc)
+                                        <a href="{{ asset('storage/' . $occupationDoc->file_path) }}" target="_blank" style="color:#6366f1; font-size:0.85rem; font-weight:500;">
+                                            View File ↗
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                @endif
+
+                @if(strtolower($user->role) === 'guardian')
+
+                    <div class="bab-card">
+                        <p class="bab-section-title"><i class="bi bi-house me-2" style="color:#6366f1;"></i>Guardian Details</p>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <p class="bab-meta-label">Address</p>
+                                <p class="bab-meta-value">{{ optional($guardian)->address ?: '—' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="bab-meta-label">Number of Children</p>
+                                <p class="bab-meta-value">{{ optional($guardian)->number_of_children ?: '—' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="bab-meta-label">Preferred Subjects</p>
+                                <p class="bab-meta-value">{{ optional($guardian)->preferred_subjects ?: '—' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                @endif
+
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection

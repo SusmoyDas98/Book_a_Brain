@@ -28,7 +28,11 @@
             <div class="role-content">
                 <div class="role-title">Tutor</div>
                 <p class="role-desc">For professional educators seeking best opportunities and tuition assignments.</p>
-                <button class="btn-proceed">Continue as Tutor <i class="bi bi-arrow-right ms-2"></i></button>
+                <form action="{{ route('role.save') }}" method="POST" class="m-0">
+                    @csrf
+                    <input type="hidden" name="role" value="tutor">
+                    <button type="submit" class="btn-proceed">Continue as Tutor <i class="bi bi-arrow-right ms-2"></i></button>
+                </form>
             </div>
         </div>
 
@@ -41,7 +45,11 @@
             <div class="role-content">
                 <div class="role-title">Tutor Seeker</div>
                 <p class="role-desc">For Guardians and Students looking for elite academic support and vetted mentors.</p>
-                <button class="btn-proceed">Continue as Tutor Seeker <i class="bi bi-arrow-right ms-2"></i></button>
+                <form action="{{ route('role.save') }}" method="POST" class="m-0">
+                    @csrf
+                    <input type="hidden" name="role" value="guardian">
+                    <button type="submit" class="btn-proceed">Continue as Tutor Seeker <i class="bi bi-arrow-right ms-2"></i></button>
+                </form>
             </div>
         </div>
     </div>
