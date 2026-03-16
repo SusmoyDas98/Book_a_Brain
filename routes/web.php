@@ -10,7 +10,7 @@ use Laravel\Socialite\Facades\Socialite;
 // Landing Page Route
 Route::get('/', function () {
     return view('landing_page');
-});
+})->name('landing_page');
 
 //  Login and Signup Page Route
 

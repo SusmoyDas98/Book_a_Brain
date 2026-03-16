@@ -132,14 +132,26 @@ function showResults() {
         return;
     }
     console.log(data);
-
     const cards = data.map(t => {
-        const profileImageHtml = t.img
-            ? `<img src="${t.img}" class="profile-img">`
-            : `<div class="profile-img d-flex align-items-center justify-content-center bg-primary text-white fw-bold fs-4">
+    
+        let profileImageHtml;
+    
+        if (t.img) {
+            profileImageHtml = `<img src="${t.img}" class="profile-img">`;
+        } 
+        else if (t.gender === "Male") {
+            profileImageHtml = `<img src="/images/default_male.png" class="profile-img">`;
+        } 
+        else if (t.gender === "Female") {
+            profileImageHtml = `<img src="/images/default_female.png" class="profile-img">`;
+        } 
+        else {
+            profileImageHtml = `
+            <div class="profile-img d-flex align-items-center justify-content-center bg-primary text-white fw-bold fs-4">
                 ${t.name.charAt(0).toUpperCase()}
-               </div>`;
-
+            </div>`;
+        }
+    
         return `
 <div class="tutor-card d-flex flex-column" style="min-height: 400px;">
     ${profileImageHtml}

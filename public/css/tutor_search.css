@@ -21,13 +21,13 @@ body{
 }
 
 /* Navbar */
-.navbar-custom{
+/* .navbar-custom{
   background:white;
   border-bottom:1px solid #e2e8f0;
   box-shadow:0 10px 25px rgba(0,0,0,.05);
   padding:12px 0;
-}
-.btn-upgrade{
+} */
+/* .btn-upgrade{
   background:linear-gradient(135deg,#f59e0b,#fbbf24);
   border:none;
   color:white;
@@ -35,7 +35,7 @@ body{
   border-radius:12px;
   padding:8px 18px;
   box-shadow:0 6px 16px rgba(245,158,11,.4);
-}
+} */
 
 /* Hero */
 .search-hero{

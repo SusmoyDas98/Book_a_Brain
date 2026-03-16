@@ -12,6 +12,7 @@ class TutorSeeder extends Seeder
         Tutor::insert([
             [
                 'tutor_id' => 1,
+                'gender' => 'Male',
                 'nid_card' => 'storage/nid/nid1.jpg',
                 'cv_pdf' => 'storage/cv/cv1.pdf',
                 'student_id_card' => 'storage/student_id/std1.jpg',
@@ -23,6 +24,7 @@ class TutorSeeder extends Seeder
             ],
             [
                 'tutor_id' => 2,
+                'gender' => 'Female',
                 'nid_card' => 'storage/nid/nid2.jpg',
                 'cv_pdf' => 'storage/cv/cv2.pdf',
                 'student_id_card' => 'storage/student_id/std2.jpg',
@@ -34,6 +36,7 @@ class TutorSeeder extends Seeder
             ],
             [
                 'tutor_id' => 3,
+                'gender' => 'Male',
                 'nid_card' => 'storage/nid/nid3.jpg',
                 'cv_pdf' => 'storage/cv/cv3.pdf',
                 'student_id_card' => 'storage/student_id/std3.jpg',
