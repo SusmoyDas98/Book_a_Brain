@@ -1,0 +1,299 @@
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css');
+:root{
+  --brand-primary:#6366f1;
+  --brand-dark:#0f172a;
+  --success:#16a34a;
+  --gold:#f59e0b;
+}
+
+/* BODY */
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--brand-dark);
+    min-height: 100vh;
+
+    background-image:
+        /* 0. Base Gradient */
+        linear-gradient(135deg, #eef2ff 0%, #dbeafe 50%, #bfdbfe 100%),
+
+        /* 1. Primary Grid Lines (60px) - more visible */
+        linear-gradient(to right, rgba(71, 85, 105, 0.3) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(71, 85, 105, 0.3) 1px, transparent 1px),
+
+        /* 2. Secondary Grid Lines (15px) - subtle texture */
+        linear-gradient(to right, rgba(99, 102, 241, 0.15) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99, 102, 241, 0.15) 1px, transparent 1px),
+
+        /* 3. Ambient Glows */
+        radial-gradient(at 15% 15%, rgba(99, 102, 241, 0.15) 0px, transparent 40%),
+        radial-gradient(at 85% 85%, rgba(14, 165, 233, 0.12) 0px, transparent 40%);
+
+    background-size:
+        auto,             /* base gradient */
+        60px 60px, 60px 60px,  /* primary grid spacing */
+        15px 15px, 15px 15px,  /* secondary grid spacing */
+        auto, auto;       /* radial glows */
+
+    background-attachment: fixed;
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* NAVBAR
+/* .navbar-custom{
+  background:white;
+  border-bottom:1px solid #e2e8f0;
+  box-shadow:0 8px 20px rgba(0,0,0,.05);
+  padding:10px 0;
+} */ */
+
+.profile-btn img{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  object-fit:cover;
+  cursor:pointer;
+  border:2px solid #000000;
+  transition:.3s;
+}
+
+.profile-btn img:hover{
+  border-color:var(--brand-primary);
+  transform:scale(1.05);
+}
+
+/* FILTER BAR */
+.filter-bar{
+  background: rgb(1, 55, 97);
+  backdrop-filter: blur(15px);
+  border-radius: 14px;
+  padding: 8px;
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0,0,0,.05);
+  position: fixed;
+  top: 66px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 90%;
+  max-width: 1200px;
+  margin-top:10px;
+}
+
+.sort-select{
+  border-radius:8px;
+  border:2px solid #e2e8f0;
+  background-color: white;
+  padding:6px 10px;
+  font-size:0.85rem;
+}
+
+.filter-btn{
+  border-radius:8px;
+  background-color: white;
+  font-weight:600;
+  font-size:0.85rem;
+}
+
+/* PROFILE CARD */
+.tutor-card {
+  width: 80%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 10px;
+  background: linear-gradient(90deg, #8ec5ff 5%, #ffffff 95%);
+  
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.05),
+    0 3px 6px rgba(0, 0, 0, 0.03),
+    inset 0 1px 4px rgba(255, 255, 255, 0.5);
+  
+  margin-bottom: 18px;
+  border-left:6px solid black;
+  /* border-top:2px solid black; */
+  /* border-bottom:2px solid black; */
+  /* border-right:1px solid black; */
+  transition: all 0.4s ease;
+}
+
+.tutor-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.08),
+    0 6px 16px rgba(99, 102, 241, 0.08),
+    inset 0 1px 4px rgba(255, 255, 255, 0.5);
+}
+
+/* AVATAR IMAGE */
+.profile-img{
+  width: 100%;
+  height: 120px;
+  border-radius: 50%;
+  object-fit:cover;
+  border: 4px solid black;
+  box-shadow:0 4px 10px rgba(0, 0, 0, 0.12);
+  transition:.3s;
+}
+
+.tutor-card:hover .profile-img{
+  transform:scale(1.04);
+  box-shadow:0 8px 16px rgba(0,0,0,.15);
+}
+
+/* NAME AND RATING */
+.tutor-name{
+  font-weight:700;
+  font-size:1.2rem;
+}
+
+.rating{
+  color:#0f172a;
+  font-weight:600;
+  font-size:0.95rem;
+}
+
+/* INFO BADGES */
+.info-badge{
+  background:#f1f5f9;
+  padding:5px 8px;
+  border-radius:7px;
+  font-size:0.75rem;
+  margin:2px;
+  border: 1px solid black;
+  display:inline-block;
+}
+
+/* BUTTONS */
+.btn-modern{
+  border-radius:10px;
+  font-weight:600;
+  padding:6px 12px;
+  background-color: white;
+  border: 2px solid black;
+  font-size:0.85rem;
+}
+
+.btn-shortlist{
+  background:linear-gradient(135deg,#16a34a,#22c55e);
+  border:none;
+  color:white;
+  transition:.3s;
+  font-size:0.85rem;
+}
+
+.btn-shortlist:hover{
+  opacity:.9;
+}
+
+.btn-profile, .cv-btn{
+  border-radius:10px;
+  font-size:0.85rem;
+}
+
+/* SHORTLISTED CARD */
+.shortlisted{
+  border:2px solid #075e27;
+  border:4px solid rgb(37, 139, 42);
+  background:linear-gradient(135deg,  #a3ffc5, rgb(255, 255, 255) );
+  box-shadow:
+    0 10px 30px rgba(22,163,74,.25),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+/* CONTAINER PADDING */
+#profilesContainer {
+  padding-top: 140px; /* filter-bar height + spacing */
+  margin-top:20px;
+}
+/* =========================
+   RESPONSIVENESS FIXES
+   ========================= */
+
+/* Make container flexible */
+.tutor-card {
+  width: 70%;
+  max-width: 1100px;
+}
+
+/* Profile image scales */
+.profile-img {
+  height: 100px;
+}
+
+/* Mobile screens */
+@media (max-width: 768px) {
+
+  /* ✅ Push content clearly below filter bar */
+  #profilesContainer {
+    padding-top: 200px; /* increased spacing */
+  }
+
+  /* ✅ Compact filter bar */
+  .filter-bar {
+    width: 88%;
+    padding: 6px 8px;
+    border-radius: 10px;
+  }
+
+  .sort-select {
+    font-size: 0.7rem;
+    padding: 4px 6px;
+  }
+
+  .filter-btn {
+    font-size: 0.7rem;
+    padding: 5px;
+  }
+
+  /* ✅ Smaller, centered cards */
+  .tutor-card {
+    width: 60%;
+    min-width: 260px;
+    margin: 0 auto 14px auto;
+    padding: 10px;
+  }
+
+  /* ✅ Fix image size */
+  .profile-img {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 8px auto;
+    display: block;
+  }
+
+  /* ✅ Force clean stacking */
+  .tutor-card .col-md-2,
+  .tutor-card .col-md-7,
+  .tutor-card .col-md-3 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  /* ✅ Typography scaled down */
+  .tutor-name {
+    font-size: 0.9rem;
+  }
+
+  .rating {
+    font-size: 0.7rem;
+  }
+
+  .info-badge {
+    font-size: 0.6rem;
+    padding: 3px 5px;
+  }
+
+  /* ✅ Buttons compact */
+  .btn-modern,
+  .btn-shortlist {
+    font-size: 0.7rem;
+    padding: 4px 6px;
+  }
+
+  .col-md-3 .btn {
+    width: 100%;
+  }
+}

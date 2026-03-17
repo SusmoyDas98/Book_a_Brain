@@ -1,60 +1,117 @@
-/* Navbar Container */
-.navbar-custom{
-  background:white;
-  border-bottom:1px solid #e2e8f0;
-  box-shadow:0 10px 25px rgba(0,0,0,.05);
-  padding:12px 0;
+/* --- Navbar Main Container --- */
+.navbar-custom {
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, .05);
+  padding: 10px 0;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
 }
 
-/* Flex layout for navbar */
-.navbar-container{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+/* Ensure the inner container uses flex to push items apart */
+.navbar-custom .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Logo on left, everything else on right */
+  width: 100%;
 }
 
-/* Logo */
-.navbar-brand-custom img{
-  height:40px;
-  display:block;
+/* --- Logo Styling --- */
+.navbar-custom a img {
+  display: block;
+  height: 40px;
 }
 
-/* Right side buttons container */
-.navbar-actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
+/* --- Right Side Action Group --- */
+/* This container holds both the buttons and the profile pic */
+.navbar-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Space between the button set and the profile pic */
 }
 
-/* Search Tutors Button */
-.btn-tutor-search{
-  background:white;
-  border:1px solid #e2e8f0;
-  color:#1e293b;
-  font-weight:500;
-  padding:7px 16px;
-  border-radius:10px;
-  transition:all 0.2s ease;
+.navbar-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Space between Search and Upgrade buttons */
 }
 
-.btn-tutor-search:hover{
-  background:#f8fafc;
-  border-color:#cbd5e1;
+/* --- Search Tutors Button (White/Grey) --- */
+.btn-tutor_search {
+  background: white;
+  /* border: 1px solid #e2e8f0; */
+  color: #1e293b;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
 }
 
-/* Upgrade Button */
-.btn-upgrade{
-  background:linear-gradient(135deg,#f59e0b,#fbbf24);
-  border:none;
-  color:white;
-  font-weight:700;
-  border-radius:12px;
-  padding:8px 18px;
-  box-shadow:0 6px 16px rgba(245,158,11,.4);
-  transition:all .2s ease;
+.btn-tutor_search:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+  text-decoration: none;
 }
 
-.btn-upgrade:hover{
-  transform:translateY(-1px);
-  box-shadow:0 8px 18px rgba(245,158,11,.5);
+/* --- Upgrade Button (Gold Gradient) --- */
+.btn-upgrade {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  border: none;
+  color: white;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 9px 20px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, .3);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-upgrade:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, .45);
+  color: white;
+  filter: brightness(1.05);
+}
+
+/* --- Profile Avatar --- */
+.profile-avatar-link {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.profile-avatar-link img {
+  height: 42px;
+  width: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f1f5f9;
+  transition: border-color 0.2s ease;
+}
+
+.profile-avatar-link:hover img {
+  border-color: #f59e0b; /* Highlights with the upgrade color on hover */
+}
+
+/* --- Responsive Reset --- */
+@media (max-width: 991px) {
+  .navbar-buttons {
+    gap: 8px;
+  }
+  .btn-tutor_search, .btn-upgrade {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
 }

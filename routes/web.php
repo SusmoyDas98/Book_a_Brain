@@ -33,3 +33,5 @@ Route::get('/tutor_search', [Page_Redirection_Controller::class, 'tutor_search_p
 Route::get('/tutor_profile/{id}', [Page_Redirection_Controller::class, 'tutor_profile_page'])->name('tutor_profile_redirect')->middleware(ValidUser::class);
 
 Route::get('/tutor_message/{id}', [Page_Redirection_Controller::class, 'tutor_message_page'])->name('tutor_message_redirect')->middleware(ValidUser::class);
+
+Route::get('/post_response', [Page_Redirection_Controller::class, 'post_response_page'])->name('post_response_redirect')->middleware(ValidUser::class);

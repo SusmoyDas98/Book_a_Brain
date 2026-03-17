@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\JobPostResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TutorProfile;
+use App\Models\Tutor;
 
 class Page_Redirection_Controller extends Controller
 {
@@ -24,5 +27,11 @@ class Page_Redirection_Controller extends Controller
     }
     public function tutor_message_page($id){
         return "Tutor Message Page for Tutor ID:" . $id;
+    }
+    public function post_response_page(){
+        $guardian_id =  "36";
+        $tutorInfos = JobPostResponse::query()->where('guardian_id', $guardian_id)->get();
+        // return $tutorInfos;
+        return view('post_response', compact('tutorInfos'));
     }
 }
