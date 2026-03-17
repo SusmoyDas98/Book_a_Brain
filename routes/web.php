@@ -66,7 +66,9 @@ Route::middleware(['auth'])->group(function () {
         return 'Dashboard coming soon.';
     })->name('dashboard');
 });
-
+Route::get('/login', function () {
+    return redirect()->route('login_or_signup_page_redirect');
+})->name('login');
 Route::get('/dev/profile-preview', function () {
     Auth::login(User::first());
     return redirect('/profile');

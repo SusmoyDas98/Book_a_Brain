@@ -102,23 +102,23 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="bab-label">Teaching Method</label>
-                            <input type="text" name="teaching_method" value="{{ old('teaching_method', optional($tutorProfile)->teaching_method) }}" class="bab-input">
+                            <input type="text" name="teaching_method" value="{{ old('teaching_method', is_array(optional($tutorProfile)->teaching_method) ? implode(', ', $tutorProfile->teaching_method) : optional($tutorProfile)->teaching_method) }}" class="bab-input">
                         </div>
                         <div class="col-md-6">
                             <label class="bab-label">Availability</label>
-                            <input type="text" name="availability" value="{{ old('availability', optional($tutorProfile)->availability) }}" class="bab-input">
+                            <input type="text" name="availability" value="{{ old('availability', is_array(optional($tutorProfile)->availability) ? implode(', ', $tutorProfile->availability) : optional($tutorProfile)->availability) }}" class="bab-input">
                         </div>
                         <div class="col-md-6">
                             <label class="bab-label">Preferred Mediums</label>
-                            <input type="text" name="preferred_mediums" value="{{ old('preferred_mediums', optional($tutorProfile)->preferred_mediums) }}" class="bab-input">
+                            <input type="text" name="preferred_mediums" value="{{ old('preferred_mediums', is_array(optional($tutorProfile)->preferred_mediums) ? implode(', ', $tutorProfile->preferred_mediums) : optional($tutorProfile)->preferred_mediums) }}" class="bab-input">
                         </div>
                         <div class="col-md-6">
                             <label class="bab-label">Preferred Subjects</label>
-                            <input type="text" name="preferred_subjects" value="{{ old('preferred_subjects', optional($tutorProfile)->preferred_subjects) }}" class="bab-input">
+                            <input type="text" name="preferred_subjects" value="{{ old('preferred_subjects', is_array(optional($tutorProfile)->preferred_subjects) ? implode(', ', $tutorProfile->preferred_subjects) : optional($tutorProfile)->preferred_subjects) }}" class="bab-input">
                         </div>
                         <div class="col-md-6">
                             <label class="bab-label">Expected Salary (৳)</label>
-                            <input type="text" name="expected_salary" value="{{ old('expected_salary', optional($tutorProfile)->expected_salary) }}" class="bab-input">
+                            <input type="text" name="expected_salary" value="{{ old('expected_salary', is_array(optional($tutorProfile)->expected_salary) ? '' : optional($tutorProfile)->expected_salary) }}" class="bab-input">
                         </div>
                     </div>
                 </div>
@@ -127,11 +127,11 @@
                     <p class="bab-section-title"><i class="bi bi-mortarboard me-2" style="color:#6366f1;"></i>Background</p>
                     <div class="mb-3">
                         <label class="bab-label">Educational Institutions</label>
-                        <textarea name="educational_institutions" rows="3" class="bab-input">{{ old('educational_institutions', optional($tutorProfile)->educational_institutions) }}</textarea>
+                        <textarea name="educational_institutions" rows="3" class="bab-input">{{ old('educational_institutions', is_array(optional($tutorProfile)->educational_institutions) ? implode(', ', $tutorProfile->educational_institutions) : optional($tutorProfile)->educational_institutions) }}</textarea>
                     </div>
                     <div>
                         <label class="bab-label">Work Experience</label>
-                        <textarea name="work_experience" rows="3" class="bab-input">{{ old('work_experience', optional($tutorProfile)->work_experience) }}</textarea>
+                        <textarea name="work_experience" rows="3" class="bab-input">{{ old('work_experience', is_array(optional($tutorProfile)->work_experience) ? implode(', ', $tutorProfile->work_experience) : optional($tutorProfile)->work_experience) }}</textarea>
                     </div>
                 </div>
 
