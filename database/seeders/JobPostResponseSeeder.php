@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use App\Models\Guardian;
 use App\Models\JobPostResponse;
-use App\Models\TutorProfile;
 use App\Models\Tutor;
+use App\Models\TutorProfile;
+use Illuminate\Database\Seeder;
 
 class JobPostResponseSeeder extends Seeder
 {
@@ -14,6 +15,8 @@ class JobPostResponseSeeder extends Seeder
         // Get all tutors and tutor profiles
         $tutorProfiles = TutorProfile::all();
         $tutors = Tutor::all()->keyBy('tutor_id'); // key by tutor_id for easy lookup
+        $guardians = Guardian::all(); // key by guardian id
+
 
         foreach ($tutorProfiles as $profile) {
             // Get corresponding tutor rating
@@ -21,7 +24,7 @@ class JobPostResponseSeeder extends Seeder
             $gender = $tutors[$profile->tutor_id]->gender ?? "not specified";
 
             JobPostResponse::create([
-                'guardian_id' => rand(1, 50), // random guardian id
+                'guardian_id' => $guardians->random()->id,
                 'tutor_id' => $profile->tutor_id,
                 'tutor_profile_pic' => $profile->profile_picture,
                 'tutor_name' => $profile->name,

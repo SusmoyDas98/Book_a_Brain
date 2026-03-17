@@ -66,13 +66,19 @@ document.addEventListener('DOMContentLoaded', () => {
             sorted.forEach(card => container.appendChild(card));
         });
     }
-    // Warn if there are unsaved changes
-    window.addEventListener('beforeunload', (e) => {
-        if (!saveBtn.disabled) {
-            e.preventDefault();
-            e.returnValue = ''; // required for most browsers
-        }
-    });
+let isSubmitting = false;
+
+// mark as submitting when form submits
+form.addEventListener('submit', () => {
+    isSubmitting = true;
+});
+
+window.addEventListener('beforeunload', (e) => {
+    if (!isSubmitting && !saveBtn.disabled) {
+        e.preventDefault();
+        e.returnValue = ''; // required for most browsers
+    }
+});
     // ✅ Filter: Show shortlisted only
     window.showShortlisted = () => {
         container.querySelectorAll('.tutor-card').forEach(card => {

@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             TutorSeeder::class,
             TutorProfileSeeder::class,       
+            GuardianSeeder::class,
             JobPostResponseSeeder::class,     
         ]);
         

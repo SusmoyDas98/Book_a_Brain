@@ -29,7 +29,7 @@ class Page_Redirection_Controller extends Controller
         return "Tutor Message Page for Tutor ID:" . $id;
     }
     public function post_response_page(){
-        $guardian_id =  "22";
+        $guardian_id =  Auth::id();
         $tutorInfos = JobPostResponse::query()->where('guardian_id', $guardian_id)->get();
         // return $tutorInfos;
         return view('post_response', compact('tutorInfos', 'guardian_id'));

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('guardians', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
+            $table->foreignId('guardian_id')->unique()->constrained('users')->onDelete('cascade');
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('contact_no', 20)->nullable();

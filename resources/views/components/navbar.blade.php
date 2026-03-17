@@ -13,6 +13,9 @@
                 <a href="{{route('tutor_search_redirect')}}" class="btn btn-tutor-search">
                     Search Tutors
                 </a>
+                <a href="{{route('post_response_redirect')}}" class="btn btn-tutor-search">
+                    Post Respone
+                </a>                
             @endif
 
             <button class="btn btn-upgrade">
