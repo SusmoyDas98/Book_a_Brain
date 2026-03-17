@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('contact_no', 20)->nullable();
+            $table->string('gender', 20)->nullable();
 
             // CV path
             $table->text('cv')->nullable();
