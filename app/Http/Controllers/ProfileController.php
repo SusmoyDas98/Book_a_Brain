@@ -128,10 +128,10 @@ class ProfileController extends Controller
             $guardian->user_id            = $user->id;
             $guardian->gender             = $request->gender;
             $guardian->address            = $request->address;
-            $guardian->latitude           = $request->latitude;
-            $guardian->longitude          = $request->longitude;
-            $guardian->number_of_children = $request->number_of_children;
-            $guardian->preferred_subjects = $request->preferred_subjects;
+            $guardian->location = [
+                'lat' => $request->lat,
+                'lng' => $request->lng,
+            ];
             $guardian->save();
         }
 
@@ -204,13 +204,14 @@ class ProfileController extends Controller
         $fields = [
             $user->name,
             $user->email,
+            optional($guardian)->name,
+            optional($guardian)->email,
+            optional($guardian)->contact_no,
             optional($guardian)->gender,
             optional($guardian)->profile_picture,
+            optional($guardian)->nid_card,
             optional($guardian)->address,
-            optional($guardian)->latitude,
-            optional($guardian)->longitude,
-            optional($guardian)->number_of_children,
-            optional($guardian)->preferred_subjects,
+            optional($guardian)->location,
         ];
 
         $filled = collect($fields)->filter(fn($v) => !is_null($v) && $v !== '')->count();

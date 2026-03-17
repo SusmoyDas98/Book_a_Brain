@@ -8,12 +8,16 @@ class Guardian extends Model
 {
     protected $fillable = [
         'user_id',
+        'name',        
+        'email',       
+        'contact_no',  
         'gender',
         'profile_picture',
+        'nid_card',    
         'address',
-        'latitude',
-        'longitude',
-        'number_of_children',
-        'preferred_subjects'  
+        'location',
+    ];
+    protected $casts = [
+        'location' => 'array',
     ];
 }

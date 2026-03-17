@@ -6,14 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('verification_documents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tutor_id')->constrained('tutors')->onDelete('cascade');
+            $table->foreignId('tutor_id')->constrained('users')->onDelete('cascade');
             $table->enum('doc_type', ['NID', 'OCCUPATION_CARD']);
             $table->string('file_path');
             $table->string('status')->default('PENDING');
@@ -24,9 +21,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('verification_documents');
