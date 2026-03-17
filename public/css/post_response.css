@@ -3,10 +3,10 @@
   --brand-primary:#6366f1;
   --brand-dark:#0f172a;
   --success:#16a34a;
+  --danger:#ef4444;
   --gold:#f59e0b;
 }
 
-/* BODY */
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     color: var(--brand-dark);
@@ -40,29 +40,6 @@ body {
     text-rendering: optimizeLegibility;
 }
 
-/* NAVBAR
-/* .navbar-custom{
-  background:white;
-  border-bottom:1px solid #e2e8f0;
-  box-shadow:0 8px 20px rgba(0,0,0,.05);
-  padding:10px 0;
-} */ */
-
-.profile-btn img{
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  object-fit:cover;
-  cursor:pointer;
-  border:2px solid #000000;
-  transition:.3s;
-}
-
-.profile-btn img:hover{
-  border-color:var(--brand-primary);
-  transform:scale(1.05);
-}
-
 /* FILTER BAR */
 .filter-bar{
   background: rgb(1, 55, 97);
@@ -78,7 +55,9 @@ body {
   z-index: 1000;
   width: 90%;
   max-width: 1200px;
-  margin-top:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 .sort-select{
@@ -95,10 +74,51 @@ body {
   font-weight:600;
   font-size:0.85rem;
 }
+.filter-btn:hover{
+  background-color: rgb(23, 246, 242);
+  color:black;
+}
+
+#saveChangesBtn{
+  border-radius:8px;
+  font-weight:600;
+  font-size:0.85rem;
+  background-color: #ff001e;
+  color: white;
+  border: 2px solid #450505;
+  transition: all 0.3s;
+}
+#saveChangesBtn:hover:not(:disabled){
+  background-color: 
+  green;
+  color:rgb(255, 255, 255);
+}
+#saveChangesBtn:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+}
+
+/* CONTAINER FOR PROFILES */
+#profilesContainer{
+  padding-top: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center horizontally */
+  justify-content: center;
+}
+#tutorsForm{
+  /* padding-top: 140px; */
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center horizontally */
+  justify-content: center;
+}
 
 /* PROFILE CARD */
 .tutor-card {
-  width: 80%;
+  width: 70%;
+  /* max-width: 450px; */
   position: relative;
   overflow: hidden;
   border-radius: 20px;
@@ -111,19 +131,13 @@ body {
     inset 0 1px 4px rgba(255, 255, 255, 0.5);
   
   margin-bottom: 18px;
-  border-left:6px solid black;
-  /* border-top:2px solid black; */
-  /* border-bottom:2px solid black; */
-  /* border-right:1px solid black; */
+  border-bottom:6px solid black;
   transition: all 0.4s ease;
 }
 
 .tutor-card:hover {
   transform: translateY(-6px) scale(1.02);
-  box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.08),
-    0 6px 16px rgba(99, 102, 241, 0.08),
-    inset 0 1px 4px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.08), 0 6px 16px rgba(99,102,241,0.08), inset 0 1px 4px rgba(255,255,255,0.5);
 }
 
 /* AVATAR IMAGE */
@@ -137,12 +151,6 @@ body {
   transition:.3s;
 }
 
-.tutor-card:hover .profile-img{
-  transform:scale(1.04);
-  box-shadow:0 8px 16px rgba(0,0,0,.15);
-}
-
-/* NAME AND RATING */
 .tutor-name{
   font-weight:700;
   font-size:1.2rem;
@@ -154,7 +162,6 @@ body {
   font-size:0.95rem;
 }
 
-/* INFO BADGES */
 .info-badge{
   background:#f1f5f9;
   padding:5px 8px;
@@ -183,117 +190,13 @@ body {
   font-size:0.85rem;
 }
 
-.btn-shortlist:hover{
-  opacity:.9;
-}
-
-.btn-profile, .cv-btn{
-  border-radius:10px;
-  font-size:0.85rem;
+.btn-shortlist.remove{
+  background:linear-gradient(135deg,#ef4444,#f87171);
 }
 
 /* SHORTLISTED CARD */
 .shortlisted{
-  border:2px solid #075e27;
   border:4px solid rgb(37, 139, 42);
   background:linear-gradient(135deg,  #a3ffc5, rgb(255, 255, 255) );
-  box-shadow:
-    0 10px 30px rgba(22,163,74,.25),
-    inset 0 1px 0 rgba(255,255,255,0.8);
-}
-
-/* CONTAINER PADDING */
-#profilesContainer {
-  padding-top: 140px; /* filter-bar height + spacing */
-  margin-top:20px;
-}
-/* =========================
-   RESPONSIVENESS FIXES
-   ========================= */
-
-/* Make container flexible */
-.tutor-card {
-  width: 70%;
-  max-width: 1100px;
-}
-
-/* Profile image scales */
-.profile-img {
-  height: 100px;
-}
-
-/* Mobile screens */
-@media (max-width: 768px) {
-
-  /* ✅ Push content clearly below filter bar */
-  #profilesContainer {
-    padding-top: 200px; /* increased spacing */
-  }
-
-  /* ✅ Compact filter bar */
-  .filter-bar {
-    width: 88%;
-    padding: 6px 8px;
-    border-radius: 10px;
-  }
-
-  .sort-select {
-    font-size: 0.7rem;
-    padding: 4px 6px;
-  }
-
-  .filter-btn {
-    font-size: 0.7rem;
-    padding: 5px;
-  }
-
-  /* ✅ Smaller, centered cards */
-  .tutor-card {
-    width: 60%;
-    min-width: 260px;
-    margin: 0 auto 14px auto;
-    padding: 10px;
-  }
-
-  /* ✅ Fix image size */
-  .profile-img {
-    width: 70px;
-    height: 70px;
-    margin: 0 auto 8px auto;
-    display: block;
-  }
-
-  /* ✅ Force clean stacking */
-  .tutor-card .col-md-2,
-  .tutor-card .col-md-7,
-  .tutor-card .col-md-3 {
-    flex: 0 0 100%;
-    max-width: 100%;
-    text-align: center;
-  }
-
-  /* ✅ Typography scaled down */
-  .tutor-name {
-    font-size: 0.9rem;
-  }
-
-  .rating {
-    font-size: 0.7rem;
-  }
-
-  .info-badge {
-    font-size: 0.6rem;
-    padding: 3px 5px;
-  }
-
-  /* ✅ Buttons compact */
-  .btn-modern,
-  .btn-shortlist {
-    font-size: 0.7rem;
-    padding: 4px 6px;
-  }
-
-  .col-md-3 .btn {
-    width: 100%;
-  }
+  box-shadow:0 10px 30px rgba(22,163,74,.25), inset 0 1px 0 rgba(255,255,255,0.8);
 }

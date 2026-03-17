@@ -189,18 +189,13 @@ function showResults() {
         </div>        
     </div>
 
-        <!-- Buttons at bottom -->
-        <div class="d-flex gap-2 mb-2">
-            <a href="/tutor_profile/${t.id}" class="btn btn-outline-primary flex-grow-1 rounded-pill d-flex align-items-center justify-content-center gap-2" title="View Profile">
-                <i class="bi bi-person-circle"></i> View Profile
-            </a>
-            <a href="/direct_message/${t.id}" class="btn btn-primary rounded-pill px-3 d-flex align-items-center justify-content-center" title="Direct Message">
-                <i class="bi bi-chat-dots-fill"></i>
-            </a>
-        </div>
-        <a href="/contracts/hire?tutor_id=${t.id}" class="btn w-100 rounded-pill d-flex align-items-center justify-content-center gap-2"
-            style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:600;border:none;">
-            <i class="bi bi-person-check-fill"></i> Hire
+    <!-- Buttons at bottom -->
+    <div class="d-flex gap-2">
+        <a href="/tutor_profile/${t.id}" class="btn btn-outline-primary flex-grow-1 rounded-pill d-flex align-items-center justify-content-center gap-2" title="View Profile">
+            <i class="bi bi-person-circle"></i> View Profile
+        </a>
+        <a href="/direct_message/${t.id}" class="btn btn-primary rounded-pill px-3 d-flex align-items-center justify-content-center" title="Direct Message">
+            <i class="bi bi-chat-dots-fill"></i>
         </a>
     </div>
 </div>`;

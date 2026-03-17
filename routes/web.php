@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\JobResponseController;
 use App\Http\Controllers\Page_Redirection_Controller;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\ValidUser;
@@ -40,6 +41,11 @@ Route::get('/post_response', [Page_Redirection_Controller::class, 'post_response
 Route::get('/tutor_message/{id}', [Page_Redirection_Controller::class, 'tutor_message_page'])
     ->name('tutor_message_redirect')
     ->middleware(ValidUser::class);
+
+// updates of job response
+Route::patch('update_response', [JobResponseController::class, 'update'])->name('update_response.update');
+
+    // ------ Susmoy -----
 
 Route::middleware(['auth'])->group(function () {
 
