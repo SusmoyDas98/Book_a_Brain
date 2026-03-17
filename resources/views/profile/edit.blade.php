@@ -172,20 +172,30 @@
                             <input type="text" name="address" value="{{ old('address', optional($guardian)->address) }}" class="bab-input">
                         </div>
                         <div class="col-md-6">
+                            <label class="bab-label">Name</label>
+                            <input type="text" name="guardian_name" value="{{ old('guardian_name', optional($guardian)->name) }}" class="bab-input">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="bab-label">Contact No</label>
+                            <input type="text" name="guardian_contact_no" value="{{ old('guardian_contact_no', optional($guardian)->contact_no) }}" class="bab-input">
+                        </div>
+                        <div class="col-md-6">
                             <label class="bab-label">Latitude</label>
-                            <input type="text" name="latitude" value="{{ old('latitude', optional($guardian)->latitude) }}" class="bab-input">
+                            <input type="text" name="lat" value="{{ old('lat', optional($guardian)->location['lat'] ?? '') }}" class="bab-input" placeholder="e.g. 23.8103">
                         </div>
                         <div class="col-md-6">
                             <label class="bab-label">Longitude</label>
-                            <input type="text" name="longitude" value="{{ old('longitude', optional($guardian)->longitude) }}" class="bab-input">
+                            <input type="text" name="lng" value="{{ old('lng', optional($guardian)->location['lng'] ?? '') }}" class="bab-input" placeholder="e.g. 90.4125">
                         </div>
-                        <div class="col-md-6">
-                            <label class="bab-label">Number of Children</label>
-                            <input type="number" name="number_of_children" value="{{ old('number_of_children', optional($guardian)->number_of_children) }}" class="bab-input">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="bab-label">Preferred Subjects</label>
-                            <input type="text" name="preferred_subjects" value="{{ old('preferred_subjects', optional($guardian)->preferred_subjects) }}" class="bab-input">
+                        <div class="col-12">
+                            <label class="bab-label">Upload NID</label>
+                            <input type="file" name="guardian_nid" accept=".pdf,.jpg,.jpeg,.png" class="bab-file-input">
+                            @if(optional($guardian)->nid_card)
+                                <a href="{{ asset('storage/' . $guardian->nid_card) }}" target="_blank"
+                                style="color:#6366f1;font-size:0.8rem;margin-top:0.4rem;display:inline-block;">
+                                    <i class="bi bi-file-earmark me-1"></i>Current NID ↗
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>

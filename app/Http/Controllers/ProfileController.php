@@ -70,6 +70,7 @@ class ProfileController extends Controller
             'cv'                  => 'nullable|mimes:pdf|max:2048',
             'nid_document'        => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
             'occupation_document' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
+            'guardian_nid'        => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         $user->name  = $request->name;
@@ -125,13 +126,19 @@ class ProfileController extends Controller
                     ->store('profile_pictures', 'public');
             }
 
-            $guardian->user_id            = $user->id;
-            $guardian->gender             = $request->gender;
-            $guardian->address            = $request->address;
-            $guardian->location = [
+            $guardian->user_id    = $user->id;
+            $guardian->name       = $request->guardian_name;
+            $guardian->contact_no = $request->guardian_contact_no;
+            $guardian->gender     = $request->gender;
+            $guardian->address    = $request->address;
+            $guardian->location   = [
                 'lat' => $request->lat,
                 'lng' => $request->lng,
             ];
+            if ($request->hasFile('guardian_nid')) {
+                $guardian->nid_card = $request->file('guardian_nid')
+                    ->store('nid_uploads', 'public');
+            }
             $guardian->save();
         }
 

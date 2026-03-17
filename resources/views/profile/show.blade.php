@@ -210,12 +210,28 @@
                                 <p class="bab-meta-value">{{ optional($guardian)->address ?: '—' }}</p>
                             </div>
                             <div class="col-md-6">
-                                <p class="bab-meta-label">Number of Children</p>
-                                <p class="bab-meta-value">{{ optional($guardian)->number_of_children ?: '—' }}</p>
+                                <p class="bab-meta-label">Contact No</p>
+                                <p class="bab-meta-value">{{ optional($guardian)->contact_no ?: '—' }}</p>
                             </div>
                             <div class="col-md-6">
-                                <p class="bab-meta-label">Preferred Subjects</p>
-                                <p class="bab-meta-value">{{ optional($guardian)->preferred_subjects ?: '—' }}</p>
+                                <p class="bab-meta-label">Location</p>
+                                <p class="bab-meta-value">
+                                    @if(optional($guardian)->location)
+                                        {{ $guardian->location['lat'] ?? '—' }}, {{ $guardian->location['lng'] ?? '—' }}
+                                    @else
+                                        —
+                                    @endif
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="bab-meta-label">NID</p>
+                                @if(optional($guardian)->nid_card)
+                                    <a href="{{ asset('storage/' . $guardian->nid_card) }}" target="_blank" style="color:#6366f1;font-size:0.9rem;">
+                                        <i class="bi bi-file-earmark me-1"></i>View NID ↗
+                                    </a>
+                                @else
+                                    <p class="bab-meta-value">—</p>
+                                @endif
                             </div>
                         </div>
                     </div>
