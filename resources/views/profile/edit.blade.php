@@ -7,12 +7,22 @@
 
         {{-- Page Header --}}
         <div class="mb-4">
-            <p style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.3em;color:#6366f1;font-weight:600;">Book-a-Brain</p>
+            <a href="{{ route('landing_page') }}" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.3em;color:#6366f1;font-weight:600;text-decoration:none;">Book-a-Brain</a>
             <h1 style="color:#0f172a;font-size:2rem;font-weight:700;margin-top:0.3rem;margin-bottom:0.4rem;">Refine Your Profile</h1>
             <p style="color:#64748b;">Update your details to maintain a polished and verified presence.</p>
         </div>
-
+        {{-- WARNING MESSAGE --}}
+        @if($completionPercentage < 100 && strtolower($user->role) === 'tutor')
+            <div class="mb-3 px-4 py-3" style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:16px;">
+                <p style="color:#6366f1;font-weight:700;margin:0;font-size:0.88rem;">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Complete your profile to <strong>100%</strong> to unlock the dashboard and find tutoring jobs.
+                    Currently at <strong>{{ $completionPercentage }}%</strong>.
+                </p>
+            </div>
+        @endif
         {{-- COMPLETION BAR --}}
+
         <div class="bab-card mb-4">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.25em;color:#6366f1;font-weight:600;">

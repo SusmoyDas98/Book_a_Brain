@@ -38,6 +38,10 @@ return new class extends Migration
 
             // expected salary
             $table->decimal('expected_salary', 10, 2)->nullable();
+            // verification
+            $table->enum('verification_status', ['PENDING', 'APPROVED', 'REJECTED'])->default('PENDING');
+            $table->text('rejection_reason')->nullable();
+            $table->timestamp('verified_at')->nullable();
 
             $table->timestamps();
 

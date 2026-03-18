@@ -11,7 +11,12 @@ class AuthController extends Controller
     public function store(Request $request)
     {
         $action = $request->input('action_type');
-
+        if ($action === 'logout') {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('landing_page');
+        }
         if ($action === 'login') {
             $credentials = $request->validate([
                 'email'    => 'required|email',

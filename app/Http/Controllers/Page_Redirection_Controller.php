@@ -23,10 +23,13 @@ class Page_Redirection_Controller extends Controller
         return view('tutor_search');
     }
     public function tutor_profile_page($id){
-        return "Tutor Profile Page for Tutor ID:" . $id;
+        $tutor        = \App\Models\Tutor::where('tutor_id', $id)->firstOrFail();
+        $tutorProfile = \App\Models\TutorProfile::where('tutor_id', $id)->firstOrFail();
+        return view('tutor_profile', compact('tutor', 'tutorProfile'));
     }
     public function tutor_message_page($id){
-        return "Tutor Message Page for Tutor ID:" . $id;
+
+    return "Tutor Message Page for Tutor ID:" . $id;
     }
     public function post_response_page(){
         $guardian_id =  Auth::id();

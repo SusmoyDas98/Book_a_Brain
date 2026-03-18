@@ -155,7 +155,10 @@ function showResults() {
         return `
 <div class="tutor-card d-flex flex-column" style="min-height: 400px;">
     ${profileImageHtml}
-    <h5 class="fw-bold mb-1">${t.name}</h5>
+    <h5 class="fw-bold mb-1">
+        ${t.name}
+        ${t.verification_status === 'APPROVED' ? `<span style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;border-radius:999px;font-size:0.65rem;font-weight:700;padding:2px 10px;display:inline-flex;align-items:center;gap:4px;vertical-align:middle;margin-left:6px;"><i class="bi bi-patch-check-fill"></i> Verified</span>` : ''}
+    </h5>
     <p class="text-muted small mb-3">
       <i class="bi bi-mortarboard-fill me-1"></i>
       ${t.educational_institutions?.university || 'Not Specified'}

@@ -109,6 +109,10 @@ class ProfileController extends Controller
                      'status' => 'PENDING', 'review_note' => null]
                 );
             }
+            // Reset verification status to PENDING when new docs uploaded
+            if ($request->hasFile('nid_document') || $request->hasFile('occupation_document')) {
+                \App\Http\Controllers\VerificationController::resetToPending($user->id);
+            }
             if ($request->hasFile('occupation_document')) {
                 VerificationDocument::updateOrCreate(
                     ['tutor_id' => $user->id, 'doc_type' => 'OCCUPATION_CARD'],

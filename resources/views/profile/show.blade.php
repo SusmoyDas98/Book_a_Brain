@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<x-navbar/>
 
 {{-- TOP BANNER --}}
 <div style="background: rgba(255,255,255,0.6); border-bottom: 1px solid #1e293b; padding: 2.5rem 0 2rem;">
@@ -37,7 +38,7 @@
             @endif
         </div>
 
-        <p style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.3em; color: #6366f1; font-weight: 600;">Book-a-Brain</p>
+        <a href="{{ route('landing_page') }}" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.3em; color: #6366f1; font-weight: 600; text-decoration: none;">Book-a-Brain</a>
         <h1 style="color: #0f172a; font-size: 2rem; font-weight: 700; margin-top: 0.3rem; margin-bottom: 0.4rem;">Your Academic Profile</h1>
         <p style="color: #64748b; max-width: 520px; margin: 0;">Manage your identity, academic depth, and professional presence.</p>
     </div>
@@ -73,6 +74,25 @@
                     <span style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2em;color:#6366f1;font-weight:600;">
                         {{ $user->role }}
                     </span>
+                    
+
+                    {{-- VERIFICATION BADGE --}}
+                    @if(strtolower($user->role) === 'tutor' && optional($tutorProfile)->verification_status === 'APPROVED')
+                        <div class="mt-2">
+                            <span style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;border-radius:999px;font-size:0.72rem;font-weight:700;padding:4px 14px;display:inline-flex;align-items:center;gap:5px;box-shadow:0 4px 12px rgba(99,102,241,0.3);">
+                                <i class="bi bi-patch-check-fill"></i> Verified Tutor
+                            </span>
+                        </div>
+                    @elseif(strtolower($user->role) === 'tutor' && optional($tutorProfile)->verification_status === 'REJECTED')
+                        <div class="mt-2">
+                            <span style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:999px;font-size:0.72rem;font-weight:700;padding:4px 14px;display:inline-flex;align-items:center;gap:5px;">
+                                <i class="bi bi-x-circle"></i> Documents Rejected — Please re-upload
+                            </span>
+                            @if(optional($tutorProfile)->rejection_reason)
+                                <p style="color:#ef4444;font-size:0.78rem;margin-top:0.4rem;">Reason: {{ $tutorProfile->rejection_reason }}</p>
+                            @endif
+                        </div>
+                    @endif
 
                     <hr style="border-color:#e2e8f0;margin:1.25rem 0;">
 
@@ -96,10 +116,16 @@
                         </p>
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-4 d-flex flex-column gap-2">
                         <a href="{{ route('profile.edit') }}" class="bab-btn-primary w-100 text-center">
                             <i class="bi bi-pencil me-2"></i>Edit Profile
                         </a>
+                        @if($completionPercentage >= 100)
+                            <a href="{{ route('dashboard') }}" class="bab-btn-primary w-100 text-center"
+                            style="background:linear-gradient(135deg,#6366f1,#4f46e5);">
+                                <i class="bi bi-speedometer2 me-2"></i>Go to Dashboard
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>

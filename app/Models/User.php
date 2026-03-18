@@ -39,4 +39,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-}
+    public function tutorProfile()
+        {
+            return $this->hasOne(TutorProfile::class, 'tutor_id');
+        }
+
+        public function guardian()
+        {
+            return $this->hasOne(Guardian::class, 'guardian_id');
+        }
+    }

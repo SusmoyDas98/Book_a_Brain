@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\TuitionContractController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('landing_page');
@@ -70,10 +73,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/contracts/{contract}/end',     [TuitionContractController::class, 'end'])->name('contracts.end');
     Route::post('/contracts/{contract}/notes',   [TuitionContractController::class, 'updateNotes'])->name('contracts.notes');
     Route::post('/session-logs/{sessionLog}/note', [TuitionContractController::class, 'guardianNote'])->name('contracts.guardian_note');
-
+    Route::post('/admin/verify/{tutorId}/approve', [VerificationController::class, 'approve'])->name('admin.verify.approve');
+    Route::post('/admin/verify/{tutorId}/reject',  [VerificationController::class, 'reject'])->name('admin.verify.reject');
     Route::get('/dashboard', function () {
         return 'Dashboard coming soon.';
     })->name('dashboard');
+    Route::get('/admin/tutors',    function() { return view('admin.tutors'); })->name('admin.tutors');
+    Route::get('/admin/guardians', function() { return view('admin.guardians'); })->name('admin.guardians');
+    Route::get('/admin/contracts', function() { return view('admin.contracts'); })->name('admin.contracts');
+    Route::post('/admin/contracts/{contract}/payment', function(\App\Models\TuitionContract $contract, \Illuminate\Http\Request $request) {
+        $contract->update(['is_paid' => $request->is_paid]);
+        return back()->with('success', 'Payment status updated.');
+    })->name('admin.contract.payment');
 });
 Route::get('/login', function () {
     return redirect()->route('login_or_signup_page_redirect');
@@ -82,3 +93,4 @@ Route::get('/dev/profile-preview', function () {
     Auth::login(User::first());
     return redirect('/profile');
 });
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

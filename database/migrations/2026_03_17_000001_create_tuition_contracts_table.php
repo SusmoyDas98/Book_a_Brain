@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('guardian_notes')->nullable();
             $table->text('tutor_notes')->nullable();
             $table->timestamp('ended_at')->nullable();
+            $table->boolean('is_paid')->default(false);
             $table->timestamps();
         });
     }
