@@ -110,25 +110,94 @@
                 <div class="bab-card">
                     <p class="bab-section-title"><i class="bi bi-journal-text me-2" style="color:#6366f1;"></i>Teaching Details</p>
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <label class="bab-label">Teaching Method</label>
                             <input type="text" name="teaching_method" value="{{ old('teaching_method', is_array(optional($tutorProfile)->teaching_method) ? implode(', ', $tutorProfile->teaching_method) : optional($tutorProfile)->teaching_method) }}" class="bab-input">
-                        </div>
+                        </div> --}}
+                        <div class="col-md-6">
+                            <label class="bab-label">Teaching Method</label>
+                        
+                            <div style="margin-top: 8px; color: #000; font-weight: 500;">
+                            
+                                <label style="margin-right: 15px;">
+                                    <input 
+                                        type="checkbox" 
+                                        name="teaching_method[]" 
+                                        value="online"
+                                        {{ in_array('online', old('teaching_method', is_array(optional($tutorProfile)->teaching_method) ? $tutorProfile->teaching_method : (optional($tutorProfile)->teaching_method ? explode(',', $tutorProfile->teaching_method) : []))) ? 'checked' : '' }}
+                                        style="accent-color: #000;"
+                                    >
+                                    Online
+                                </label>
+                            
+                                <label>
+                                    <input 
+                                        type="checkbox" 
+                                        name="teaching_method[]" 
+                                        value="in_person"
+                                        {{ in_array('in_person', old('teaching_method', is_array(optional($tutorProfile)->teaching_method) ? $tutorProfile->teaching_method : (optional($tutorProfile)->teaching_method ? explode(',', $tutorProfile->teaching_method) : []))) ? 'checked' : '' }}
+                                        style="accent-color: #000;"
+                                    >
+                                    In Person
+                                </label>
+                            
+                            </div>
+                        </div>                        
                         <div class="col-md-6">
                             <label class="bab-label">Availability</label>
-                            <input type="text" name="availability" value="{{ old('availability', is_array(optional($tutorProfile)->availability) ? implode(', ', $tutorProfile->availability) : optional($tutorProfile)->availability) }}" class="bab-input">
+                           <input 
+                            placeholder="e.g. Mon-Fri 6-9pm, Sat 9am-1pm"
+                            type="text" 
+                            name="availability" 
+                            value="{{ old('availability', is_array(optional($tutorProfile)->availability) ? implode(', ', $tutorProfile->availability) : optional($tutorProfile)->availability) }}" 
+                            class="bab-input"
+                        >
                         </div>
+                        {{-- <div class="col-md-6">
+                            <label class="bab-label">Preferred Mediums</label>
+                            <input placeholder="use comma (',') to separate" type="text" name="preferred_mediums" value="{{ old('preferred_mediums', is_array(optional($tutorProfile)->preferred_mediums) ? implode(', ', $tutorProfile->preferred_mediums) : optional($tutorProfile)->preferred_mediums) }}" class="bab-input">
+                        </div> --}}
                         <div class="col-md-6">
                             <label class="bab-label">Preferred Mediums</label>
-                            <input type="text" name="preferred_mediums" value="{{ old('preferred_mediums', is_array(optional($tutorProfile)->preferred_mediums) ? implode(', ', $tutorProfile->preferred_mediums) : optional($tutorProfile)->preferred_mediums) }}" class="bab-input">
+                        
+                            <div style="margin-top: 8px; color: #000; font-weight: 500;">
+
+                                <label style="margin-right: 15px;">
+                                    <input 
+                                        type="checkbox" 
+                                        name="preferred_mediums[]" 
+                                        value="Bangla"
+                                        {{ in_array('Bangla', old('preferred_mediums', is_array(optional($tutorProfile)->preferred_mediums) ? $tutorProfile->preferred_mediums : (optional($tutorProfile)->preferred_mediums ? explode(',', $tutorProfile->preferred_mediums) : []))) ? 'checked' : '' }}
+                                        style="accent-color: #000;"
+                                    >
+                                    Bangla
+                                </label>
+                            
+                                <label>
+                                    <input 
+                                        type="checkbox" 
+                                        name="preferred_mediums[]" 
+                                        value="English"
+                                        {{ in_array('English', old('preferred_mediums', is_array(optional($tutorProfile)->preferred_mediums) ? $tutorProfile->preferred_mediums : (optional($tutorProfile)->preferred_mediums ? explode(',', $tutorProfile->preferred_mediums) : []))) ? 'checked' : '' }}
+                                        style="accent-color: #000;"
+                                    >
+                                    English
+                                </label>
+                            
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label class="bab-label">Preferred Subjects</label>
-                            <input type="text" name="preferred_subjects" value="{{ old('preferred_subjects', is_array(optional($tutorProfile)->preferred_subjects) ? implode(', ', $tutorProfile->preferred_subjects) : optional($tutorProfile)->preferred_subjects) }}" class="bab-input">
+                            <input placeholder="use comma (',') to separate"  type="text" name="preferred_subjects" value="{{ old('preferred_subjects', is_array(optional($tutorProfile)->preferred_subjects) ? implode(', ', $tutorProfile->preferred_subjects) : optional($tutorProfile)->preferred_subjects) }}" class="bab-input">
                         </div>
                         <div class="col-md-6">
-                            <label class="bab-label">Expected Salary (৳)</label>
-                            <input type="text" name="expected_salary" value="{{ old('expected_salary', is_array(optional($tutorProfile)->expected_salary) ? '' : optional($tutorProfile)->expected_salary) }}" class="bab-input">
+                            <label class="bab-label">Expected Salary (৳)/hour</label>
+                            <input placeholder="per hour" type="text" name="expected_salary" value="{{ old('expected_salary', is_array(optional($tutorProfile)->expected_salary) ? '' : optional($tutorProfile)->expected_salary) }}" class="bab-input">
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="bab-label">Preferred Classes</label>
+                            <input placeholder="use comma (',') to separate"  type="text" name="preferred_classes" value="{{ old('preferred_classes', is_array(optional($tutorProfile)->preferred_classes) ? implode(', ', $tutorProfile->preferred_classes) : optional($tutorProfile)->preferred_classes) }}" class="bab-input">
                         </div>
                     </div>
                 </div>
@@ -136,13 +205,103 @@
                 <div class="bab-card">
                     <p class="bab-section-title"><i class="bi bi-mortarboard me-2" style="color:#6366f1;"></i>Background</p>
                     <div class="mb-3">
-                        <label class="bab-label">Educational Institutions</label>
-                        <textarea name="educational_institutions" rows="3" class="bab-input">{{ old('educational_institutions', is_array(optional($tutorProfile)->educational_institutions) ? implode(', ', $tutorProfile->educational_institutions) : optional($tutorProfile)->educational_institutions) }}</textarea>
+                        <label class="bab-label">Educational Institution</label>
+                        {{-- <textarea placeholder="If graduated, please mention your graduating institution."  name="educational_institutions" rows="3" class="bab-input">{{ old('educational_institutions', is_array(optional($tutorProfile)->educational_institutions) ? implode(', ', $tutorProfile->educational_institutions) : optional($tutorProfile)->educational_institutions) }}</textarea> --}}
+                        
+                        <div class="mb-3">
+                          <label class="form-label">
+                              🏫 School
+                          </label>
+                          <div class="input-group">
+                              <span class="input-group-text">🏫</span>
+                              <input 
+                                  type="text" 
+                                  name="educational_institutions[School]" 
+                                  class="form-control"                             
+                                  value="{{ old('educational_institutions.School', $tutorProfile->educational_institutions['School'] ??                           '') }}"
+                              >
+                          </div>
+                      </div>
+                      
+                      <div class="mb-3">
+                          <label class="form-label">
+                              🎓 College
+                          </label>
+                          <div class="input-group">
+                              <span class="input-group-text">🎓</span>
+                              <input 
+                                  type="text" 
+                                  name="educational_institutions[College]" 
+                                  class="form-control"                             
+                                  value="{{ old('educational_institutions.College', $tutorProfile->educational_institutions['College'] ??                           '') }}"
+                              >
+                          </div>
+                      </div>
+                      
+                      <div class="mb-3">
+                          <label class="form-label">
+                              🏛️ University
+                          </label>
+                          <div class="input-group">
+                              <span class="input-group-text">🏛️</span>
+                              <input 
+                                  type="text" 
+                                  name="educational_institutions[University]" 
+                                  class="form-control"                             
+                                  value="{{ old('educational_institutions.University', $tutorProfile->educational_institutions['University'] ??                           '') }}"
+                              >
+                          </div>
+                      </div>                                     
                     </div>
+                    {{-- <div>
+                        <label class="bab-label">Work Experience</label>
+                        <textarea placeholder=""  name="work_experience" rows="3" class="bab-input">{{ old('work_experience', is_array(optional($tutorProfile)->work_experience) ? implode(', ', $tutorProfile->work_experience) : optional($tutorProfile)->work_experience) }}</textarea>
+                    </div> --}}
                     <div>
                         <label class="bab-label">Work Experience</label>
-                        <textarea name="work_experience" rows="3" class="bab-input">{{ old('work_experience', is_array(optional($tutorProfile)->work_experience) ? implode(', ', $tutorProfile->work_experience) : optional($tutorProfile)->work_experience) }}</textarea>
+                    
+                        <!-- Radio Options -->
+                        <div style="margin-top: 8px;">
+                        <label style="margin-right: 15px; color: #000; font-weight: 500;">
+                            <input 
+                                type="radio" 
+                                name="work_experience[status]" 
+                                value="unemployed"
+                                onclick="toggleWorkExperience(false, 'Unemployed')"
+                                {{ old('work_experience.status', is_array(optional($tutorProfile)->work_experience) ? ($tutorProfile->work_experience['status'] ?? '') : '') == 'unemployed' ? 'checked' : '' }}
+                                style="accent-color: #000;"
+                            >
+                            Unemployed
+                        </label>
+
+                        <input type="hidden" id="currently_input" name="work_experience[Currently]" value="">
+                             
+                        
+                            <label style="color: #000; font-weight: 500;">
+                                <input 
+                                    type="radio" 
+                                    name="work_experience[status]" 
+                                    value="experienced"
+                                    onclick="toggleWorkExperience(true)"
+                                    {{ old('work_experience.status', optional($tutorProfile)->work_experience['status'] ?? '') == 'experienced' ? 'checked' : '' }}
+                                    style="accent-color: #000;"
+                                >
+                                Has Work Experience
+                            </label>
+                        </div>
+                    
+                        <!-- Work Experience Textarea -->
+                        <div id="workExperienceBox" style="margin-top: 10px; display: none;">
+                            <textarea 
+                                name="work_experience[Currently]" 
+                                rows="3" 
+                                class="bab-input"
+                                placeholder="Describe your current/ work place like 'Position at name_of_institution'..." {{ old('work_experience.Currently', is_array(optional($tutorProfile)->work_experience['Currently'] ?? null) ? implode(', ', $tutorProfile->work_experience['Currently']) : (optional($tutorProfile)->work_experience['Currently'] ?? '')) }}></textarea>
+                            {{-- >{{ old('work_experience', is_array(optional($tutorProfile)->work_experience['Currently']) ? implode(', ', $tutorProfile->work_experience['Currently']) : optional($tutorProfile)->work_experience['Currently']) }}</textarea> --}}
+                        </div>
                     </div>
+
+               
                 </div>
 
                 <div class="bab-card">
@@ -163,7 +322,7 @@
                             <input type="file" name="nid_document" accept=".pdf,.jpg,.jpeg,.png" class="bab-file-input">
                         </div>
                         <div class="col-12">
-                            <label class="bab-label">Upload Occupation Verification Card</label>
+                            <label class="bab-label">Upload Occupation Verification/ Student Id (if student) Card</label>
                             <input type="file" name="occupation_document" accept=".pdf,.jpg,.jpeg,.png" class="bab-file-input">
                         </div>
                     </div>
@@ -248,5 +407,20 @@
                     </form>
                 </div>
             </div>
-
+            <script>
+                function toggleWorkExperience(isExperienced, value = '') {
+                    document.getElementById('currently_input').value = value;
+                }                
+                function toggleWorkExperience(show) {
+                    document.getElementById('workExperienceBox').style.display = show ? 'block' : 'none';
+                }
+            
+                // On page load: show textarea if "experienced" is selected
+                document.addEventListener("DOMContentLoaded", function () {
+                    const selected = document.querySelector('input[name="work_status"]:checked');
+                    if (selected && selected.value === 'experienced') {
+                        toggleWorkExperience(true);
+                    }
+                });
+            </script>     
             @endsection

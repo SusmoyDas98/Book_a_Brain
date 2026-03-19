@@ -99,13 +99,13 @@
 <x-navbar/>
 
 <div style="padding: 3rem 0 5rem;">
-<div class="container" style="max-width: 960px;">
+<div class="container" style="max-width: 960px; margin-top:40px;">
 
     <div class="row g-4">
 
         {{-- LEFT: Identity --}}
         <div class="col-lg-4">
-            <div class="profile-card text-center" style="position:sticky;top:2rem;">
+            <div class="profile-card text-center" style="position:fixed;top:4.2rem; width:fix-content; padding-left:60px; padding-right: 60px; paddin-top:20px ;">
 
                 {{-- Profile Picture --}}
                 @php
@@ -265,7 +265,7 @@
                 @if(is_array($edu))
                     <ul style="color:#1e293b;font-size:0.9rem;padding-left:1.25rem;margin-bottom:1rem;">
                         @foreach($edu as $key => $val)
-                            <li><strong>{{ ucfirst($key) }}:</strong> {{ $val }}</li>
+                            <li><strong>{{ ucfirst($key) }}:</strong> <p class = "tag">{{ $val }}</p></li>
                         @endforeach
                     </ul>
                 @else
@@ -275,11 +275,22 @@
                 <p class="meta-label">Work Experience</p>
                 @php $work = optional($tutorProfile)->work_experience; @endphp
                 @if(is_array($work))
-                    <ul style="color:#1e293b;font-size:0.9rem;padding-left:1.25rem;margin:0;">
+                    {{-- <ul style="color:#1e293b;font-size:0.9rem;padding-left:1.25rem;margin:0;">
                         @foreach($work as $period => $desc)
                             <li><strong>{{ $period }}:</strong> {{ $desc }}</li>
                         @endforeach
-                    </ul>
+                    </ul> --}}
+                    @if ($work['status'] != 'unemployed')
+                        <strong>
+                                Job Status:
+                        </strong>
+                              <p class = 'tag'>  {{ $work['Currently']}}</p>
+                    @else
+                        <strong>
+                            Job Status:
+                        </strong>
+                            <p class="tag">Unemployed</p>
+                    @endif
                 @else
                     <p class="meta-value mb-0">{{ $work ?: '—' }}</p>
                 @endif

@@ -141,19 +141,35 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <p class="bab-meta-label">Teaching Method</p>
-                                <p class="bab-meta-value">{{ optional($tutorProfile)->teaching_method ?: '—' }}</p>
+                                <p class="bab-meta-value">
+                                    {{ is_array(optional($tutorProfile)->teaching_method) 
+                                        ? implode(', ', $tutorProfile->teaching_method) 
+                                        : (optional($tutorProfile)->teaching_method ?: '—') 
+                                    }}
+                                </p>
                             </div>
                             <div class="col-md-6">
                                 <p class="bab-meta-label">Availability</p>
-                                <p class="bab-meta-value">{{ optional($tutorProfile)->availability ?: '—' }}</p>
+                                {{-- <p class="bab-meta-value">{{ optional($tutorProfile)->availability ?: '—' }}</p> --}}
+                                @forelse ($tutorProfile->availability as $time)
+                                    <p class="tag">{{$time}}</p>
+                                    
+                                @empty
+                                    
+                                @endforelse
                             </div>
                             <div class="col-md-6">
                                 <p class="bab-meta-label">Preferred Mediums</p>
-                                <p class="bab-meta-value">{{ optional($tutorProfile)->preferred_mediums ?: '—' }}</p>
+                                <p class="bab-meta-value">
+                                    {{ is_array(optional($tutorProfile)->preferred_mediums) 
+                                        ? implode(', ', $tutorProfile->preferred_mediums) 
+                                        : (optional($tutorProfile)->preferred_mediums ?: '—') 
+                                    }}
+                                </p>
                             </div>
                             <div class="col-md-6">
                                 <p class="bab-meta-label">Preferred Subjects</p>
-                                <p class="bab-meta-value">{{ optional($tutorProfile)->preferred_subjects ?: '—' }}</p>
+                                {{-- <p class="bab-meta-value">{{ optional($tutorProfile)->preferred_subjects ?: '—' }}</p> --}}
                             </div>
                             <div class="col-md-6">
                                 <p class="bab-meta-label">Expected Salary</p>
@@ -178,9 +194,39 @@
                     <div class="bab-card">
                         <p class="bab-section-title"><i class="bi bi-mortarboard me-2" style="color:#6366f1;"></i>Background</p>
                         <p class="bab-meta-label">Educational Institutions</p>
-                        <p class="bab-meta-value mb-3">{{ optional($tutorProfile)->educational_institutions ?: '—' }}</p>
+
+                        <p class="bab-meta-value mb-1">
+                            <strong>School:</strong>
+                            {{ $tutorProfile->educational_institutions['School'] ?? '—' }}
+                        </p>
+
+                        <p class="bab-meta-value mb-1">
+                            <strong>College:</strong>
+                            {{ $tutorProfile->educational_institutions['College'] ?? '—' }}
+                        </p>
+
+                        <p class="bab-meta-value mb-3">
+                            <strong>University:</strong>
+                            {{ $tutorProfile->educational_institutions['University'] ?? '—' }}
+                        </p>
                         <p class="bab-meta-label">Work Experience</p>
-                        <p class="bab-meta-value mb-0">{{ optional($tutorProfile)->work_experience ?: '—' }}</p>
+                        {{-- <p class="bab-meta-value mb-0">{{ optional($tutorProfile)->work_experience ?: '—' }}</p> --}}
+                        @isset($tutorProfile->work_experience)
+                            @if ($tutorProfile->work_experience['status'] != 'unemployed')
+                                <strong>
+                                    Job Status:
+                                </strong>
+                                <p class="tag">
+                                    {{$tutorProfile->work_experience['Currently']}}
+                                </p>
+                            @else
+                            <strong>
+                                Job Status:
+                            </strong>
+                            <p class="tag"> Unemployed </p>
+                            @endif
+                        @endisset
+
                     </div>
 
                     {{-- Verification Documents --}}
