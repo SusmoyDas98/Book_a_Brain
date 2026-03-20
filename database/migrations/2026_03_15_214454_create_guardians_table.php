@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('guardians', function (Blueprint $table) {
-            // $table->id();
-            $table->foreignId('guardian_id')->primary()->constrained('users')->onDelete('cascade');
+            $table->id();
+            $table->foreignId('guardian_id')->constrained('users')->onDelete('cascade');
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('contact_no', 20)->nullable();

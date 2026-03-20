@@ -353,14 +353,45 @@
                             <label class="bab-label">Contact No</label>
                             <input type="text" name="guardian_contact_no" value="{{ old('guardian_contact_no', optional($guardian)->contact_no) }}" class="bab-input">
                         </div>
+                        {{-- ------------------------ --}}
                         <div class="col-md-6">
+                            <label for="user_location" class="bab-label">Location</label>
+                            <button type="button" id="select_location" onclick="LocationTaker()" class="bab-input bg-primary text-white fw-bold">
+                                <i class="bi bi-geo-alt"></i>
+                            </button>
+                        
+                            <p id="output">
+                                @if(!empty($guardian->location['latitude']) && !empty($guardian->location['longitude']))
+                                    <br>Selected<b>
+                                @else
+                                    No Location Selected
+                                @endif
+                            </p>
+                        
+                            <div id="map_show">
+                                @if(!empty($guardian->location['latitude']) && !empty($guardian->location['longitude']))
+                                    <iframe
+                                        width="100%"
+                                        {{-- height="400" --}}
+                                        style="border:0"
+                                        loading="lazy"
+                                        src="https://www.google.com/maps?q={{ $guardian->location['latitude'] }},{{ $guardian->location['longitude'] }}&output=embed">
+                                    </iframe>
+                                @endif
+                            </div>
+                        
+                            <input type="hidden" id="lat" name="user_location[latitude]" value="{{ $guardian->location['latitude'] ?? '' }}">
+                            <input type="hidden" id="lon" name="user_location[longitude]" value="{{ $guardian->location['longitude'] ?? '' }}">
+                        </div>
+                        {{-- <div class="col-md-6">
                             <label class="bab-label">Latitude</label>
                             <input type="text" name="lat" value="{{ old('lat', optional($guardian)->location['lat'] ?? '') }}" class="bab-input" placeholder="e.g. 23.8103">
                         </div>
                         <div class="col-md-6">
                             <label class="bab-label">Longitude</label>
                             <input type="text" name="lng" value="{{ old('lng', optional($guardian)->location['lng'] ?? '') }}" class="bab-input" placeholder="e.g. 90.4125">
-                        </div>
+                        </div> --}}
+                        {{-- ------------------------ --}}
                         <div class="col-12">
                             <label class="bab-label">Upload NID</label>
                             <input type="file" name="guardian_nid" accept=".pdf,.jpg,.jpeg,.png" class="bab-file-input">
@@ -413,6 +444,57 @@
                 </div>
             </div>
             <script>
+            function LocationTaker(){
+                const button_selected  = document.getElementById('select_location');
+                const output  = document.getElementById('output');
+                const lat_get = document.getElementById('lat');
+                const long_get = document.getElementById('lon');
+                const map_showing = document.getElementById('map_show');
+                
+            
+                if (!navigator.geolocation){
+                    output.innerText = "Geolocation is not supported";
+                    return;
+                }
+            
+                output.innerText = "Fetching location...";
+            
+                navigator.geolocation.getCurrentPosition(
+                    function(position){
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        // output.innerHTML = "<b>Latitude: </b>" + lat + ", <br><b>Longitude: </b>" + lon;
+                        output.innerHTML = "<br>Selected<b>"
+                        lat_get.value = lat;
+                        long_get.value = lon;
+                        map_showing.innerHTML = `
+                            <iframe
+                                width="100%"
+                                style="border:0"
+                                loading="lazy"
+                                src="https://www.google.com/maps?q=${lat},${lon}&output=embed">
+                            </iframe>
+                        `;
+                    
+
+                    },
+                    function(error){
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                output.innerText = "Permission denied.";
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                output.innerText = "Location unavailable.";
+                                break;
+                            case error.TIMEOUT:
+                                output.innerText = "Request timed out.";
+                                break;
+                            default:
+                                output.innerText = "An error occurred.";
+                        }
+                    }
+                );
+            }
                 function toggleWorkExperience(isExperienced, value = '') {
                     document.getElementById('currently_input').value = value;
                 }                

@@ -285,16 +285,7 @@
                                 <p class="bab-meta-label">Contact No</p>
                                 <p class="bab-meta-value">{{ optional($guardian)->contact_no ?: '—' }}</p>
                             </div>
-                            <div class="col-md-6">
-                                <p class="bab-meta-label">Location</p>
-                                <p class="bab-meta-value">
-                                    @if(optional($guardian)->location)
-                                        {{ $guardian->location['lat'] ?? '—' }}, {{ $guardian->location['lng'] ?? '—' }}
-                                    @else
-                                        —
-                                    @endif
-                                </p>
-                            </div>
+ 
                             <div class="col-md-6">
                                 <p class="bab-meta-label">NID</p>
                                 @if(optional($guardian)->nid_card)
@@ -305,6 +296,22 @@
                                     <p class="bab-meta-value">—</p>
                                 @endif
                             </div>
+                           <div class="col-md-6">
+                                <p class="bab-meta-label">Location</p>
+                                <p class="bab-meta-value">
+                                    @if(optional($guardian)->location)
+                                        <iframe
+                                            width="100%"
+                                            {{-- height="400" --}}
+                                            style="border:0"
+                                            loading="lazy"
+                                            src="https://www.google.com/maps?q={{ optional($guardian)->location['latitude'] }},{{ optional($guardian)->location['longitude'] }}&output=embed">
+                                        </iframe>                                    
+                                    @else
+                                        —
+                                    @endif
+                                </p>
+                            </div>                            
                         </div>
                     </div>
 

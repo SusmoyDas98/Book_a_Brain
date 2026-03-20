@@ -147,7 +147,7 @@ class ProfileController extends Controller
 
         elseif (strtolower($user->role) === 'guardian') {
             $guardian = Guardian::firstOrNew(['guardian_id' => $user->id]);
-
+            // dd($request->user_location);
             //  $guardian = User::firstOrNew(['guardian_id' => $user->id]);
 
             if ($request->hasFile('profile_picture')) {
@@ -161,10 +161,11 @@ class ProfileController extends Controller
             $guardian->email = $request->email;
             $guardian->gender     = $request->gender;
             $guardian->address    = $request->address;
-            $guardian->location   = [
-                'lat' => $request->lat,
-                'lng' => $request->lng,
-            ];
+            // $guardian->location   = [
+            //     'lat' => $request->lat,
+            //     'lng' => $request->lng,
+            // ];
+            $guardian->location = $request->user_location;
             if ($request->hasFile('guardian_nid')) {
                 $guardian->nid_card = $request->file('guardian_nid')
                     ->store('nid_uploads', 'public');
