@@ -84,7 +84,7 @@
       </div>
 
       <div class="d-flex gap-2 mt-3 flex-wrap">
-        <a href="{{ route('job_posts.show', $post) }}"
+        <a href="{{ route('post_response_redirect') }}"
            class="btn btn-outline-dark btn-sm" style="border-radius:10px;font-weight:600">
           <i class="bi bi-people me-1"></i>View Applicants
         </a>

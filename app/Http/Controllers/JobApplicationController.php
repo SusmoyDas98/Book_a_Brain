@@ -41,7 +41,7 @@ class JobApplicationController extends Controller
         }
 
         $validated = $request->validate([
-            'application_message' => 'required|string|min:20|max:500',
+            'application_message' => 'required|string|min:1|max:500',
         ]);
 
         $tutorProfile = TutorProfile::where('tutor_id', Auth::id())->first();

@@ -73,6 +73,7 @@ class JobPostController extends Controller
         }
 
         return view('job_posts.edit', compact('jobPost'));
+        
     }
 
     public function update(Request $request, JobPost $jobPost)

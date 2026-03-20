@@ -12,7 +12,8 @@
             @auth
                 {{-- Role-based nav links --}}
                 @if(strtolower(Auth::user()->role) === 'guardian')
-                    <a href="{{ route('tutor_search_redirect') }}" class="btn btn-tutor-search">Find Tutors</a>
+                    <a href="{{ route('tutor_search_redirect') }}" style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;" class="btn btn-tutor-search">Find Tutors</a>
+                     <a href="{{ route('job_posts.index') }}" style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;" class="btn btn-tutor-search">Post Jobs</a>
                     <a href="{{ route('contracts.guardian') }}" class="btn"
                     style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
                     My Contracts
@@ -26,12 +27,17 @@
                     style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
                     My Contracts
                 </a>
+                <a href="{{ route('jobs.browse') }}" class="btn" id="tutorDashboardLink"
+                    style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
+                    Browse Jobs
+                </a>                
                 <a href="{{ route('dashboard') }}" class="btn" id="tutorDashboardLink"
                     style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
                     Dashboard
                 </a>
                 @elseif(strtolower(Auth::user()->role) === 'admin')
                     <a href="{{ route('dashboard') }}" class="btn btn-tutor-search">Admin Dashboard</a>
+                    
                 @endif
 
                 <button class="btn btn-upgrade">UPGRADE</button>

@@ -105,7 +105,7 @@
 
         {{-- LEFT: Identity --}}
         <div class="col-lg-4">
-            <div class="profile-card text-center" style="position:fixed;top:4.2rem; width:fix-content; padding-left:60px; padding-right: 60px; paddin-top:20px ;">
+            <div class="profile-card text-center" style="position:sticky;top:4.3rem; width:fix-content; padding-left:60px; padding-right: 60px; paddin-bottom:10px ; height: fit-content;">
 
                 {{-- Profile Picture --}}
                 @php

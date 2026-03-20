@@ -49,14 +49,17 @@
     @csrf
     @method('PATCH')
 @forelse ($tutorInfos as $tutorInfo)
-    @php
-        $profilePic = $tutorInfo['tutor_profile_pic'];
-        if (!$profilePic || !file_exists(public_path($profilePic))) {
-            $profilePic = $tutorInfo['gender'] === 'Male' ? asset('images/default_male.png') : asset('images/default_female.png');
-        } else {
-            $profilePic = asset($profilePic);
-        }
-    @endphp
+@php
+    $profilePic = $tutorInfo['tutor_profile_pic'];
+
+    if (!$profilePic || !file_exists(storage_path('app/public/' . $profilePic))) {
+        $profilePic = $tutorInfo['gender'] === 'Male' 
+            ? asset('images/default_male.png') 
+            : asset('images/default_female.png');
+    } else {
+        $profilePic = asset('storage/' . $profilePic);
+    }
+@endphp
 
     <div class="tutor-card {{ $tutorInfo['shortlisted'] ? 'shortlisted' : '' }}"
         data-rating="{{ $tutorInfo['tutor_rating'] }}"
@@ -80,8 +83,15 @@
                 </div>
             </div>
             <div class="ms-3 text-end">
-                <a class="btn btn-outline-dark btn-modern mb-2 w-100" href="{{ $tutorInfo['cv'] }}" target="_blank"><i class="bi bi-eye-fill"></i> View CV</a>
-                <button class="btn btn-outline-primary btn-modern mb-2 w-100"><i class="bi bi-person-circle"></i> View Profile</button>
+                {{-- <a class="btn btn-outline-dark btn-modern mb-2 w-100" href="{{ $data['cv_pdf'] }}" target="_blank"><i class="bi bi-eye-fill"></i> View CV</a> --}}
+               {{-- <a class="btn btn-outline-dark btn-modern mb-2 w-100" 
+                       href="{{ asset('storage/' . $tutorInfo['cv_pdf']) }}" 
+                       target="_blank">
+                       <i class="bi bi-eye-fill"></i> View CV
+                    </a> --}}
+                <a href="{{ url('/tutor_profile/' . $tutorInfo['tutor_id']) }}"   target = '_blank'  class="btn btn-outline-dark btn-modern mb-2 w-100">
+                    <i class="bi bi-person-circle"></i> View Profile
+                </a>
                 <button class="btn btn-outline-secondary btn-modern mb-2 w-100"><i class="bi bi-chat-dots"></i> Message</button>
                 <input 
                     type="hidden" 

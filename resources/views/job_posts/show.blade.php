@@ -70,7 +70,7 @@
 
   {{-- Applicants Section --}}
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fw-bold">Applicants ({{ count($responses) }})</h4>
+    {{-- <h4 class="fw-bold">Applicants ({{ count($responses) }})</h4> --}}
     @if($jobPost->shortlisted_count >= 2)
       <a href="{{ route('post_response_redirect') }}"
          class="btn-success-custom">

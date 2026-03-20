@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Guardian;
 use App\Models\Tutor;
 use App\Models\TutorProfile;
+use App\Models\User;
 use App\Models\VerificationDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -144,8 +145,10 @@ class ProfileController extends Controller
             }
         }
 
-        if (strtolower($user->role) === 'guardian') {
+        elseif (strtolower($user->role) === 'guardian') {
             $guardian = Guardian::firstOrNew(['guardian_id' => $user->id]);
+
+            //  $guardian = User::firstOrNew(['guardian_id' => $user->id]);
 
             if ($request->hasFile('profile_picture')) {
                 $guardian->profile_picture = $request->file('profile_picture')
