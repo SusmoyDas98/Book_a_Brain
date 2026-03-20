@@ -46,7 +46,7 @@
                             $navPic = optional($navProfile)->profile_picture
                                 ? asset('storage/' . $navProfile->profile_picture) : null;
                         } elseif (strtolower($navUser->role) === 'guardian') {
-                            $navGuardian = \App\Models\Guardian::where('user_id', $navUser->id)->first();
+                            $navGuardian = \App\Models\Guardian::where('guardian_id', $navUser->id)->first();
                             $navPic = optional($navGuardian)->profile_picture
                                 ? asset('storage/' . $navGuardian->profile_picture) : null;
                         }
@@ -175,7 +175,7 @@
 @else
 <script>
     function toggleProfileDropdown(e) {
-        e.preventDefault();
+    e.preventDefault
         const d = document.getElementById('profileDropdown');
         d.style.display = d.style.display === 'none' ? 'block' : 'none';
     }

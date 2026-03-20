@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-
+{{-- <x-navbar/> --}}
 @php
     $user             = Auth::user();
-    $guardian         = \App\Models\Guardian::where('user_id', $user->id)->first();
+    $guardian         = \App\Models\Guardian::where('guardian_id', $user->id)->first();
     $activeContracts  = \App\Models\TuitionContract::where('guardian_id', $user->id)->where('status', 'ACTIVE')->with('tutor')->get();
     $pendingContracts = \App\Models\TuitionContract::where('guardian_id', $user->id)->where('status', 'PENDING')->count();
     $totalHired       = \App\Models\TuitionContract::where('guardian_id', $user->id)->whereIn('status', ['ACTIVE','ENDED'])->count();
@@ -12,7 +12,7 @@
 @endphp
 
 <div style="min-height:100vh; padding: 2.5rem 0 5rem;">
-<div class="container" style="max-width:1100px;">
+<div class="container" style="max-width:1100px; margin-top:40px;">
 
     {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">

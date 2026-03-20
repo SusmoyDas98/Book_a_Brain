@@ -92,6 +92,7 @@ public function index(Request $request)
         return [
             'id' => $profile->tutor_id,
             'name' => $profile->name,
+            'img' => $profile->profile_picture,
             'gender' => $profile->tutor->gender,
             'educational_institutions' => $profile->educational_institutions,
             'expected_salary' => $profile->expected_salary,

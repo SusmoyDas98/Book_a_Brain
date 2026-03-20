@@ -137,8 +137,12 @@ function showResults() {
         let profileImageHtml;
     
         if (t.img) {
-            profileImageHtml = `<img src="${t.img}" class="profile-img">`;
+            // profileImageHtml = `<img src="${t.img}" class="profile-img">`;
+            // profileImageHtml = `<img src="{{asset(storage/)}}" class="profile-img">`;
+            profileImageHtml = `<img src="/storage/${t.img}" class="profile-img">`;
+            
         } 
+
         else if (t.gender === "Male") {
             profileImageHtml = `<img src="/images/default_male.png" class="profile-img">`;
         } 

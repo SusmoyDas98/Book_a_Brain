@@ -344,6 +344,11 @@
                             <label class="bab-label">Name</label>
                             <input type="text" name="guardian_name" value="{{ old('guardian_name', optional($guardian)->name) }}" class="bab-input">
                         </div>
+
+                        <div class="col-md-6">
+                            <label class="bab-label">Guardian Email</label>
+                            <input type="email" name="email" value="{{ old('email', optional($guardian)->email ?? $user->email) }}" class="bab-input">
+                        </div>                        
                         <div class="col-md-6">
                             <label class="bab-label">Contact No</label>
                             <input type="text" name="guardian_contact_no" value="{{ old('guardian_contact_no', optional($guardian)->contact_no) }}" class="bab-input">

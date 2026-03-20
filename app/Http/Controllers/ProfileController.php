@@ -156,6 +156,7 @@ class ProfileController extends Controller
             $guardian->guardian_id    = $user->id;
             $guardian->name       = $request->guardian_name;
             $guardian->contact_no = $request->guardian_contact_no;
+            $guardian->email = $request->email;
             $guardian->gender     = $request->gender;
             $guardian->address    = $request->address;
             $guardian->location   = [

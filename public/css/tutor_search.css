@@ -208,7 +208,7 @@ body {
   display:none;
 }
 .tutor-card {
-  width: 350px;                 /* fixed width */
+  min-width: 350px;                 /* fixed width */
   background: rgb(255, 255, 255);
   border-radius: 20px;
   padding: 20px;

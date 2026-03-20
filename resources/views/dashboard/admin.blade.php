@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
+{{-- <x-navbar/> --}}
 @php
     $totalUsers    = \App\Models\User::count();
     $totalTutors   = \App\Models\User::where('role','tutor')->count();
@@ -25,7 +25,7 @@
 @endphp
 
 <div style="min-height:100vh; padding: 2.5rem 0 5rem;">
-<div class="container" style="max-width:1100px;">
+<div class="container" style="max-width:1100px;margin-top:80px;">
 
     {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
