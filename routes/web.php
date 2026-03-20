@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\JobApplicationController;
+use App\Http\Controllers\JobPostController;
 use App\Http\Controllers\JobResponseController;
 use App\Http\Controllers\Page_Redirection_Controller;
 use App\Http\Controllers\ProfileController;
@@ -85,6 +87,28 @@ Route::middleware(['auth'])->group(function () {
         $contract->update(['is_paid' => $request->is_paid]);
         return back()->with('success', 'Payment status updated.');
     })->name('admin.contract.payment');
+
+    Route::get('/dashboard', function () {
+        return 'Dashboard coming soon.';
+    })->name('dashboard');
+
+    // ---- Feature 4: Job Posts (Guardian) ----
+    Route::get('/job-posts', [JobPostController::class, 'index'])->name('job_posts.index');
+    Route::get('/job-posts/create', [JobPostController::class, 'create'])->name('job_posts.create');
+    Route::post('/job-posts', [JobPostController::class, 'store'])->name('job_posts.store');
+    Route::get('/job-posts/{jobPost}', [JobPostController::class, 'show'])->name('job_posts.show');
+    Route::get('/job-posts/{jobPost}/edit', [JobPostController::class, 'edit'])->name('job_posts.edit');
+    Route::put('/job-posts/{jobPost}', [JobPostController::class, 'update'])->name('job_posts.update');
+    Route::delete('/job-posts/{jobPost}', [JobPostController::class, 'destroy'])->name('job_posts.destroy');
+    Route::post('/job-posts/{jobPost}/shortlist', [JobPostController::class, 'shortlist'])->name('job_posts.shortlist');
+    Route::post('/job-posts/{jobPost}/remove-shortlist', [JobPostController::class, 'removeShortlist'])->name('job_posts.remove_shortlist');
+    Route::post('/job-posts/{jobPost}/reject', [JobPostController::class, 'rejectApplicant'])->name('job_posts.reject');
+
+    // ---- Feature 8: Applications (Tutor) ----
+    Route::get('/browse-jobs', [JobApplicationController::class, 'browse'])->name('jobs.browse');
+    Route::post('/jobs/{jobPost}/apply', [JobApplicationController::class, 'apply'])->name('jobs.apply');
+    Route::get('/my-applications', [JobApplicationController::class, 'index'])->name('applications.index');
+    Route::delete('/applications/{response}/withdraw', [JobApplicationController::class, 'withdraw'])->name('applications.withdraw');
 });
 Route::get('/login', function () {
     return redirect()->route('login_or_signup_page_redirect');

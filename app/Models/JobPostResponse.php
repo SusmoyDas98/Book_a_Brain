@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\JobPost;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,6 +30,9 @@ class JobPostResponse extends Model
         'expected_salary',
         'tutor_rating',
         'shortlisted',
+        'job_post_id',
+        'application_message',
+        'status',
     ];
 
     // Cast JSON fields to arrays
@@ -42,11 +47,22 @@ class JobPostResponse extends Model
         'shortlisted' => 'boolean',
         'expected_salary' => 'decimal:2',
         'tutor_rating' => 'float',
+        'job_post_id' => 'integer',
     ];
 
     // Relationship to TutorProfile (optional)
     public function tutorProfile()
     {
         return $this->belongsTo(TutorProfile::class, 'tutor_id', 'tutor_id');
+    }
+
+    public function jobPost()
+    {
+        return $this->belongsTo(JobPost::class, 'job_post_id');
+    }
+
+    public function tutor()
+    {
+        return $this->belongsTo(User::class, 'tutor_id', 'id');
     }
 }

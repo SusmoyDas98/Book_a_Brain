@@ -57,7 +57,6 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        // dd($request->work_experience)  ;
         $user = Auth::user();
         // LOG 1: Check if the request is even hitting the controller
         Log::info('Update method reached for user: ' . $user->id);
