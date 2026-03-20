@@ -31,7 +31,7 @@
     $completionPct = round((collect($fields)->filter(fn($v) => !is_null($v) && $v !== '')->count() / count($fields)) * 100);
 @endphp
 
-<div style="min-height:100vh; padding: 2.5rem 0 5rem;">
+<div style="min-height:100vh; padding: 2.5rem 0 5rem;margin-top:40px;">
 <div class="container" style="max-width:1100px;">
 
     {{-- HEADER --}}

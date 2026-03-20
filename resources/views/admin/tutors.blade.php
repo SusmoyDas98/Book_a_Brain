@@ -3,7 +3,7 @@
 @section('content')
 @php $tutors = \App\Models\User::where('role','tutor')->with('tutorProfile')->latest()->get(); @endphp
 
-<div style="min-height:100vh;padding:2.5rem 0 5rem;">
+<div style="min-height:100vh;padding:2.5rem 0 5rem;margin-top:60px">
 <div class="container" style="max-width:1100px;">
 
     <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">

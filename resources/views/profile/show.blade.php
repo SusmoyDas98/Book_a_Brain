@@ -4,8 +4,8 @@
 <x-navbar/>
 
 {{-- TOP BANNER --}}
-<div style="background: rgba(255,255,255,0.6); border-bottom: 1px solid #1e293b; padding: 2.5rem 0 2rem;">
-    <div class="container">
+<div style="background: rgba(255,255,255,0.6); border-bottom: 1px solid #1e293b; padding: 2.5rem 0 2rem; ">
+    <div class="container" style=" margin-top:80px;">
 
         @if(session('success'))
         <div class="mb-4 px-4 py-3" style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color: #86efac; border-radius: 16px;">
