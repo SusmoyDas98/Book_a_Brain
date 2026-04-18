@@ -121,8 +121,31 @@
 
 </div>
 
+<!-- Hire First Modal -->
+<div class="modal fade" id="hireFirstModal" tabindex="-1" aria-labelledby="hireFirstModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:24px;border:none;box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+      <div class="modal-header border-0 pb-0 justify-content-end">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center pt-0 pb-5 px-4">
+        <div style="width:80px;height:80px;background:rgba(99,102,241,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+          <i class="bi bi-chat-lock" style="font-size:2.5rem;color:#6366f1;"></i>
+        </div>
+        <h4 style="font-weight:800;color:#0f172a;margin-bottom:1rem;">Hire First to Message</h4>
+        <p style="color:#64748b;font-size:0.95rem;margin-bottom:1.5rem;line-height:1.6;">
+          For privacy and security, you can only directly message a tutor <strong>after</strong> you have hired them. 
+          View their profile and click "Hire This Tutor" to get started!
+        </p>
+        <button type="button" class="btn apply-btn px-4 py-2" data-bs-dismiss="modal" style="border-radius:12px;">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="{{asset('js/tutor_search.js')}}"></script>
 {{-- <script src="{{asset('js/tutor_search_handler.js')}}"></script> --}}
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
