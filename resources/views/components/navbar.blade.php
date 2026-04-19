@@ -22,6 +22,10 @@
                     style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
                     Dashboard
                 </a>
+                <a href="{{ route('complaints.my') }}" class="btn"
+                    style="background:#fee2e2;color:#ef4444;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
+                    My Complaints
+                </a>
                 @elseif(strtolower(Auth::user()->role) === 'tutor')
                     <a href="{{ route('contracts.tutor') }}" class="btn"
                     style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
@@ -35,9 +39,34 @@
                     style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
                     Dashboard
                 </a>
+                <a href="{{ route('complaints.my') }}" class="btn"
+                    style="background:#fee2e2;color:#ef4444;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
+                    My Complaints
+                </a>
                 @elseif(strtolower(Auth::user()->role) === 'admin')
                     <a href="{{ route('dashboard') }}" class="btn btn-tutor-search">Admin Dashboard</a>
                     
+                @endif
+
+                {{-- Messages icon with unread badge --}}
+                @if(in_array(strtolower(Auth::user()->role), ['guardian', 'tutor']))
+                    @php
+                        $navUnreadCount = \App\Models\Message::whereHas('conversation', function($q) {
+                            $q->where('guardian_id', Auth::id())->orWhere('tutor_id', Auth::id());
+                        })->where('sender_id', '!=', Auth::id())->whereNull('read_at')->count();
+                    @endphp
+                    <a href="{{ route('messages.index') }}"
+                       style="position:relative;background:rgba(99,102,241,0.08);color:#6366f1;border-radius:12px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:0.2s;"
+                       onmouseover="this.style.background='rgba(99,102,241,0.15)'"
+                       onmouseout="this.style.background='rgba(99,102,241,0.08)'"
+                       title="Messages">
+                        <i class="bi bi-chat-dots-fill" style="font-size:1.1rem;"></i>
+                        @if($navUnreadCount > 0)
+                            <span style="position:absolute;top:-4px;right:-4px;background:#ef4444;color:white;border-radius:999px;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:800;padding:0 4px;border:2px solid white;">
+                                {{ $navUnreadCount > 99 ? '99+' : $navUnreadCount }}
+                            </span>
+                        @endif
+                    </a>
                 @endif
 
                 <button class="btn btn-upgrade">UPGRADE</button>

@@ -10,7 +10,9 @@ class TutorProfile extends Model
 
     // Primary key
     protected $primaryKey = 'tutor_id';
+
     public $incrementing = false;
+
     protected $keyType = 'int';
 
     protected $fillable = [
@@ -18,7 +20,7 @@ class TutorProfile extends Model
         'profile_picture',
         'name',
         'email',
-        'contact_no','gender',
+        'contact_no', 'gender',
         'cv',
         'educational_institutions',
         'work_experience',
@@ -30,7 +32,9 @@ class TutorProfile extends Model
         'preferred_mediums',
         'preferred_subjects',
         'preferred_classes',
-        'expected_salary'
+        'expected_salary',
+        'trust_score',
+        'trust_score_updated_at',
     ];
 
     // Cast JSON columns to PHP array automatically
@@ -49,9 +53,10 @@ class TutorProfile extends Model
     {
         return $this->belongsTo(User::class, 'tutor_id');
     }
+
     public function tutor()
     {
         // One profile belongs to one tutor
         return $this->belongsTo(Tutor::class, 'tutor_id');
-    }    
+    }
 }

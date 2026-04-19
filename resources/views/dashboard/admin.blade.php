@@ -68,6 +68,24 @@
         @endforeach
     </div>
 
+    {{-- QUICK LINKS --}}
+    @php $openComplaints = \App\Models\Complaint::where('status', 'Open')->count(); @endphp
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a href="{{ route('admin.analytics') }}"
+           style="display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:14px;padding:0.65rem 1.25rem;text-decoration:none;font-size:0.85rem;box-shadow:0 4px 12px rgba(99,102,241,0.3);">
+            <i class="bi bi-graph-up"></i> Platform Analytics
+        </a>
+        <a href="{{ route('admin.complaints') }}"
+           style="display:flex;align-items:center;gap:8px;background:white;color:#ef4444;font-weight:700;border:2px solid rgba(239,68,68,0.3);border-radius:14px;padding:0.65rem 1.25rem;text-decoration:none;font-size:0.85rem;position:relative;">
+            <i class="bi bi-exclamation-triangle"></i> Complaints
+            @if($openComplaints > 0)
+                <span style="background:#ef4444;color:white;border-radius:999px;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:800;padding:0 5px;">
+                    {{ $openComplaints }}
+                </span>
+            @endif
+        </a>
+    </div>
+
     <div class="row g-4">
 
         {{-- LEFT COLUMN --}}
