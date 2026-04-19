@@ -16,13 +16,24 @@
             </p>
         </div>
         @if($contract->status === 'ACTIVE')
-            <form action="{{ route('contracts.end', $contract) }}" method="POST">
-                @csrf
-                <button type="submit" class="bab-btn-secondary" style="color:#ef4444;border-color:#fca5a5;"
-                    onclick="return confirm('Are you sure you want to end this contract?')">
-                    <i class="bi bi-x-circle me-1"></i>End Contract
-                </button>
-            </form>
+            <div class="d-flex gap-2 flex-wrap">
+                {{-- Chat Button --}}
+                <form action="{{ route('messages.start', $contract) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="bab-btn-primary" style="padding:0.6rem 1.2rem;font-size:0.85rem;">
+                        <i class="bi bi-chat-dots me-1"></i>Open Chat
+                    </button>
+                </form>
+
+                {{-- End Contract --}}
+                <form action="{{ route('contracts.end', $contract) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="bab-btn-secondary" style="color:#ef4444;border-color:#fca5a5;"
+                        onclick="return confirm('Are you sure you want to end this contract?')">
+                        <i class="bi bi-x-circle me-1"></i>End Contract
+                    </button>
+                </form>
+            </div>
         @endif
     </div>
 
@@ -192,6 +203,48 @@
             @endforeach
         </div>
     @endif
+
+    {{-- REVIEWS SECTION --}}
+    @php $reviews = $contract->reviews()->with('guardian')->latest()->get(); @endphp
+
+    <div class="bab-card mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <p class="bab-section-title mb-0"><i class="bi bi-star me-2" style="color:#f59e0b;"></i>Reviews</p>
+            @if(!$isTutor && in_array($contract->status, ['ACTIVE', 'ENDED']))
+                @php $hasReviewed = $reviews->where('guardian_id', Auth::id())->first(); @endphp
+                <a href="{{ route('reviews.create', $contract) }}" class="bab-btn-primary" style="padding:0.5rem 1rem;font-size:0.82rem;">
+                    <i class="bi bi-pencil me-1"></i>{{ $hasReviewed ? 'Edit Review' : 'Leave a Review' }}
+                </a>
+            @endif
+        </div>
+
+        @forelse($reviews as $review)
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div style="color:#f59e0b;font-size:0.9rem;margin-bottom:0.25rem;">
+                            @for($i = 1; $i <= 5; $i++)
+                                <i class="bi {{ $i <= $review->rating ? 'bi-star-fill' : 'bi-star' }}"></i>
+                            @endfor
+                            <span style="color:#0f172a;font-weight:700;font-size:0.82rem;margin-left:6px;">{{ $review->rating }}/5</span>
+                        </div>
+                        @if($review->comment)
+                            <p style="color:#64748b;font-size:0.85rem;margin:0.3rem 0 0;line-height:1.5;">{{ $review->comment }}</p>
+                        @endif
+                    </div>
+                    <div style="text-align:right;flex-shrink:0;">
+                        <p style="color:#94a3b8;font-size:0.72rem;margin:0;">{{ $review->guardian->name }}</p>
+                        <p style="color:#cbd5e1;font-size:0.68rem;margin:0;">{{ $review->created_at->diffForHumans() }}</p>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div style="text-align:center;padding:1.5rem 0;">
+                <i class="bi bi-chat-square-text" style="font-size:1.5rem;color:#cbd5e1;"></i>
+                <p style="color:#94a3b8;font-size:0.83rem;margin:0.5rem 0 0;">No reviews yet.</p>
+            </div>
+        @endforelse
+    </div>
 
     <div class="mt-3">
         <a href="{{ $isTutor ? route('contracts.tutor') : route('contracts.guardian') }}" class="bab-btn-secondary">
