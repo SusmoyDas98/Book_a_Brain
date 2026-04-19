@@ -280,43 +280,92 @@
                             <li><strong>{{ $period }}:</strong> {{ $desc }}</li>
                         @endforeach
                     </ul> --}}
-                    @if ($work['status'] != 'unemployed')
+                    @if (isset($work['status']) && $work['status'] != 'unemployed')
                         <strong>
                                 Job Status:
                         </strong>
-                              <p class = 'tag'>  {{ $work['Currently']}}</p>
-                    @else
+                              <p class = 'tag'>  {{ $work['Currently'] ?? 'Employed' }}</p>
+                    @elseif (isset($work['status']) && $work['status'] == 'unemployed')
                         <strong>
                             Job Status:
                         </strong>
                             <p class="tag">Unemployed</p>
+                    @else
+                        <ul style="color:#1e293b;font-size:0.9rem;padding-left:1.25rem;margin:0;">
+                            @foreach($work as $period => $desc)
+                                @if(!is_array($desc))
+                                    <li><strong>{{ ucfirst($period) }}:</strong> {{ $desc }}</li>
+                                @endif
+                            @endforeach
+                        </ul>
                     @endif
                 @else
                     <p class="meta-value mb-0">{{ $work ?: '—' }}</p>
                 @endif
             </div>
 
-            {{-- Ratings & Reviews --}}
+            {{-- Trust Score Badge --}}
+            @php
+                $trustScore = optional($tutorProfile)->trust_score ?? 0;
+                $trustColor = $trustScore >= 70 ? '#22c55e' : ($trustScore >= 40 ? '#f59e0b' : '#ef4444');
+                $trustLabel = $trustScore >= 70 ? 'Excellent' : ($trustScore >= 40 ? 'Good' : 'Needs Improvement');
+            @endphp
+            <div class="profile-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width:56px;height:56px;border-radius:50%;border:4px solid {{ $trustColor }};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <span style="font-size:1.2rem;font-weight:800;color:{{ $trustColor }};">{{ number_format($trustScore) }}</span>
+                    </div>
+                    <div>
+                        <p style="font-weight:800;color:#0f172a;font-size:0.95rem;margin:0;">Trust Score</p>
+                        <p style="color:{{ $trustColor }};font-weight:700;font-size:0.82rem;margin:0;">{{ $trustLabel }}</p>
+                        <p style="color:#94a3b8;font-size:0.72rem;margin:0;">Based on ratings, verification, hires & profile</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Ratings & Reviews (real data) --}}
+            @php
+                $profileReviews = \App\Models\Review::where('tutor_id', $tutor->tutor_id)->with('guardian')->latest()->get();
+                $reviewCount = $profileReviews->count();
+                $avgRating = $reviewCount > 0 ? $profileReviews->avg('rating') : 0;
+            @endphp
             <div class="profile-card">
                 <p class="section-title"><i class="bi bi-star me-2" style="color:#f59e0b;"></i>Ratings & Reviews</p>
                 <div class="d-flex align-items-center gap-3 mb-3">
-                    <p style="font-size:3rem;font-weight:800;color:#0f172a;margin:0;line-height:1;">{{ number_format($rating, 1) }}</p>
+                    <p style="font-size:3rem;font-weight:800;color:#0f172a;margin:0;line-height:1;">{{ number_format($avgRating, 1) }}</p>
                     <div>
                         <div style="color:#f59e0b;font-size:1.2rem;">
                             @for($i = 1; $i <= 5; $i++)
-                                <i class="bi {{ $i <= round($rating) ? 'bi-star-fill' : 'bi-star' }}"></i>
+                                <i class="bi {{ $i <= round($avgRating) ? 'bi-star-fill' : 'bi-star' }}"></i>
                             @endfor
                         </div>
-                        <p style="color:#94a3b8;font-size:0.8rem;margin:0.2rem 0 0;">Based on guardian reviews</p>
+                        <p style="color:#94a3b8;font-size:0.8rem;margin:0.2rem 0 0;">{{ $reviewCount }} review{{ $reviewCount !== 1 ? 's' : '' }}</p>
                     </div>
                 </div>
-                @if(optional($tutor)->review)
-                    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1rem;">
-                        <p style="color:#1e293b;font-size:0.9rem;margin:0;font-style:italic;">"{{ $tutor->review }}"</p>
+
+                @forelse($profileReviews->take(5) as $rev)
+                    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:0.85rem 1rem;margin-bottom:0.5rem;">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div style="color:#f59e0b;font-size:0.82rem;margin-bottom:0.2rem;">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="bi {{ $i <= $rev->rating ? 'bi-star-fill' : 'bi-star' }}"></i>
+                                    @endfor
+                                    <span style="color:#0f172a;font-weight:700;font-size:0.78rem;margin-left:4px;">{{ $rev->rating }}/5</span>
+                                </div>
+                                @if($rev->comment)
+                                    <p style="color:#64748b;font-size:0.85rem;margin:0.2rem 0 0;line-height:1.5;">{{ $rev->comment }}</p>
+                                @endif
+                            </div>
+                            <div style="text-align:right;flex-shrink:0;">
+                                <p style="color:#94a3b8;font-size:0.7rem;margin:0;">{{ $rev->guardian->name }}</p>
+                                <p style="color:#cbd5e1;font-size:0.65rem;margin:0;">{{ $rev->created_at->diffForHumans() }}</p>
+                            </div>
+                        </div>
                     </div>
-                @else
+                @empty
                     <p style="color:#94a3b8;font-size:0.85rem;margin:0;">No reviews yet.</p>
-                @endif
+                @endforelse
             </div>
 
         </div>
