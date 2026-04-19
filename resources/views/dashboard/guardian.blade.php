@@ -32,6 +32,10 @@
                style="background:white;color:#6366f1;font-weight:700;border:2px solid #6366f1;border-radius:14px;padding:0.7rem 1.4rem;text-decoration:none;font-size:0.88rem;">
                 <i class="bi bi-file-earmark-text me-2"></i>My Contracts
             </a>
+            <a href="{{ route('guardian.payment.index') }}"
+               style="background:{{ request()->routeIs('guardian.payment.index') ? 'linear-gradient(135deg,#6366f1,#4f46e5)' : 'white' }};color:{{ request()->routeIs('guardian.payment.index') ? 'white' : '#6366f1' }};font-weight:700;border:2px solid #6366f1;border-radius:14px;padding:0.7rem 1.4rem;text-decoration:none;font-size:0.88rem;{{ request()->routeIs('guardian.payment.index') ? 'box-shadow:0 6px 20px rgba(99,102,241,0.3);' : '' }}">
+                <i class="bi bi-credit-card me-2"></i>Payment &amp; Tuition Fees
+            </a>
         </div>
     </div>
 

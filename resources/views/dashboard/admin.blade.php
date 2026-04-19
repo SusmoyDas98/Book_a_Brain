@@ -44,6 +44,10 @@
                 </p>
             </div>
         @endif
+        <a href="{{ route('admin.payment.index') }}"
+           style="background:{{ request()->routeIs('admin.payment.index') ? 'linear-gradient(135deg,#6366f1,#4f46e5)' : 'white' }};color:{{ request()->routeIs('admin.payment.index') ? 'white' : '#6366f1' }};font-weight:700;border:2px solid #6366f1;border-radius:14px;padding:0.7rem 1.4rem;text-decoration:none;font-size:0.88rem;{{ request()->routeIs('admin.payment.index') ? 'box-shadow:0 6px 20px rgba(99,102,241,0.3);' : '' }}">
+            <i class="bi bi-credit-card me-2"></i>Payment &amp; Tuition Fees
+        </a>
     </div>
 
     {{-- STATS CARDS --}}
