@@ -8,6 +8,7 @@ use App\Http\Controllers\JobPostController;
 use App\Http\Controllers\JobResponseController;
 use App\Http\Controllers\Page_Redirection_Controller;
 use App\Http\Controllers\Payment\AdminPaymentController;
+use App\Http\Controllers\Payment\BkashPortalController;
 use App\Http\Controllers\Payment\GuardianPaymentController;
 use App\Http\Controllers\Payment\TutorPaymentController;
 use App\Http\Controllers\ProfileController;
@@ -75,6 +76,9 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
         Route::post('/job-posts/{jobPost}/remove-shortlist', [JobPostController::class, 'removeShortlist'])->name('job_posts.remove_shortlist');
         Route::post('/job-posts/{jobPost}/reject', [JobPostController::class, 'rejectApplicant'])->name('job_posts.reject');
         Route::get('/guardian/payment', [GuardianPaymentController::class, 'index'])->name('guardian.payment.index');
+        Route::post('/guardian/payment/{tuitionPayment}/initiate', [GuardianPaymentController::class, 'initiatePayment'])->name('guardian.payment.initiate');
+        Route::get('/guardian/subscribe', [GuardianPaymentController::class, 'showPlan'])->name('guardian.subscribe.plan');
+        Route::post('/guardian/subscribe/confirm', [GuardianPaymentController::class, 'confirmPlan'])->name('guardian.subscribe.confirm');
 
     });
     // Tutor routes
@@ -89,15 +93,14 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
         Route::get('/my-applications', [JobApplicationController::class, 'index'])->name('applications.index');
         Route::delete('/applications/{response}/withdraw', [JobApplicationController::class, 'withdraw'])->name('applications.withdraw');
         Route::get('/tutor/payment', [TutorPaymentController::class, 'index'])->name('tutor.payment.index');
+        Route::get('/tutor/subscribe', [TutorPaymentController::class, 'showPlan'])->name('tutor.subscribe.plan');
+        Route::post('/tutor/subscribe/confirm', [TutorPaymentController::class, 'confirmPlan'])->name('tutor.subscribe.confirm');
     });
 
     // Admin Routes
     Route::middleware([IsAdmin::class])->group(function () {
         Route::post('/admin/verify/{tutorId}/approve', [VerificationController::class, 'approve'])->name('admin.verify.approve');
         Route::post('/admin/verify/{tutorId}/reject', [VerificationController::class, 'reject'])->name('admin.verify.reject');
-        Route::get('/dashboard', function () {
-            return 'Dashboard coming soon.';
-        })->name('dashboard');
         Route::get('/admin/tutors', function () {
             return view('admin.tutors');
         })->name('admin.tutors');
@@ -122,9 +125,18 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
     Route::post('/contracts/{contract}/notes', [TuitionContractController::class, 'updateNotes'])->name('contracts.notes');
     Route::post('/session-logs/{sessionLog}/note', [TuitionContractController::class, 'guardianNote'])->name('contracts.guardian_note');
 
-    Route::get('/dashboard', function () {
-        return 'Dashboard coming soon.';
-    })->name('dashboard');
+    // ── bKash Portal Routes (accessible by guardian and tutor) ──
+    Route::get('/bkash/phone', [BkashPortalController::class, 'showPhone'])->name('bkash.portal.phone');
+    Route::post('/bkash/phone', [BkashPortalController::class, 'submitPhone'])->name('bkash.portal.phone.submit');
+    Route::get('/bkash/otp', [BkashPortalController::class, 'showOtp'])->name('bkash.portal.otp');
+    Route::post('/bkash/otp', [BkashPortalController::class, 'submitOtp'])->name('bkash.portal.otp.submit');
+    Route::get('/bkash/password', [BkashPortalController::class, 'showPassword'])->name('bkash.portal.password');
+    Route::post('/bkash/password', [BkashPortalController::class, 'submitPassword'])->name('bkash.portal.password.submit');
+    Route::post('/bkash/cancel', [BkashPortalController::class, 'cancel'])->name('bkash.portal.cancel');
+    Route::get('/bkash/success', [BkashPortalController::class, 'success'])->name('bkash.portal.success');
+    Route::get('/bkash/failed', [BkashPortalController::class, 'failed'])->name('bkash.portal.failed');
+    Route::get('/bkash/cancelled', [BkashPortalController::class, 'cancelled'])->name('bkash.portal.cancelled');
+
 });
 
 Route::get('/login', function () {

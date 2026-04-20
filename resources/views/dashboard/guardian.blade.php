@@ -14,6 +14,23 @@
 <div style="min-height:100vh; padding: 2.5rem 0 5rem;">
 <div class="container" style="max-width:1100px; margin-top:40px;">
 
+    {{-- FLASH MESSAGES --}}
+    @if(session('success'))
+        <div style="background:#f0fdf4;border:2px solid #bbf7d0;color:#16a34a;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div style="background:#fef2f2;border:2px solid #fecaca;color:#ef4444;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+            <i class="bi bi-x-circle-fill me-2"></i>{{ session('error') }}
+        </div>
+    @endif
+    @if(session('info'))
+        <div style="background:#eff6ff;border:2px solid #bfdbfe;color:#3b82f6;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+            <i class="bi bi-info-circle-fill me-2"></i>{{ session('info') }}
+        </div>
+    @endif
+
     {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
         <div>
@@ -152,13 +169,13 @@
                 </div>
             </div>
 
-            {{-- PAYMENT HISTORY PLACEHOLDER --}}
+            {{-- PAYMENT HISTORY --}}
             <div style="background:white;border:2px solid #e2e8f0;border-radius:24px;padding:1.5rem;box-shadow:0 4px 15px rgba(0,0,0,0.05);">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <p style="font-weight:800;color:#0f172a;font-size:1rem;margin:0;">
                         <i class="bi bi-receipt me-2" style="color:#6366f1;"></i>Payment History
                     </p>
-                    <span style="background:rgba(245,158,11,0.1);color:#d97706;border-radius:999px;font-size:0.7rem;font-weight:700;padding:2px 10px;">Coming Soon</span>
+                    <a href="{{ route('guardian.payment.index') }}" style="color:#6366f1;font-size:0.8rem;font-weight:600;text-decoration:none;">View all →</a>
                 </div>
                 @foreach($activeContracts->take(3) as $c)
                     <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid #f1f5f9;">

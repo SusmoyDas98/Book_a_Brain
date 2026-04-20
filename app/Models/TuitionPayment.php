@@ -67,4 +67,22 @@ class TuitionPayment extends Model
     {
         return 'Book-a-Brain Portal';
     }
+
+    /**
+     * Relationship: the guardian who made this payment.
+     * guardian_id stores the auto-increment PK of the guardians table.
+     */
+    public function guardian(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Guardian::class, 'guardian_id');
+    }
+
+    /**
+     * Relationship: the tutor this payment is for.
+     * tutor_id stores the tutor's user_id (PK of the tutors table).
+     */
+    public function tutor(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Tutor::class, 'tutor_id', 'tutor_id');
+    }
 }

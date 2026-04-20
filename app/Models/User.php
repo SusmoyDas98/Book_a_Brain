@@ -39,13 +39,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-    public function tutorProfile()
-        {
-            return $this->hasOne(TutorProfile::class, 'tutor_id');
-        }
 
-        public function guardian()
-        {
-            return $this->hasOne(Guardian::class, 'guardian_id');
-        }
+    public function tutorProfile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(TutorProfile::class, 'tutor_id');
     }
+
+    public function guardian(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Guardian::class, 'guardian_id');
+    }
+
+    public function tutor(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Tutor::class, 'tutor_id');
+    }
+}

@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             GuardianSeeder::class,
             JobPostResponseSeeder::class,
             PaymentAndSubscriptionSeeder::class,
+            BkashAccountSeeder::class,
         ]);
 
     }

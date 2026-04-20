@@ -9,10 +9,27 @@
     <div class="mb-4">
         <p style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.3em;color:#6366f1;font-weight:700;">Book-a-Brain</p>
         <h1 style="color:#0f172a;font-size:2rem;font-weight:800;margin-bottom:0.25rem;">
-            <i class="bi bi-credit-card me-2" style="color:#6366f1;"></i>Payment & Tuition Fees
+            <i class="bi bi-credit-card me-2" style="color:#6366f1;"></i>Payment &amp; Tuition Fees
         </h1>
         <p style="color:#64748b;margin:0;">Manage your subscription and review payment history.</p>
     </div>
+
+    {{-- FLASH MESSAGES --}}
+    @if(session('success'))
+        <div style="background:#f0fdf4;border:2px solid #bbf7d0;color:#16a34a;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div style="background:#fef2f2;border:2px solid #fecaca;color:#ef4444;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+            <i class="bi bi-x-circle-fill me-2"></i>{{ session('error') }}
+        </div>
+    @endif
+    @if(session('info'))
+        <div style="background:#eff6ff;border:2px solid #bfdbfe;color:#3b82f6;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+            <i class="bi bi-info-circle-fill me-2"></i>{{ session('info') }}
+        </div>
+    @endif
 
     {{-- SECTION 1: SUBSCRIPTION STATUS --}}
     <div style="background:white;border:2px solid #e2e8f0;border-radius:24px;padding:1.5rem;box-shadow:0 4px 15px rgba(0,0,0,0.05);margin-bottom:1.5rem;">
@@ -87,7 +104,7 @@
                     </div>
                 </div>
             </div>
-            <a href="#"
+            <a href="{{ route('guardian.subscribe.plan') }}"
                style="display:inline-block;background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:14px;padding:0.65rem 1.5rem;text-decoration:none;font-size:0.88rem;box-shadow:0 6px 20px rgba(99,102,241,0.3);">
                 <i class="bi bi-shield-plus me-2"></i>Subscribe via Portal
             </a>
@@ -98,7 +115,7 @@
                 <i class="bi bi-shield-x" style="font-size:2rem;color:#cbd5e1;"></i>
                 <p style="color:#64748b;margin:0.75rem 0 0;font-size:0.88rem;">You have no active subscription.</p>
             </div>
-            <a href="#"
+            <a href="{{ route('guardian.subscribe.plan') }}"
                style="display:inline-block;background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:14px;padding:0.65rem 1.5rem;text-decoration:none;font-size:0.88rem;box-shadow:0 6px 20px rgba(99,102,241,0.3);">
                 <i class="bi bi-shield-plus me-2"></i>Subscribe via Portal
             </a>
@@ -166,7 +183,7 @@
                         <th style="text-align:left;padding:0.6rem 0.75rem;color:#64748b;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Method</th>
                         <th style="text-align:left;padding:0.6rem 0.75rem;color:#64748b;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Status</th>
                         <th style="text-align:left;padding:0.6rem 0.75rem;color:#64748b;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Date</th>
-                        <th style="text-align:left;padding:0.6rem 0.75rem;color:#64748b;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Description</th>
+                        <th style="text-align:left;padding:0.6rem 0.75rem;color:#64748b;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -187,7 +204,19 @@
                             @endif
                         </td>
                         <td style="padding:0.65rem 0.75rem;color:#94a3b8;font-size:0.78rem;">{{ $tp->payment_date?->format('d M Y') ?? 'N/A' }}</td>
-                        <td style="padding:0.65rem 0.75rem;color:#64748b;">{{ $tp->description ?? '—' }}</td>
+                        <td style="padding:0.65rem 0.75rem;">
+                            @if($tp->payment_status === 'pending')
+                                <form method="POST" action="{{ route('guardian.payment.initiate', $tp->id) }}" style="margin:0;">
+                                    @csrf
+                                    <button type="submit"
+                                        style="background:linear-gradient(135deg,#E2136E,#c2185b);color:white;border:none;border-radius:8px;padding:0.4rem 0.8rem;font-size:0.75rem;font-weight:700;cursor:pointer;">
+                                        <i class="bi bi-credit-card me-1"></i>Pay via Portal
+                                    </button>
+                                </form>
+                            @else
+                                <span style="color:#94a3b8;font-size:0.75rem;">—</span>
+                            @endif
+                        </td>
                     </tr>
                     @empty
                     <tr>

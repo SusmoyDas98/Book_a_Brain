@@ -38,4 +38,10 @@ class Guardian extends Model
         return $this->hasMany(SubscriptionPayment::class, 'subscriber_id')
             ->where('subscriber_type', 'guardian');
     }
+
+    public function bkashAccounts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(BkashAccount::class, 'account_holder_id')
+            ->where('account_holder_type', 'guardian');
+    }
 }
