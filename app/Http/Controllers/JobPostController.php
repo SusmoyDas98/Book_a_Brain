@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\JobPost;
 use App\Models\JobPostResponse;
+use App\Models\Subscription;
 use App\Models\TutorProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class JobPostController extends Controller
 {
@@ -30,12 +32,20 @@ class JobPostController extends Controller
             'title'           => 'required|string|max:255',
             'subject'         => 'required|string|max:255',
             'class_level'     => 'required|string|max:100',
-            'expected_salary' => 'required|numeric|min:0',
+            'expected_salary' => 'required|numeric|min:1',
             'location'        => 'required|string|max:255',
             'medium'          => 'required|in:Bangla,English,Both',
             'mode'            => 'required|in:Online,Offline,Both',
             'description'     => 'nullable|string|max:1000',
         ]);
+
+        $duplicate = JobPost::where('guardian_id', Auth::id())
+            ->where('subject', $validated['subject'])
+            ->where('status', 'Open')
+            ->exists();
+        if ($duplicate) {
+            session()->flash('warning', 'You already have an open job for this subject.');
+        }
 
         JobPost::create(array_merge($validated, [
             'guardian_id'       => Auth::id(),
@@ -68,12 +78,18 @@ class JobPostController extends Controller
             abort(403);
         }
 
-        if (in_array($jobPost->status, ['Hired', 'Closed'])) {
-            return redirect()->back()->with('error', 'Cannot edit a Hired or Closed post.');
+        if (in_array($jobPost->status, ['Hired', 'Online', 'Completed', 'Cancelled', 'Closed'])) {
+            return redirect()->back()->with('error', 'This job cannot be edited in its current state.');
+        }
+
+        $hasActiveApplicants = $jobPost->responses()
+            ->whereIn('status', ['Pending', 'Shortlisted'])
+            ->exists();
+        if ($hasActiveApplicants) {
+            return redirect()->back()->with('error', 'Cannot edit a job with active applicants. Remove all applicants first.');
         }
 
         return view('job_posts.edit', compact('jobPost'));
-        
     }
 
     public function update(Request $request, JobPost $jobPost)
@@ -82,15 +98,15 @@ class JobPostController extends Controller
             abort(403);
         }
 
-        if (in_array($jobPost->status, ['Hired', 'Closed'])) {
-            return redirect()->back()->with('error', 'Cannot edit a Hired or Closed post.');
+        if (in_array($jobPost->status, ['Hired', 'Online', 'Completed', 'Cancelled', 'Closed'])) {
+            return redirect()->back()->with('error', 'This job cannot be edited in its current state.');
         }
 
         $validated = $request->validate([
             'title'           => 'required|string|max:255',
             'subject'         => 'required|string|max:255',
             'class_level'     => 'required|string|max:100',
-            'expected_salary' => 'required|numeric|min:0',
+            'expected_salary' => 'required|numeric|min:1',
             'location'        => 'required|string|max:255',
             'medium'          => 'required|in:Bangla,English,Both',
             'mode'            => 'required|in:Online,Offline,Both',
@@ -113,7 +129,10 @@ class JobPostController extends Controller
             return redirect()->back()->with('error', 'Only Open posts can be deleted.');
         }
 
-        $jobPost->delete();
+        DB::transaction(function () use ($jobPost) {
+            $jobPost->responses()->update(['status' => 'Rejected']);
+            $jobPost->delete();
+        });
 
         return redirect()->route('job_posts.index')->with('success', 'Job post deleted.');
     }
@@ -131,8 +150,22 @@ class JobPostController extends Controller
             return redirect()->back()->with('error', 'This tutor is already shortlisted.');
         }
 
-        if ($jobPost->shortlisted_count >= 5) {
-            return redirect()->back()->with('error', 'Maximum 5 tutors can be shortlisted per post.');
+        $guardian = Auth::user()->guardian;
+        $subscription = $guardian
+            ? Subscription::forGuardian($guardian->id)
+                ->where('status', 'active')
+                ->where('expires_at', '>=', now())
+                ->latest()
+                ->first()
+            : null;
+        $limit = ($subscription && $subscription->plan_name === 'Pro') ? 20 : 5;
+
+        if ($jobPost->shortlisted_count >= $limit) {
+            $msg = "Shortlist limit of {$limit} reached.";
+            if ($limit === 5) {
+                $msg .= ' Upgrade to Pro to shortlist up to 20 tutors.';
+            }
+            return redirect()->back()->with('error', $msg);
         }
 
         $response->status = 'Shortlisted';

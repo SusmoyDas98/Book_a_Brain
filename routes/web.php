@@ -3,9 +3,11 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\Hire\HireController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobPostController;
 use App\Http\Controllers\JobResponseController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Page_Redirection_Controller;
 use App\Http\Controllers\Payment\AdminPaymentController;
 use App\Http\Controllers\Payment\BkashPortalController;
@@ -57,6 +59,13 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/select-role', [ProfileController::class, 'saveRole'])->name('role.save');
     Route::post('/profile/confirm', [ProfileController::class, 'confirmProfile'])->name('profile.confirm');
+
+    // ── Notification routes (shared, accessible by all roles) ──
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read.all');
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread.count');
+
     // Guardian routes
     Route::middleware([IsGuardian::class])->group(function () {
         Route::get('/tutor_search', [Page_Redirection_Controller::class, 'tutor_search_page'])
@@ -80,7 +89,11 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
         Route::get('/guardian/subscribe', [GuardianPaymentController::class, 'showPlan'])->name('guardian.subscribe.plan');
         Route::post('/guardian/subscribe/confirm', [GuardianPaymentController::class, 'confirmPlan'])->name('guardian.subscribe.confirm');
 
+        // ---- Feature 10: Hire System (Guardian) ----
+        Route::post('/guardian/hire/{applicationId}', [HireController::class, 'hire'])->name('guardian.hire');
+        Route::post('/guardian/hire/cancel/{hireConfirmationId}', [HireController::class, 'requestCancellation'])->name('guardian.hire.cancel');
     });
+
     // Tutor routes
     Route::middleware([IsTutor::class])->group(function () {
         Route::get('/contracts/tutor', [TuitionContractController::class, 'tutorIndex'])->name('contracts.tutor');
@@ -95,6 +108,10 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
         Route::get('/tutor/payment', [TutorPaymentController::class, 'index'])->name('tutor.payment.index');
         Route::get('/tutor/subscribe', [TutorPaymentController::class, 'showPlan'])->name('tutor.subscribe.plan');
         Route::post('/tutor/subscribe/confirm', [TutorPaymentController::class, 'confirmPlan'])->name('tutor.subscribe.confirm');
+
+        // ---- Feature 10: Hire System (Tutor) ----
+        Route::post('/tutor/hire/confirm/{hireConfirmationId}', [HireController::class, 'confirmHire'])->name('tutor.hire.confirm');
+        Route::post('/tutor/hire/decline/{hireConfirmationId}', [HireController::class, 'declineHire'])->name('tutor.hire.decline');
     });
 
     // Admin Routes
@@ -116,6 +133,9 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
             return back()->with('success', 'Payment status updated.');
         })->name('admin.contract.payment');
         Route::get('/admin/payment', [AdminPaymentController::class, 'index'])->name('admin.payment.index');
+
+        // ---- Feature 10: Hire System (Admin) ----
+        Route::post('/admin/hire/cancel/approve/{hireConfirmationId}', [HireController::class, 'approveCancellation'])->name('admin.hire.cancel.approve');
     });
 
     // Shared

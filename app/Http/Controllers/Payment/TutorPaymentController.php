@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\Subscription;
 use App\Models\SubscriptionPayment;
 use App\Models\TuitionPayment;
@@ -32,8 +33,12 @@ class TutorPaymentController extends Controller
             ->orderBy('payment_date', 'desc')
             ->get();
 
+        $auditLogs = AuditLog::forTutor($tutor->tutor_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('payment.tutor', compact(
-            'tuitionEngagements', 'subscription', 'subscriptionPayments'
+            'tuitionEngagements', 'subscription', 'subscriptionPayments', 'auditLogs'
         ));
     }
 

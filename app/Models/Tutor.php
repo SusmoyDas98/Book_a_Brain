@@ -8,13 +8,10 @@ class Tutor extends Model
 {
     protected $table = 'tutors';
 
-    // Primary key
     protected $primaryKey = 'tutor_id';
 
-    // Because tutor_id comes from users table
     public $incrementing = false;
 
-    // Primary key type
     protected $keyType = 'int';
 
     protected $fillable = [
@@ -27,7 +24,6 @@ class Tutor extends Model
         'review',
     ];
 
-    // Relationship with User
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'tutor_id');
@@ -35,7 +31,6 @@ class Tutor extends Model
 
     public function profile(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        // tutor_id is the PK of the tutors table (= user_id)
         return $this->hasOne(TutorProfile::class, 'tutor_id', 'tutor_id');
     }
 
@@ -60,5 +55,21 @@ class Tutor extends Model
     {
         return $this->hasMany(BkashAccount::class, 'account_holder_id')
             ->where('account_holder_type', 'tutor');
+    }
+
+    public function hireConfirmations()
+    {
+        return $this->hasMany(HireConfirmation::class, 'tutor_id', 'tutor_id');
+    }
+
+    public function auditLogs()
+    {
+        return $this->hasMany(AuditLog::class, 'tutor_id', 'tutor_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(AppNotification::class, 'recipient_id', 'tutor_id')
+                    ->where('recipient_type', 'tutor');
     }
 }

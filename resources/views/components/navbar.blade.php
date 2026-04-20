@@ -40,6 +40,37 @@
                     
                 @endif
 
+                {{-- Notification bell --}}
+                <div style="position:relative;display:inline-block;">
+                    <a href="{{ route('notifications.index') }}"
+                       style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#6366f1,#4f46e5);border-radius:12px;padding:8px 10px;text-decoration:none;"
+                       title="Notifications">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                             stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                    </a>
+                    @php
+                        $_navRole = Auth::user()->role ?? null;
+                        $_navRoleRecord = match($_navRole) {
+                            'guardian' => Auth::user()->guardian ?? null,
+                            'tutor'    => Auth::user()->tutor ?? null,
+                            'admin'    => Auth::user()->admin ?? null,
+                            default    => null,
+                        };
+                        $_unreadCount = $_navRoleRecord
+                            ? \App\Models\AppNotification::forRecipient($_navRole, $_navRoleRecord->getKey())
+                                  ->unread()->count()
+                            : 0;
+                    @endphp
+                    @if($_unreadCount > 0)
+                        <span style="position:absolute;top:-6px;right:-8px;background:#E2136E;color:white;border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;line-height:1;">
+                            {{ $_unreadCount > 99 ? '99+' : $_unreadCount }}
+                        </span>
+                    @endif
+                </div>
+
                 <button class="btn btn-upgrade">UPGRADE</button>
 
                 {{-- Profile dropdown --}}

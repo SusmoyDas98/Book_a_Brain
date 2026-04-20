@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HireConfirmation;
+use App\Models\Tutor;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -16,14 +18,25 @@ class DashboardController extends Controller
         }
 
         if ($role === 'tutor') {
-            return view('dashboard.tutor');
+            $tutor = Tutor::where('tutor_id', $user->id)->first();
+            $pendingHires = $tutor
+                ? HireConfirmation::where('tutor_id', $tutor->tutor_id)
+                    ->where('status', 'awaiting_tutor')
+                    ->with('job')
+                    ->get()
+                : collect();
+
+            return view('dashboard.tutor', compact('pendingHires'));
         }
 
         if ($role === 'admin') {
-            return view('dashboard.admin');
+            $cancellationRequests = \App\Models\HireConfirmation::where('status', 'cancellation_requested')
+                ->orderBy('updated_at', 'desc')
+                ->get();
+
+            return view('dashboard.admin', compact('cancellationRequests'));
         }
 
-        // No role yet — send to role selection
         return redirect()->route('select_role_redirect');
     }
 }

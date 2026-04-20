@@ -44,4 +44,20 @@ class Guardian extends Model
         return $this->hasMany(BkashAccount::class, 'account_holder_id')
             ->where('account_holder_type', 'guardian');
     }
+
+    public function hireConfirmations()
+    {
+        return $this->hasMany(HireConfirmation::class, 'guardian_id');
+    }
+
+    public function auditLogs()
+    {
+        return $this->hasMany(AuditLog::class, 'guardian_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(AppNotification::class, 'recipient_id')
+                    ->where('recipient_type', 'guardian');
+    }
 }

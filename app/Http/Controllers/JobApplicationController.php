@@ -84,7 +84,7 @@ class JobApplicationController extends Controller
         $responses = JobPostResponse::where('tutor_id', Auth::id())
             ->with('jobPost')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
 
         return view('applications.index', compact('responses'));
     }

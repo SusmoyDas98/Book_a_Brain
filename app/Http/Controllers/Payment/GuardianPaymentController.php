@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\Subscription;
 use App\Models\SubscriptionPayment;
 use App\Models\TuitionPayment;
@@ -31,8 +32,12 @@ class GuardianPaymentController extends Controller
             ->orderBy('payment_date', 'desc')
             ->get();
 
+        $auditLogs = AuditLog::forGuardian($guardian->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('payment.guardian', compact(
-            'tuitionPayments', 'subscription', 'subscriptionPayments'
+            'tuitionPayments', 'subscription', 'subscriptionPayments', 'auditLogs'
         ));
     }
 

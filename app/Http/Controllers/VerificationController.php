@@ -21,6 +21,10 @@ class VerificationController extends Controller
 
         $tutorProfile = TutorProfile::where('tutor_id', $tutorId)->firstOrFail();
 
+        if ($tutorProfile->verification_status === 'APPROVED') {
+            return back()->with('error', 'This tutor has already been verified.');
+        }
+
         $tutorProfile->update([
             'verification_status' => 'APPROVED',
             'rejection_reason'    => null,

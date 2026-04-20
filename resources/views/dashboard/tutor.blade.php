@@ -136,6 +136,13 @@
         </div>
     </div>
 
+    {{-- PENDING HIRE OFFERS (Feature 10) --}}
+    @if(isset($pendingHires) && $pendingHires->isNotEmpty())
+        @foreach($pendingHires as $confirmation)
+            @include('hire.tutor_confirmation', ['confirmation' => $confirmation])
+        @endforeach
+    @endif
+
     <div class="row g-4">
 
         {{-- ACTIVE CONTRACTS + SESSION LOGS --}}

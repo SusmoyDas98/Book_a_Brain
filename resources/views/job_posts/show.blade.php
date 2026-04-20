@@ -30,6 +30,11 @@
       <i class="bi bi-exclamation-circle me-2"></i>{{ session('error') }}
     </div>
   @endif
+  @if(session('info'))
+    <div style="background:#eff6ff;border:2px solid #bfdbfe;color:#3b82f6;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+      <i class="bi bi-info-circle-fill me-2"></i>{{ session('info') }}
+    </div>
+  @endif
 
   {{-- Job Details Section --}}
   <div class="job-card mb-4">
@@ -66,11 +71,49 @@
         <i class="bi bi-arrow-left me-1"></i>Back to My Posts
       </a>
     </div>
+
+    {{-- Cancellation section for active engagements --}}
+    @php $hireConfirmation = $jobPost->hireConfirmation; @endphp
+    @if($hireConfirmation)
+      @if($hireConfirmation->status === 'both_confirmed')
+        <div style="margin-top:1.5rem;background:#fef2f2;border:2px solid #fecaca;border-radius:16px;padding:1.25rem;">
+          <p style="font-weight:700;color:#ef4444;margin-bottom:0.75rem;">
+            <i class="bi bi-x-circle me-2"></i>Request Cancellation
+          </p>
+          <form method="POST" action="{{ route('guardian.hire.cancel', $hireConfirmation->id) }}">
+            @csrf
+            <div style="margin-bottom:8px;">
+              <label class="bab-label">Reason for cancellation</label>
+              <textarea name="reason" required minlength="10" maxlength="500"
+                        class="bab-input"
+                        placeholder="Please explain why you need to cancel..."
+                        rows="3"></textarea>
+            </div>
+            <button type="submit"
+                    style="background:#ef4444;color:white;font-weight:700;border:none;border-radius:12px;padding:0.65rem 1.5rem;cursor:pointer;"
+                    onclick="return confirm('This will submit a cancellation request to the admin for approval. Continue?')">
+              <i class="bi bi-x-circle me-2"></i>Request cancellation
+            </button>
+          </form>
+        </div>
+      @elseif($hireConfirmation->status === 'cancellation_requested')
+        <div style="margin-top:1.5rem;background:#fffbeb;border:2px solid #fde68a;border-radius:16px;padding:1rem;">
+          <p style="color:#d97706;font-weight:600;margin:0;">
+            <i class="bi bi-hourglass-split me-2"></i>Cancellation request submitted. Awaiting admin approval.
+          </p>
+        </div>
+      @elseif($hireConfirmation->status === 'cancelled')
+        <div style="margin-top:1.5rem;">
+          <span style="background:rgba(239,68,68,0.1);color:#ef4444;border-radius:999px;font-size:0.78rem;font-weight:700;padding:4px 14px;">
+            <i class="bi bi-x-circle me-1"></i>Engagement cancelled
+          </span>
+        </div>
+      @endif
+    @endif
   </div>
 
   {{-- Applicants Section --}}
   <div class="d-flex justify-content-between align-items-center mb-3">
-    {{-- <h4 class="fw-bold">Applicants ({{ count($responses) }})</h4> --}}
     @if($jobPost->shortlisted_count >= 2)
       <a href="{{ route('post_response_redirect') }}"
          class="btn-success-custom">
@@ -122,7 +165,37 @@
           </div>
         </div>
         <div class="d-flex flex-column gap-2" style="min-width:160px">
-          @if($response->status === 'Pending' && !$response->shortlisted && $jobPost->shortlisted_count < 5)
+
+          {{-- Hire button for shortlisted applicants --}}
+          @if($response->status === 'Shortlisted' && in_array($jobPost->status, ['Open','Shortlisting']))
+          <form method="POST" action="{{ route('guardian.hire', $response->id) }}"
+                onsubmit="return confirm('Are you sure you want to hire this tutor? All other shortlisted applicants will be discarded.')">
+            @csrf
+            <button type="submit"
+                    style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border:none;border-radius:10px;padding:7px 14px;font-size:0.82rem;cursor:pointer;width:100%;">
+              <i class="bi bi-person-check me-1"></i>Hire this tutor
+            </button>
+          </form>
+          @endif
+
+          {{-- Status badges when job is already hired/online/cancelled --}}
+          @if($response->status === 'Hired' || $jobPost->status === 'Hired')
+            <span style="background:rgba(245,158,11,0.1);color:#d97706;border-radius:999px;font-size:0.72rem;font-weight:700;padding:3px 12px;text-align:center;">
+              Awaiting tutor confirmation
+            </span>
+          @endif
+          @if($jobPost->status === 'Online')
+            <span style="background:rgba(34,197,94,0.1);color:#16a34a;border-radius:999px;font-size:0.72rem;font-weight:700;padding:3px 12px;text-align:center;">
+              Engagement active
+            </span>
+          @endif
+          @if($jobPost->status === 'Cancelled')
+            <span style="background:rgba(239,68,68,0.1);color:#ef4444;border-radius:999px;font-size:0.72rem;font-weight:700;padding:3px 12px;text-align:center;">
+              Cancelled
+            </span>
+          @endif
+
+          @if($response->status === 'Pending' && !$response->shortlisted && $jobPost->shortlisted_count < 5 && in_array($jobPost->status, ['Open','Shortlisting']))
           <form method="POST" action="{{ route('job_posts.shortlist', $jobPost) }}">
             @csrf
             <input type="hidden" name="response_id" value="{{ $response->id }}">
@@ -131,7 +204,7 @@
             </button>
           </form>
           @endif
-          @if($response->shortlisted)
+          @if($response->shortlisted && in_array($jobPost->status, ['Open','Shortlisting']))
           <form method="POST" action="{{ route('job_posts.remove_shortlist', $jobPost) }}">
             @csrf
             <input type="hidden" name="response_id" value="{{ $response->id }}">
@@ -140,7 +213,7 @@
             </button>
           </form>
           @endif
-          @if($response->status === 'Pending' && !$response->shortlisted)
+          @if($response->status === 'Pending' && !$response->shortlisted && in_array($jobPost->status, ['Open','Shortlisting']))
           <form method="POST" action="{{ route('job_posts.reject', $jobPost) }}">
             @csrf
             <input type="hidden" name="response_id" value="{{ $response->id }}">
