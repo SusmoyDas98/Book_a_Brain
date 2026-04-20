@@ -11,6 +11,7 @@ use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobPostController;
 use App\Http\Controllers\JobResponseController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Page_Redirection_Controller;
 use App\Http\Controllers\Payment\AdminPaymentController;
 use App\Http\Controllers\Payment\BkashPortalController;
@@ -98,7 +99,6 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
         Route::post('/guardian/hire/cancel/{hireConfirmationId}', [HireController::class, 'requestCancellation'])->name('guardian.hire.cancel');
     });
 
-    });
     // Tutor routes
     Route::middleware([IsTutor::class])->group(function () {
         Route::get('/contracts/tutor', [TuitionContractController::class, 'tutorIndex'])->name('contracts.tutor');

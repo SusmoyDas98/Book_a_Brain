@@ -130,6 +130,14 @@
                     </div>
                 @endif
 
+                @if(optional($tutorProfile)->trust_score > 0)
+                    <div class="mb-2">
+                        <span style="background:linear-gradient(135deg,#22c55e,#16a34a);color:white;border-radius:999px;font-size:0.72rem;font-weight:700;padding:4px 14px;display:inline-flex;align-items:center;gap:5px;box-shadow:0 4px 12px rgba(34,197,94,0.3);">
+                            <i class="bi bi-shield-check"></i> Trust Score: {{ $tutorProfile->trust_score }} / 100
+                        </span>
+                    </div>
+                @endif
+
                 {{-- Rating --}}
                 @php $rating = $tutor->ratings ?? 0; @endphp
                 <div class="mb-3">
