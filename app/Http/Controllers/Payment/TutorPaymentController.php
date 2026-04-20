@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
-use App\Models\AuditLog;
 use App\Models\Subscription;
 use App\Models\SubscriptionPayment;
 use App\Models\TuitionPayment;
 use App\Models\Tutor;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class TutorPaymentController extends Controller
@@ -33,12 +32,8 @@ class TutorPaymentController extends Controller
             ->orderBy('payment_date', 'desc')
             ->get();
 
-        $auditLogs = AuditLog::forTutor($tutor->tutor_id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
         return view('payment.tutor', compact(
-            'tuitionEngagements', 'subscription', 'subscriptionPayments', 'auditLogs'
+            'tuitionEngagements', 'subscription', 'subscriptionPayments'
         ));
     }
 
@@ -66,12 +61,22 @@ class TutorPaymentController extends Controller
         return view('payment.plan', compact('plan', 'role'));
     }
 
-    public function confirmPlan(Request $request): \Illuminate\Http\RedirectResponse
+    public function confirmPlan(): \Illuminate\Http\RedirectResponse
     {
         $tutor = Tutor::where('tutor_id', Auth::id())->first();
 
         if (! $tutor) {
             abort(403, 'Tutor profile not found. Please complete your profile setup.');
+        }
+
+        $activeSub = Subscription::forTutor($tutor->tutor_id)
+            ->where('status', 'active')
+            ->where('expires_at', '>', Carbon::now())
+            ->first();
+
+        if ($activeSub) {
+            return redirect()->route('tutor.payment.index')
+                ->with('info', 'You already have an active subscription. Your current plan renews on ' . $activeSub->expires_at->format('d M Y') . '.');
         }
 
         session([

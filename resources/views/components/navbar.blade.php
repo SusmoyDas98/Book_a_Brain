@@ -71,7 +71,24 @@
                     @endif
                 </div>
 
-                <button class="btn btn-upgrade">UPGRADE</button>
+                @php
+                    $_role = strtolower(Auth::user()->role);
+                    $_subId = match($_role) {
+                        'tutor'    => Auth::user()->tutor?->tutor_id,
+                        'guardian' => Auth::user()->guardian?->guardian_id,
+                        default    => null,
+                    };
+                    $_hasActiveSub = $_subId && \App\Models\Subscription::where('subscriber_type', $_role)
+                        ->where('subscriber_id', $_subId)
+                        ->where('status', 'active')
+                        ->where('expires_at', '>', now())
+                        ->exists();
+                @endphp
+                @if(!$_hasActiveSub && $_role === 'tutor')
+                    <a href="{{ route('tutor.subscribe.plan') }}" class="btn btn-upgrade">UPGRADE</a>
+                @elseif(!$_hasActiveSub && $_role === 'guardian')
+                    <a href="{{ route('guardian.subscribe.plan') }}" class="btn btn-upgrade">UPGRADE</a>
+                @endif
 
                 {{-- Profile dropdown --}}
                 <div style="position:relative;" id="profileDropdownWrapper">
@@ -125,7 +142,7 @@
 
             @else
                 <a href="{{ route('login_or_signup_page_redirect') }}" class="btn btn-tutor-search">Login</a>
-                <button class="btn btn-upgrade">UPGRADE</button>
+                <a href="{{ route('login_or_signup_page_redirect') }}" class="btn btn-upgrade">UPGRADE</a>
             @endauth
 
         </div>
@@ -212,7 +229,7 @@
 @else
 <script>
     function toggleProfileDropdown(e) {
-    e.preventDefault
+        e.preventDefault();
         const d = document.getElementById('profileDropdown');
         d.style.display = d.style.display === 'none' ? 'block' : 'none';
     }

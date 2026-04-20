@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
-use App\Models\AuditLog;
 use App\Models\Subscription;
 use App\Models\SubscriptionPayment;
 use App\Models\TuitionPayment;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class GuardianPaymentController extends Controller
@@ -32,12 +31,8 @@ class GuardianPaymentController extends Controller
             ->orderBy('payment_date', 'desc')
             ->get();
 
-        $auditLogs = AuditLog::forGuardian($guardian->id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
         return view('payment.guardian', compact(
-            'tuitionPayments', 'subscription', 'subscriptionPayments', 'auditLogs'
+            'tuitionPayments', 'subscription', 'subscriptionPayments'
         ));
     }
 
@@ -66,12 +61,22 @@ class GuardianPaymentController extends Controller
         return view('payment.plan', compact('plan', 'role'));
     }
 
-    public function confirmPlan(Request $request): \Illuminate\Http\RedirectResponse
+    public function confirmPlan(): \Illuminate\Http\RedirectResponse
     {
         $guardian = Auth::user()->guardian;
 
         if (! $guardian) {
             abort(403, 'Guardian profile not found. Please complete your profile setup.');
+        }
+
+        $activeSub = Subscription::forGuardian($guardian->id)
+            ->where('status', 'active')
+            ->where('expires_at', '>', Carbon::now())
+            ->first();
+
+        if ($activeSub) {
+            return redirect()->route('guardian.payment.index')
+                ->with('info', 'You already have an active subscription. Your current plan renews on ' . $activeSub->expires_at->format('d M Y') . '.');
         }
 
         session([
@@ -106,6 +111,18 @@ class GuardianPaymentController extends Controller
         if ($tuitionPayment->payment_status === 'paid') {
             return redirect()->route('guardian.payment.index')
                 ->with('info', 'This payment has already been completed.');
+        }
+
+        $alreadyPaidThisMonth = TuitionPayment::forGuardian($guardian->id)
+            ->where('tutor_id', $tuitionPayment->tutor_id)
+            ->where('payment_status', 'paid')
+            ->whereMonth('payment_date', Carbon::now()->month)
+            ->whereYear('payment_date', Carbon::now()->year)
+            ->exists();
+
+        if ($alreadyPaidThisMonth) {
+            return redirect()->route('guardian.payment.index')
+                ->with('info', 'You have already made a payment for this tutor this month. Next payment is due in ' . Carbon::now()->endOfMonth()->diffInDays(Carbon::now()) . ' days.');
         }
 
         session([

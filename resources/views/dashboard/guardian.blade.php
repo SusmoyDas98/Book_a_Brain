@@ -177,18 +177,31 @@
                     </p>
                     <a href="{{ route('guardian.payment.index') }}" style="color:#6366f1;font-size:0.8rem;font-weight:600;text-decoration:none;">View all →</a>
                 </div>
-                @foreach($activeContracts->take(3) as $c)
+                @php
+                    $recentPayments = $guardian
+                        ? \App\Models\TuitionPayment::forGuardian($guardian->id)
+                            ->orderBy('payment_date', 'desc')
+                            ->take(3)
+                            ->get()
+                        : collect();
+                @endphp
+                @forelse($recentPayments as $p)
                     <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid #f1f5f9;">
                         <div>
-                            <p style="font-size:0.83rem;font-weight:600;color:#0f172a;margin:0;">{{ $c->tutor->name }}</p>
-                            <p style="font-size:0.75rem;color:#94a3b8;margin:0;">{{ $c->start_date->format('M Y') }}</p>
+                            <p style="font-size:0.83rem;font-weight:600;color:#0f172a;margin:0;">{{ $p->tutor->user->name ?? ('Tutor #' . $p->tutor_id) }}</p>
+                            <p style="font-size:0.75rem;color:#94a3b8;margin:0;">{{ $p->month_label ?? $p->payment_date?->format('M Y') }}</p>
                         </div>
-                        <span style="font-weight:700;color:#16a34a;font-size:0.85rem;">৳{{ number_format($c->salary) }}</span>
+                        @if($p->payment_status === 'paid')
+                            <span style="background:rgba(34,197,94,0.1);color:#16a34a;border-radius:999px;font-size:0.72rem;font-weight:700;padding:2px 10px;">Paid</span>
+                        @elseif($p->payment_status === 'pending')
+                            <span style="background:rgba(245,158,11,0.1);color:#d97706;border-radius:999px;font-size:0.72rem;font-weight:700;padding:2px 10px;">Pending</span>
+                        @else
+                            <span style="background:rgba(239,68,68,0.1);color:#ef4444;border-radius:999px;font-size:0.72rem;font-weight:700;padding:2px 10px;">Failed</span>
+                        @endif
                     </div>
-                @endforeach
-                @if($activeContracts->isEmpty())
+                @empty
                     <p style="color:#94a3b8;font-size:0.83rem;text-align:center;padding:1rem 0;margin:0;">No payment records yet.</p>
-                @endif
+                @endforelse
             </div>
 
         </div>
