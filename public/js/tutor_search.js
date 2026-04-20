@@ -201,9 +201,9 @@ function showResults() {
         <a href="/tutor_profile/${t.id}" class="btn btn-outline-primary flex-grow-1 rounded-pill d-flex align-items-center justify-content-center gap-2" title="View Profile">
             <i class="bi bi-person-circle"></i> View Profile
         </a>
-        <a href="/direct_message/${t.id}" class="btn btn-primary rounded-pill px-3 d-flex align-items-center justify-content-center" title="Direct Message">
+        <button type="button" class="btn btn-primary rounded-pill px-3 d-flex align-items-center justify-content-center" title="Message" data-bs-toggle="modal" data-bs-target="#hireFirstModal">
             <i class="bi bi-chat-dots-fill"></i>
-        </a>
+        </button>
     </div>
 </div>`;
     }).join("");

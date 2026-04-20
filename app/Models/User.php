@@ -40,18 +40,38 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function tutorProfile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function tutorProfile()
     {
         return $this->hasOne(TutorProfile::class, 'tutor_id');
     }
 
-    public function guardian(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function guardian()
     {
         return $this->hasOne(Guardian::class, 'guardian_id');
     }
 
-    public function tutor(): \Illuminate\Database\Eloquent\Relations\HasOne
+    /**
+     * All chat conversations this user is part of (as guardian or tutor).
+     */
+    public function conversations()
     {
-        return $this->hasOne(Tutor::class, 'tutor_id');
+        return Conversation::where('guardian_id', $this->id)
+            ->orWhere('tutor_id', $this->id);
+    }
+
+    /**
+     * Reviews given by this user (as guardian).
+     */
+    public function reviewsGiven()
+    {
+        return $this->hasMany(Review::class, 'guardian_id');
+    }
+
+    /**
+     * Reviews received by this user (as tutor).
+     */
+    public function reviewsReceived()
+    {
+        return $this->hasMany(Review::class, 'tutor_id');
     }
 }

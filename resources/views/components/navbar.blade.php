@@ -22,6 +22,10 @@
                     style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
                     Dashboard
                 </a>
+                <a href="{{ route('complaints.my') }}" class="btn"
+                    style="background:#fee2e2;color:#ef4444;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
+                    My Complaints
+                </a>
                 @elseif(strtolower(Auth::user()->role) === 'tutor')
                     <a href="{{ route('contracts.tutor') }}" class="btn"
                     style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
@@ -35,60 +39,37 @@
                     style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
                     Dashboard
                 </a>
+                <a href="{{ route('complaints.my') }}" class="btn"
+                    style="background:#fee2e2;color:#ef4444;font-weight:700;border-radius:12px;padding:7px 16px;border:none;font-size:0.85rem;">
+                    My Complaints
+                </a>
                 @elseif(strtolower(Auth::user()->role) === 'admin')
                     <a href="{{ route('dashboard') }}" class="btn btn-tutor-search">Admin Dashboard</a>
                     
                 @endif
 
-                {{-- Notification bell --}}
-                <div style="position:relative;display:inline-block;">
-                    <a href="{{ route('notifications.index') }}"
-                       style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#6366f1,#4f46e5);border-radius:12px;padding:8px 10px;text-decoration:none;"
-                       title="Notifications">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                             stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                        </svg>
-                    </a>
+                {{-- Messages icon with unread badge --}}
+                @if(in_array(strtolower(Auth::user()->role), ['guardian', 'tutor']))
                     @php
-                        $_navRole = Auth::user()->role ?? null;
-                        $_navRoleRecord = match($_navRole) {
-                            'guardian' => Auth::user()->guardian ?? null,
-                            'tutor'    => Auth::user()->tutor ?? null,
-                            'admin'    => Auth::user()->admin ?? null,
-                            default    => null,
-                        };
-                        $_unreadCount = $_navRoleRecord
-                            ? \App\Models\AppNotification::forRecipient($_navRole, $_navRoleRecord->getKey())
-                                  ->unread()->count()
-                            : 0;
+                        $navUnreadCount = \App\Models\Message::whereHas('conversation', function($q) {
+                            $q->where('guardian_id', Auth::id())->orWhere('tutor_id', Auth::id());
+                        })->where('sender_id', '!=', Auth::id())->whereNull('read_at')->count();
                     @endphp
-                    @if($_unreadCount > 0)
-                        <span style="position:absolute;top:-6px;right:-8px;background:#E2136E;color:white;border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;line-height:1;">
-                            {{ $_unreadCount > 99 ? '99+' : $_unreadCount }}
-                        </span>
-                    @endif
-                </div>
-
-                @php
-                    $_role = strtolower(Auth::user()->role);
-                    $_subId = match($_role) {
-                        'tutor'    => Auth::user()->tutor?->tutor_id,
-                        'guardian' => Auth::user()->guardian?->guardian_id,
-                        default    => null,
-                    };
-                    $_hasActiveSub = $_subId && \App\Models\Subscription::where('subscriber_type', $_role)
-                        ->where('subscriber_id', $_subId)
-                        ->where('status', 'active')
-                        ->where('expires_at', '>', now())
-                        ->exists();
-                @endphp
-                @if(!$_hasActiveSub && $_role === 'tutor')
-                    <a href="{{ route('tutor.subscribe.plan') }}" class="btn btn-upgrade">UPGRADE</a>
-                @elseif(!$_hasActiveSub && $_role === 'guardian')
-                    <a href="{{ route('guardian.subscribe.plan') }}" class="btn btn-upgrade">UPGRADE</a>
+                    <a href="{{ route('messages.index') }}"
+                       style="position:relative;background:rgba(99,102,241,0.08);color:#6366f1;border-radius:12px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:0.2s;"
+                       onmouseover="this.style.background='rgba(99,102,241,0.15)'"
+                       onmouseout="this.style.background='rgba(99,102,241,0.08)'"
+                       title="Messages">
+                        <i class="bi bi-chat-dots-fill" style="font-size:1.1rem;"></i>
+                        @if($navUnreadCount > 0)
+                            <span style="position:absolute;top:-4px;right:-4px;background:#ef4444;color:white;border-radius:999px;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:800;padding:0 4px;border:2px solid white;">
+                                {{ $navUnreadCount > 99 ? '99+' : $navUnreadCount }}
+                            </span>
+                        @endif
+                    </a>
                 @endif
+
+                <button class="btn btn-upgrade">UPGRADE</button>
 
                 {{-- Profile dropdown --}}
                 <div style="position:relative;" id="profileDropdownWrapper">

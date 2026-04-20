@@ -266,13 +266,17 @@
                 </div>
             </div>
 
-            {{-- RATINGS PLACEHOLDER --}}
+            {{-- RATINGS FROM REVIEWS --}}
             <div style="background:white;border:2px solid #e2e8f0;border-radius:24px;padding:1.5rem;box-shadow:0 4px 15px rgba(0,0,0,0.05);">
                 <p style="font-weight:800;color:#0f172a;font-size:1rem;margin-bottom:0.75rem;">
                     <i class="bi bi-star me-2" style="color:#f59e0b;"></i>Your Rating
                 </p>
-                @php $rating = \App\Models\Tutor::where('tutor_id', $user->id)->value('ratings') ?? 0; @endphp
-                <div style="display:flex;align-items:center;gap:0.75rem;">
+                @php
+                    $reviewCount = \App\Models\Review::where('tutor_id', $user->id)->count();
+                    $rating = $reviewCount > 0 ? \App\Models\Review::where('tutor_id', $user->id)->avg('rating') : 0;
+                    $recentReviews = \App\Models\Review::where('tutor_id', $user->id)->with('guardian')->latest()->take(3)->get();
+                @endphp
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
                     <p style="font-size:2.5rem;font-weight:800;color:#0f172a;margin:0;line-height:1;">{{ number_format($rating, 1) }}</p>
                     <div>
                         <div style="color:#f59e0b;font-size:1rem;">
@@ -280,10 +284,61 @@
                                 <i class="bi {{ $i <= round($rating) ? 'bi-star-fill' : 'bi-star' }}"></i>
                             @endfor
                         </div>
-                        <p style="color:#94a3b8;font-size:0.75rem;margin:0.2rem 0 0;">Based on guardian reviews</p>
+                        <p style="color:#94a3b8;font-size:0.75rem;margin:0.2rem 0 0;">Based on {{ $reviewCount }} guardian review{{ $reviewCount !== 1 ? 's' : '' }}</p>
+                    </div>
+                </div>
+                @foreach($recentReviews as $rv)
+                    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:0.55rem 0.75rem;margin-bottom:0.4rem;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div style="color:#f59e0b;font-size:0.7rem;">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <i class="bi {{ $i <= $rv->rating ? 'bi-star-fill' : 'bi-star' }}"></i>
+                                @endfor
+                            </div>
+                            <span style="color:#cbd5e1;font-size:0.65rem;">{{ $rv->created_at->diffForHumans(null, true) }}</span>
+                        </div>
+                        @if($rv->comment)
+                            <p style="color:#64748b;font-size:0.78rem;margin:0.2rem 0 0;">{{ Str::limit($rv->comment, 80) }}</p>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- TRUST SCORE --}}
+            @php
+                $trustScore = optional($tutorProfile)->trust_score ?? 0;
+                $trustColor = $trustScore >= 70 ? '#22c55e' : ($trustScore >= 40 ? '#f59e0b' : '#ef4444');
+                $trustLabel = $trustScore >= 70 ? 'Excellent' : ($trustScore >= 40 ? 'Good' : 'Needs Improvement');
+            @endphp
+            <div style="background:white;border:2px solid #e2e8f0;border-radius:24px;padding:1.5rem;box-shadow:0 4px 15px rgba(0,0,0,0.05);margin-top:1rem;">
+                <p style="font-weight:800;color:#0f172a;font-size:1rem;margin-bottom:0.75rem;">
+                    <i class="bi bi-shield-check me-2" style="color:{{ $trustColor }};"></i>Trust Score
+                </p>
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <div style="width:64px;height:64px;border-radius:50%;border:4px solid {{ $trustColor }};display:flex;align-items:center;justify-content:center;">
+                        <span style="font-size:1.3rem;font-weight:800;color:{{ $trustColor }};">{{ number_format($trustScore) }}</span>
+                    </div>
+                    <div>
+                        <p style="font-weight:700;color:{{ $trustColor }};margin:0;font-size:0.9rem;">{{ $trustLabel }}</p>
+                        <p style="color:#94a3b8;font-size:0.72rem;margin:0.2rem 0 0;">Out of 100 · Based on ratings, verification, hires & profile</p>
                     </div>
                 </div>
             </div>
+
+            {{-- CALENDAR LINK --}}
+            <a href="{{ route('calendar.index') }}"
+               style="display:flex;align-items:center;gap:0.75rem;background:white;border:2px solid #e2e8f0;border-radius:24px;padding:1.25rem;box-shadow:0 4px 15px rgba(0,0,0,0.05);margin-top:1rem;text-decoration:none;transition:0.2s;"
+               onmouseover="this.style.borderColor='#6366f1'"
+               onmouseout="this.style.borderColor='#e2e8f0'">
+                <div style="width:44px;height:44px;background:rgba(99,102,241,0.08);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="bi bi-calendar3" style="color:#6366f1;font-size:1.2rem;"></i>
+                </div>
+                <div>
+                    <p style="font-weight:700;color:#0f172a;margin:0;font-size:0.9rem;">My Calendar</p>
+                    <p style="color:#94a3b8;font-size:0.75rem;margin:0;">Schedule sessions & manage availability</p>
+                </div>
+                <i class="bi bi-chevron-right ms-auto" style="color:#cbd5e1;"></i>
+            </a>
 
         </div>
     </div>
