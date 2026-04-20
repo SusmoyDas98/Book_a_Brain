@@ -50,22 +50,33 @@
         </div>
 
         {{-- CTA --}}
-        @if($role === 'guardian')
-            <form method="POST" action="{{ route('guardian.subscribe.confirm') }}">
-                @csrf
-                <button type="submit"
-                    style="display:block;width:100%;background:linear-gradient(135deg,#E2136E,#c2185b);color:white;font-weight:800;border:none;border-radius:14px;padding:0.9rem 1.5rem;font-size:1rem;cursor:pointer;box-shadow:0 6px 20px rgba(226,19,110,0.3);transition:0.2s;">
-                    <i class="bi bi-credit-card me-2"></i>Confirm &amp; Pay via bKash
-                </button>
-            </form>
+        @if($activeSubscription && $activeSubscription->isActive())
+            <div style="background:rgba(245,158,11,0.08);border:2px solid rgba(245,158,11,0.25);border-radius:14px;padding:1rem 1.25rem;text-align:center;">
+                <p style="font-weight:700;color:#d97706;font-size:0.88rem;margin:0 0 0.25rem;">
+                    <i class="bi bi-info-circle me-2"></i>You already have an active subscription.
+                </p>
+                <p style="color:#92400e;font-size:0.80rem;margin:0;">
+                    Your current plan renews on <strong>{{ $activeSubscription->expires_at->format('d M Y') }}</strong>.
+                </p>
+            </div>
         @else
-            <form method="POST" action="{{ route('tutor.subscribe.confirm') }}">
-                @csrf
-                <button type="submit"
-                    style="display:block;width:100%;background:linear-gradient(135deg,#E2136E,#c2185b);color:white;font-weight:800;border:none;border-radius:14px;padding:0.9rem 1.5rem;font-size:1rem;cursor:pointer;box-shadow:0 6px 20px rgba(226,19,110,0.3);transition:0.2s;">
-                    <i class="bi bi-credit-card me-2"></i>Confirm &amp; Pay via bKash
-                </button>
-            </form>
+            @if($role === 'guardian')
+                <form method="POST" action="{{ route('guardian.subscribe.confirm') }}">
+                    @csrf
+                    <button type="submit"
+                        style="display:block;width:100%;background:linear-gradient(135deg,#E2136E,#c2185b);color:white;font-weight:800;border:none;border-radius:14px;padding:0.9rem 1.5rem;font-size:1rem;cursor:pointer;box-shadow:0 6px 20px rgba(226,19,110,0.3);transition:0.2s;">
+                        <i class="bi bi-credit-card me-2"></i>Confirm &amp; Pay via bKash
+                    </button>
+                </form>
+            @else
+                <form method="POST" action="{{ route('tutor.subscribe.confirm') }}">
+                    @csrf
+                    <button type="submit"
+                        style="display:block;width:100%;background:linear-gradient(135deg,#E2136E,#c2185b);color:white;font-weight:800;border:none;border-radius:14px;padding:0.9rem 1.5rem;font-size:1rem;cursor:pointer;box-shadow:0 6px 20px rgba(226,19,110,0.3);transition:0.2s;">
+                        <i class="bi bi-credit-card me-2"></i>Confirm &amp; Pay via bKash
+                    </button>
+                </form>
+            @endif
         @endif
     </div>
 

@@ -58,7 +58,12 @@ class GuardianPaymentController extends Controller
 
         $role = 'guardian';
 
-        return view('payment.plan', compact('plan', 'role'));
+        $activeSubscription = Subscription::forGuardian($guardian->id)
+            ->where('status', 'active')
+            ->where('expires_at', '>', Carbon::now())
+            ->first();
+
+        return view('payment.plan', compact('plan', 'role', 'activeSubscription'));
     }
 
     public function confirmPlan(): \Illuminate\Http\RedirectResponse
@@ -113,16 +118,18 @@ class GuardianPaymentController extends Controller
                 ->with('info', 'This payment has already been completed.');
         }
 
-        $alreadyPaidThisMonth = TuitionPayment::forGuardian($guardian->id)
+        $lastPaidPayment = TuitionPayment::forGuardian($guardian->id)
             ->where('tutor_id', $tuitionPayment->tutor_id)
             ->where('payment_status', 'paid')
-            ->whereMonth('payment_date', Carbon::now()->month)
-            ->whereYear('payment_date', Carbon::now()->year)
-            ->exists();
+            ->orderBy('payment_date', 'desc')
+            ->first();
 
-        if ($alreadyPaidThisMonth) {
-            return redirect()->route('guardian.payment.index')
-                ->with('info', 'You have already made a payment for this tutor this month. Next payment is due in ' . Carbon::now()->endOfMonth()->diffInDays(Carbon::now()) . ' days.');
+        if ($lastPaidPayment && $lastPaidPayment->payment_date) {
+            $nextPaymentDue = $lastPaidPayment->payment_date->copy()->addDays(30);
+            if (Carbon::today()->lt($nextPaymentDue)) {
+                return redirect()->route('guardian.payment.index')
+                    ->with('info', 'Your next payment for this tutor is due on ' . $nextPaymentDue->format('d M Y') . '.');
+            }
         }
 
         session([

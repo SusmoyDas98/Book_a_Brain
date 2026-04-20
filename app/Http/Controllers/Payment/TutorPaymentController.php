@@ -58,7 +58,12 @@ class TutorPaymentController extends Controller
 
         $role = 'tutor';
 
-        return view('payment.plan', compact('plan', 'role'));
+        $activeSubscription = Subscription::forTutor($tutor->tutor_id)
+            ->where('status', 'active')
+            ->where('expires_at', '>', Carbon::now())
+            ->first();
+
+        return view('payment.plan', compact('plan', 'role', 'activeSubscription'));
     }
 
     public function confirmPlan(): \Illuminate\Http\RedirectResponse
