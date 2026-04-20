@@ -44,6 +44,10 @@
                 </p>
             </div>
         @endif
+        <a href="{{ route('admin.payment.index') }}"
+           style="background:{{ request()->routeIs('admin.payment.index') ? 'linear-gradient(135deg,#6366f1,#4f46e5)' : 'white' }};color:{{ request()->routeIs('admin.payment.index') ? 'white' : '#6366f1' }};font-weight:700;border:2px solid #6366f1;border-radius:14px;padding:0.7rem 1.4rem;text-decoration:none;font-size:0.88rem;{{ request()->routeIs('admin.payment.index') ? 'box-shadow:0 6px 20px rgba(99,102,241,0.3);' : '' }}">
+            <i class="bi bi-credit-card me-2"></i>Payment &amp; Tuition Fees
+        </a>
     </div>
 
     {{-- STATS CARDS --}}
@@ -234,6 +238,65 @@
 
         </div>
     </div>
+
+    {{-- CANCELLATION REQUESTS (Feature 10) --}}
+    @if(isset($cancellationRequests) && $cancellationRequests->count() > 0)
+    <div style="background:white;border:2px solid #fecaca;border-radius:24px;padding:1.5rem;box-shadow:0 4px 15px rgba(0,0,0,0.05);margin-top:1.5rem;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <p style="font-weight:800;color:#0f172a;font-size:1rem;margin:0;">
+                <i class="bi bi-exclamation-triangle me-2" style="color:#ef4444;"></i>Pending Cancellation Requests
+            </p>
+            <span style="background:rgba(239,68,68,0.1);color:#ef4444;border-radius:999px;font-size:0.72rem;font-weight:700;padding:2px 10px;">
+                {{ $cancellationRequests->count() }} pending
+            </span>
+        </div>
+        <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.83rem;">
+                <thead>
+                    <tr style="border-bottom:2px solid #f1f5f9;">
+                        <th style="text-align:left;padding:0.6rem 0.75rem;color:#64748b;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Job ID</th>
+                        <th style="text-align:left;padding:0.6rem 0.75rem;color:#64748b;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Guardian ID</th>
+                        <th style="text-align:left;padding:0.6rem 0.75rem;color:#64748b;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Tutor ID</th>
+                        <th style="text-align:left;padding:0.6rem 0.75rem;color:#64748b;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Reason</th>
+                        <th style="text-align:left;padding:0.6rem 0.75rem;color:#64748b;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Requested At</th>
+                        <th style="text-align:left;padding:0.6rem 0.75rem;color:#64748b;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($cancellationRequests as $confirmation)
+                    <tr style="border-bottom:1px solid #f8fafc;">
+                        <td style="padding:0.65rem 0.75rem;font-weight:600;color:#0f172a;">#{{ $confirmation->job_id }}</td>
+                        <td style="padding:0.65rem 0.75rem;color:#64748b;">{{ $confirmation->guardian_id }}</td>
+                        <td style="padding:0.65rem 0.75rem;color:#64748b;">{{ $confirmation->tutor_id }}</td>
+                        <td style="padding:0.65rem 0.75rem;color:#64748b;max-width:220px;">
+                            <span style="font-size:0.8rem;">{{ Str::limit($confirmation->cancellation_reason, 80) }}</span>
+                        </td>
+                        <td style="padding:0.65rem 0.75rem;color:#94a3b8;font-size:0.78rem;">{{ $confirmation->updated_at->format('d M Y, h:i A') }}</td>
+                        <td style="padding:0.65rem 0.75rem;">
+                            <form method="POST"
+                                  action="{{ route('admin.hire.cancel.approve', $confirmation->id) }}">
+                                @csrf
+                                <button type="submit"
+                                        style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:4px 12px;font-size:0.75rem;font-weight:700;cursor:pointer;"
+                                        onclick="return confirm('Approve this cancellation? This cannot be undone.')">
+                                    Approve
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @else
+    <div style="background:white;border:2px solid #e2e8f0;border-radius:24px;padding:1.5rem;box-shadow:0 4px 15px rgba(0,0,0,0.05);margin-top:1.5rem;">
+        <p style="font-weight:800;color:#0f172a;font-size:1rem;margin-bottom:0.5rem;">
+            <i class="bi bi-x-circle me-2" style="color:#6366f1;"></i>Cancellation Requests
+        </p>
+        <p style="color:#94a3b8;font-size:0.83rem;margin:0;">No cancellation requests pending.</p>
+    </div>
+    @endif
 
 </div>
 </div>

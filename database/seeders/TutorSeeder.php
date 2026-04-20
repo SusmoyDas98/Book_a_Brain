@@ -3,13 +3,13 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Tutor;
+use Illuminate\Support\Facades\DB;
 
 class TutorSeeder extends Seeder
 {
     public function run(): void
     {
-        Tutor::insert([
+        $tutors = [
             [
                 'tutor_id' => 1,
                 'gender' => 'Male',
@@ -20,7 +20,7 @@ class TutorSeeder extends Seeder
                 'ratings' => 4.5,
                 'review' => 'Very patient and explains concepts clearly.',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'tutor_id' => 2,
@@ -32,7 +32,7 @@ class TutorSeeder extends Seeder
                 'ratings' => 4.2,
                 'review' => 'Strong background in mathematics.',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'tutor_id' => 3,
@@ -44,8 +44,15 @@ class TutorSeeder extends Seeder
                 'ratings' => 4.0,
                 'review' => 'Good at explaining programming topics.',
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
-        ]);
+                'updated_at' => now(),
+            ],
+        ];
+
+        foreach ($tutors as $tutor) {
+            DB::table('tutors')->updateOrInsert(
+                ['tutor_id' => $tutor['tutor_id']],
+                $tutor
+            );
+        }
     }
 }

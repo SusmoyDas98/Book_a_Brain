@@ -34,7 +34,23 @@
 <div style="min-height:100vh; padding: 2.5rem 0 5rem;margin-top:40px;">
 <div class="container" style="max-width:1100px;">
 
-    {{-- HEADER --}}
+    {{-- FLASH MESSAGES --}}
+    @if(session('success'))
+        <div style="background:#f0fdf4;border:2px solid #bbf7d0;color:#16a34a;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div style="background:#fef2f2;border:2px solid #fecaca;color:#ef4444;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+            <i class="bi bi-x-circle-fill me-2"></i>{{ session('error') }}
+        </div>
+    @endif
+    @if(session('info'))
+        <div style="background:#eff6ff;border:2px solid #bfdbfe;color:#3b82f6;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+            <i class="bi bi-info-circle-fill me-2"></i>{{ session('info') }}
+        </div>
+    @endif
+
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
         <div>
             <p style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.3em;color:#6366f1;font-weight:700;">Book-a-Brain</p>
@@ -51,6 +67,10 @@
             <a href="{{ route('contracts.tutor') }}"
                style="background:white;color:#6366f1;font-weight:700;border:2px solid #6366f1;border-radius:14px;padding:0.7rem 1.4rem;text-decoration:none;font-size:0.88rem;">
                 <i class="bi bi-file-earmark-text me-2"></i>My Contracts
+            </a>
+            <a href="{{ route('tutor.payment.index') }}"
+               style="background:{{ request()->routeIs('tutor.payment.index') ? 'linear-gradient(135deg,#6366f1,#4f46e5)' : 'white' }};color:{{ request()->routeIs('tutor.payment.index') ? 'white' : '#6366f1' }};font-weight:700;border:2px solid #6366f1;border-radius:14px;padding:0.7rem 1.4rem;text-decoration:none;font-size:0.88rem;{{ request()->routeIs('tutor.payment.index') ? 'box-shadow:0 6px 20px rgba(99,102,241,0.3);' : '' }}">
+                <i class="bi bi-credit-card me-2"></i>Payment &amp; Tuition Fees
             </a>
         </div>
     </div>
@@ -115,6 +135,13 @@
             </div>
         </div>
     </div>
+
+    {{-- PENDING HIRE OFFERS (Feature 10) --}}
+    @if(isset($pendingHires) && $pendingHires->isNotEmpty())
+        @foreach($pendingHires as $confirmation)
+            @include('hire.tutor_confirmation', ['confirmation' => $confirmation])
+        @endforeach
+    @endif
 
     <div class="row g-4">
 

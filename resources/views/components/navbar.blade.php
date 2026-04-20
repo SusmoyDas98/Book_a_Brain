@@ -123,7 +123,7 @@
 
             @else
                 <a href="{{ route('login_or_signup_page_redirect') }}" class="btn btn-tutor-search">Login</a>
-                <button class="btn btn-upgrade">UPGRADE</button>
+                <a href="{{ route('login_or_signup_page_redirect') }}" class="btn btn-upgrade">UPGRADE</a>
             @endauth
 
         </div>
@@ -210,7 +210,7 @@
 @else
 <script>
     function toggleProfileDropdown(e) {
-    e.preventDefault
+        e.preventDefault();
         const d = document.getElementById('profileDropdown');
         d.style.display = d.style.display === 'none' ? 'block' : 'none';
     }

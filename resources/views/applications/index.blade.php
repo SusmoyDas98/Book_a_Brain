@@ -110,6 +110,12 @@
     @endforeach
   @endif
 
+  @if($responses->hasPages())
+    <div class="d-flex justify-content-center mt-4">
+      {{ $responses->links() }}
+    </div>
+  @endif
+
 </div>
 
 </body>

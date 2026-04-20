@@ -6,11 +6,16 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\Hire\HireController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobPostController;
 use App\Http\Controllers\JobResponseController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Page_Redirection_Controller;
+use App\Http\Controllers\Payment\AdminPaymentController;
+use App\Http\Controllers\Payment\BkashPortalController;
+use App\Http\Controllers\Payment\GuardianPaymentController;
+use App\Http\Controllers\Payment\TutorPaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TuitionContractController;
@@ -58,6 +63,13 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/select-role', [ProfileController::class, 'saveRole'])->name('role.save');
     Route::post('/profile/confirm', [ProfileController::class, 'confirmProfile'])->name('profile.confirm');
+
+    // ── Notification routes (shared, accessible by all roles) ──
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read.all');
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread.count');
+
     // Guardian routes
     Route::middleware([IsGuardian::class])->group(function () {
         Route::get('/tutor_search', [Page_Redirection_Controller::class, 'tutor_search_page'])
@@ -76,6 +88,15 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
         Route::post('/job-posts/{jobPost}/shortlist', [JobPostController::class, 'shortlist'])->name('job_posts.shortlist');
         Route::post('/job-posts/{jobPost}/remove-shortlist', [JobPostController::class, 'removeShortlist'])->name('job_posts.remove_shortlist');
         Route::post('/job-posts/{jobPost}/reject', [JobPostController::class, 'rejectApplicant'])->name('job_posts.reject');
+        Route::get('/guardian/payment', [GuardianPaymentController::class, 'index'])->name('guardian.payment.index');
+        Route::post('/guardian/payment/{tuitionPayment}/initiate', [GuardianPaymentController::class, 'initiatePayment'])->name('guardian.payment.initiate');
+        Route::get('/guardian/subscribe', [GuardianPaymentController::class, 'showPlan'])->name('guardian.subscribe.plan');
+        Route::post('/guardian/subscribe/confirm', [GuardianPaymentController::class, 'confirmPlan'])->name('guardian.subscribe.confirm');
+
+        // ---- Feature 10: Hire System (Guardian) ----
+        Route::post('/guardian/hire/{applicationId}', [HireController::class, 'hire'])->name('guardian.hire');
+        Route::post('/guardian/hire/cancel/{hireConfirmationId}', [HireController::class, 'requestCancellation'])->name('guardian.hire.cancel');
+    });
 
     });
     // Tutor routes

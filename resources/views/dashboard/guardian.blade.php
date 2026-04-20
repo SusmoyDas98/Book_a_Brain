@@ -14,6 +14,23 @@
 <div style="min-height:100vh; padding: 2.5rem 0 5rem;">
 <div class="container" style="max-width:1100px; margin-top:40px;">
 
+    {{-- FLASH MESSAGES --}}
+    @if(session('success'))
+        <div style="background:#f0fdf4;border:2px solid #bbf7d0;color:#16a34a;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div style="background:#fef2f2;border:2px solid #fecaca;color:#ef4444;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+            <i class="bi bi-x-circle-fill me-2"></i>{{ session('error') }}
+        </div>
+    @endif
+    @if(session('info'))
+        <div style="background:#eff6ff;border:2px solid #bfdbfe;color:#3b82f6;border-radius:14px;padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-weight:600;font-size:0.88rem;">
+            <i class="bi bi-info-circle-fill me-2"></i>{{ session('info') }}
+        </div>
+    @endif
+
     {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
         <div>
@@ -31,6 +48,10 @@
             <a href="{{ route('contracts.guardian') }}"
                style="background:white;color:#6366f1;font-weight:700;border:2px solid #6366f1;border-radius:14px;padding:0.7rem 1.4rem;text-decoration:none;font-size:0.88rem;">
                 <i class="bi bi-file-earmark-text me-2"></i>My Contracts
+            </a>
+            <a href="{{ route('guardian.payment.index') }}"
+               style="background:{{ request()->routeIs('guardian.payment.index') ? 'linear-gradient(135deg,#6366f1,#4f46e5)' : 'white' }};color:{{ request()->routeIs('guardian.payment.index') ? 'white' : '#6366f1' }};font-weight:700;border:2px solid #6366f1;border-radius:14px;padding:0.7rem 1.4rem;text-decoration:none;font-size:0.88rem;{{ request()->routeIs('guardian.payment.index') ? 'box-shadow:0 6px 20px rgba(99,102,241,0.3);' : '' }}">
+                <i class="bi bi-credit-card me-2"></i>Payment &amp; Tuition Fees
             </a>
         </div>
     </div>
@@ -148,26 +169,39 @@
                 </div>
             </div>
 
-            {{-- PAYMENT HISTORY PLACEHOLDER --}}
+            {{-- PAYMENT HISTORY --}}
             <div style="background:white;border:2px solid #e2e8f0;border-radius:24px;padding:1.5rem;box-shadow:0 4px 15px rgba(0,0,0,0.05);">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <p style="font-weight:800;color:#0f172a;font-size:1rem;margin:0;">
                         <i class="bi bi-receipt me-2" style="color:#6366f1;"></i>Payment History
                     </p>
-                    <span style="background:rgba(245,158,11,0.1);color:#d97706;border-radius:999px;font-size:0.7rem;font-weight:700;padding:2px 10px;">Coming Soon</span>
+                    <a href="{{ route('guardian.payment.index') }}" style="color:#6366f1;font-size:0.8rem;font-weight:600;text-decoration:none;">View all →</a>
                 </div>
-                @foreach($activeContracts->take(3) as $c)
+                @php
+                    $recentPayments = $guardian
+                        ? \App\Models\TuitionPayment::forGuardian($guardian->id)
+                            ->orderBy('payment_date', 'desc')
+                            ->take(3)
+                            ->get()
+                        : collect();
+                @endphp
+                @forelse($recentPayments as $p)
                     <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid #f1f5f9;">
                         <div>
-                            <p style="font-size:0.83rem;font-weight:600;color:#0f172a;margin:0;">{{ $c->tutor->name }}</p>
-                            <p style="font-size:0.75rem;color:#94a3b8;margin:0;">{{ $c->start_date->format('M Y') }}</p>
+                            <p style="font-size:0.83rem;font-weight:600;color:#0f172a;margin:0;">{{ $p->tutor->user->name ?? ('Tutor #' . $p->tutor_id) }}</p>
+                            <p style="font-size:0.75rem;color:#94a3b8;margin:0;">{{ $p->month_label ?? $p->payment_date?->format('M Y') }}</p>
                         </div>
-                        <span style="font-weight:700;color:#16a34a;font-size:0.85rem;">৳{{ number_format($c->salary) }}</span>
+                        @if($p->payment_status === 'paid')
+                            <span style="background:rgba(34,197,94,0.1);color:#16a34a;border-radius:999px;font-size:0.72rem;font-weight:700;padding:2px 10px;">Paid</span>
+                        @elseif($p->payment_status === 'pending')
+                            <span style="background:rgba(245,158,11,0.1);color:#d97706;border-radius:999px;font-size:0.72rem;font-weight:700;padding:2px 10px;">Pending</span>
+                        @else
+                            <span style="background:rgba(239,68,68,0.1);color:#ef4444;border-radius:999px;font-size:0.72rem;font-weight:700;padding:2px 10px;">Failed</span>
+                        @endif
                     </div>
-                @endforeach
-                @if($activeContracts->isEmpty())
+                @empty
                     <p style="color:#94a3b8;font-size:0.83rem;text-align:center;padding:1rem 0;margin:0;">No payment records yet.</p>
-                @endif
+                @endforelse
             </div>
 
         </div>

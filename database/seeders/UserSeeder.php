@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -11,11 +12,17 @@ class UserSeeder extends Seeder
     public function run()
     {
         // Admin user
-        User::create([
+        $adminUser = User::create([
             'name' => 'Goku',
             'email' => 'admin@bookabrain.com',
             'password' => Hash::make('123'),
             'role' => 'admin'
+        ]);
+
+        Admin::create([
+            'admin_id'    => $adminUser->id,
+            'department'  => 'Platform',
+            'permissions' => ['verify_tutors', 'manage_users', 'approve_cancellations'],
         ]);
 
         // Standard users
