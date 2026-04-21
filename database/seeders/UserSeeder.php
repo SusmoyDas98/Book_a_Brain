@@ -25,29 +25,29 @@ class UserSeeder extends Seeder
             'permissions' => ['verify_tutors', 'manage_users', 'approve_cancellations'],
         ]);
 
-        // Standard users
+        // Tutors (tutor_id=2, tutor_id=3 in TutorSeeder)
         User::create([
             'name' => 'Naruto',
             'email' => 'naruto@example.com',
             'password' => Hash::make('123'),
-            'role' => 'user'
+            'role' => 'tutor'
         ]);
 
         User::create([
             'name' => 'Luffy',
             'email' => 'luffy@example.com',
             'password' => Hash::make('123'),
-            'role' => 'user'
+            'role' => 'tutor'
         ]);
 
+        // Guardians
         User::create([
             'name' => 'Sailor Moon',
             'email' => 'sailormoon@example.com',
             'password' => Hash::make('123'),
-            'role' => 'user'
+            'role' => 'guardian'
         ]);
 
-        // Google OAuth users
         User::create([
             'name' => 'Totoro',
             'email' => 'totoro@example.com',
@@ -55,8 +55,8 @@ class UserSeeder extends Seeder
             'google_token' => null,
             'google_refresh_token' => null,
             'avatar' => 'https://example.com/totoro.png',
-            'role' => 'user',
-            'password' => Hash::make('123') // still needs a password for firstOrCreate logic
+            'role' => 'guardian',
+            'password' => Hash::make('123')
         ]);
 
         User::create([
@@ -66,7 +66,7 @@ class UserSeeder extends Seeder
             'google_token' => null,
             'google_refresh_token' => null,
             'avatar' => 'https://example.com/kiki.png',
-            'role' => 'user',
+            'role' => 'guardian',
             'password' => Hash::make('123')
         ]);
     }

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\BkashAccount;
 use App\Models\Guardian;
 use App\Models\Tutor;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class BkashAccountSeeder extends Seeder
@@ -22,9 +23,17 @@ class BkashAccountSeeder extends Seeder
             $this->command->warn('BkashAccountSeeder: No tutors found — skipping tutor accounts.');
         }
 
+        // Kiki gets a fixed bKash number
+        $kikiUser = User::where('email', 'kiki@example.com')->first();
+        $kikiGuardian = $kikiUser ? Guardian::where('guardian_id', $kikiUser->id)->first() : null;
+
         foreach ($guardians as $guardian) {
-            $this->seedAccount('guardian', $guardian->id, '017'.str_pad($guardian->id.'1', 8, '0', STR_PAD_LEFT));
-            $this->seedAccount('guardian', $guardian->id, '018'.str_pad($guardian->id.'2', 8, '0', STR_PAD_LEFT));
+            $isKiki = $kikiGuardian && $guardian->id === $kikiGuardian->id;
+            $primary = $isKiki ? '01746478910' : '017'.str_pad($guardian->id.'1', 8, '0', STR_PAD_LEFT);
+            $this->seedAccount('guardian', $guardian->id, $primary);
+            if (!$isKiki) {
+                $this->seedAccount('guardian', $guardian->id, '018'.str_pad($guardian->id.'2', 8, '0', STR_PAD_LEFT));
+            }
         }
 
         foreach ($tutors as $tutor) {

@@ -110,6 +110,15 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
         Route::post('/jobs/{jobPost}/apply', [JobApplicationController::class, 'apply'])->name('jobs.apply');
         Route::get('/my-applications', [JobApplicationController::class, 'index'])->name('applications.index');
         Route::delete('/applications/{response}/withdraw', [JobApplicationController::class, 'withdraw'])->name('applications.withdraw');
+
+        // ---- Feature 20: Tutor Payment & Subscription ----
+        Route::get('/tutor/payment', [TutorPaymentController::class, 'index'])->name('tutor.payment.index');
+        Route::get('/tutor/subscribe', [TutorPaymentController::class, 'showPlan'])->name('tutor.subscribe.plan');
+        Route::post('/tutor/subscribe/confirm', [TutorPaymentController::class, 'confirmPlan'])->name('tutor.subscribe.confirm');
+
+        // ---- Feature 10: Hire System (Tutor) ----
+        Route::post('/tutor/hire/confirm/{hireConfirmationId}', [HireController::class, 'confirmHire'])->name('tutor.hire.confirm');
+        Route::post('/tutor/hire/decline/{hireConfirmationId}', [HireController::class, 'declineHire'])->name('tutor.hire.decline');
     });
 
     // Admin Routes
@@ -142,6 +151,10 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
         // ---- Feature 17: Analytics & Reporting ----
         Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics');
         Route::get('/admin/analytics/export', [AnalyticsController::class, 'exportCsv'])->name('admin.analytics.export');
+
+        // ---- Feature 20: Admin Payment & Hire Oversight ----
+        Route::get('/admin/payment', [AdminPaymentController::class, 'index'])->name('admin.payment.index');
+        Route::post('/admin/hire/cancel/approve/{hireConfirmationId}', [HireController::class, 'approveCancellation'])->name('admin.hire.cancel.approve');
     });
 
     // Shared
@@ -166,6 +179,18 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
     Route::get('/my-complaints', [ComplaintController::class, 'myComplaints'])->name('complaints.my');
     Route::get('/complaints/create', [ComplaintController::class, 'create'])->name('complaints.create');
     Route::post('/complaints', [ComplaintController::class, 'store'])->name('complaints.store');
+
+    // ---- Feature 20: bKash Simulated Portal ----
+    Route::get('/bkash/phone', [BkashPortalController::class, 'showPhone'])->name('bkash.portal.phone');
+    Route::post('/bkash/phone', [BkashPortalController::class, 'submitPhone'])->name('bkash.portal.phone.submit');
+    Route::get('/bkash/otp', [BkashPortalController::class, 'showOtp'])->name('bkash.portal.otp');
+    Route::post('/bkash/otp', [BkashPortalController::class, 'submitOtp'])->name('bkash.portal.otp.submit');
+    Route::get('/bkash/password', [BkashPortalController::class, 'showPassword'])->name('bkash.portal.password');
+    Route::post('/bkash/password', [BkashPortalController::class, 'submitPassword'])->name('bkash.portal.password.submit');
+    Route::post('/bkash/cancel', [BkashPortalController::class, 'cancel'])->name('bkash.portal.cancel');
+    Route::get('/bkash/success', [BkashPortalController::class, 'success'])->name('bkash.portal.success');
+    Route::get('/bkash/failed', [BkashPortalController::class, 'failed'])->name('bkash.portal.failed');
+    Route::get('/bkash/cancelled', [BkashPortalController::class, 'cancelled'])->name('bkash.portal.cancelled');
 
     // ---- Feature 18: Calendar (Tutor) ----
     Route::middleware([IsTutor::class])->group(function () {
