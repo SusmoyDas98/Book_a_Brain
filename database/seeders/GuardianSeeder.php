@@ -19,20 +19,22 @@ class GuardianSeeder extends Seeder
         ])->get();
 
         foreach ($users as $user) {
-            Guardian::create([
-                'guardian_id' => $user->id,
-                'name' => $user->name, // can use the same name as user
-                'email' => $user->email,
-                'contact_no' => '+8801' . rand(100000000, 999999999), // random bangladeshi number
-                'gender' => rand(0, 1) ? 'Male' : 'Female',
-                'profile_picture' => $user->avatar ?? null,
-                'nid_card' => null, // leave empty or add dummy
-                'address' => '123 Example Street, Dhaka',
-                'location' => json_encode([
-                    'lat' => 23.8103 + (rand(-100, 100)/10000), 
-                    'lng' => 90.4125 + (rand(-100, 100)/10000)
-                ]),
-            ]);
+            Guardian::firstOrCreate(
+                ['guardian_id' => $user->id],
+                [
+                    'name'            => $user->name,
+                    'email'           => $user->email,
+                    'contact_no'      => '+8801' . rand(100000000, 999999999),
+                    'gender'          => rand(0, 1) ? 'Male' : 'Female',
+                    'profile_picture' => $user->avatar ?? null,
+                    'nid_card'        => null,
+                    'address'         => '123 Example Street, Dhaka',
+                    'location'        => json_encode([
+                        'lat' => 23.8103 + (rand(-100, 100) / 10000),
+                        'lng' => 90.4125 + (rand(-100, 100) / 10000),
+                    ]),
+                ]
+            );
         }
     }
 }

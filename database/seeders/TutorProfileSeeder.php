@@ -9,9 +9,7 @@ class TutorProfileSeeder extends Seeder
 {
     public function run(): void
     {
-        // Tutor 1
-        TutorProfile::create([
-            'tutor_id' => 1,
+        TutorProfile::firstOrCreate(['tutor_id' => 1], [
             'profile_picture' => 'storage/profiles/tutor1.jpg',
             'name' => 'John Doe',
             'email' => 'john@example.com',
@@ -20,11 +18,11 @@ class TutorProfileSeeder extends Seeder
             'educational_institutions' => [
                 'school' => 'ABC High School',
                 'college' => 'DEF College',
-                'university' => 'BRAC University'
+                'university' => 'BRAC University',
             ],
             'work_experience' => [
                 '2018-2020' => 'Math Teacher at XYZ School',
-                '2020-2023' => 'Physics Tutor at ABC Academy'
+                '2020-2023' => 'Physics Tutor at ABC Academy',
             ],
             'teaching_method' => ['online', 'offline', 'group classes'],
             'availability' => ['Mon-Fri 5-8pm', 'Sat 10am-2pm'],
@@ -34,9 +32,7 @@ class TutorProfileSeeder extends Seeder
             'expected_salary' => 2500.00,
         ]);
 
-        // Tutor 2
-        TutorProfile::create([
-            'tutor_id' => 2,
+        TutorProfile::firstOrCreate(['tutor_id' => 2], [
             'profile_picture' => 'storage/profiles/tutor2.jpg',
             'name' => 'Jane Smith',
             'email' => 'jane@example.com',
@@ -45,11 +41,11 @@ class TutorProfileSeeder extends Seeder
             'educational_institutions' => [
                 'school' => 'XYZ High School',
                 'college' => 'LMN College',
-                'university' => 'North South University'
+                'university' => 'North South University',
             ],
             'work_experience' => [
                 '2017-2019' => 'English Teacher at LMN School',
-                '2019-2023' => 'Online Tutor at EdTech Platform'
+                '2019-2023' => 'Online Tutor at EdTech Platform',
             ],
             'teaching_method' => ['online', 'one-to-one'],
             'availability' => ['Tue-Thu 4-7pm'],
@@ -59,9 +55,7 @@ class TutorProfileSeeder extends Seeder
             'expected_salary' => 2000.00,
         ]);
 
-        // Tutor 3
-        TutorProfile::create([
-            'tutor_id' => 3,
+        TutorProfile::firstOrCreate(['tutor_id' => 3], [
             'profile_picture' => 'storage/profiles/tutor3.jpg',
             'name' => 'Alex Johnson',
             'email' => 'alex@example.com',
@@ -70,11 +64,11 @@ class TutorProfileSeeder extends Seeder
             'educational_institutions' => [
                 'school' => 'DEF High School',
                 'college' => 'GHI College',
-                'university' => 'University of Dhaka'
+                'university' => 'University of Dhaka',
             ],
             'work_experience' => [
                 '2015-2018' => 'Science Tutor at ABC Academy',
-                '2018-2023' => 'Freelance Programming Tutor'
+                '2018-2023' => 'Freelance Programming Tutor',
             ],
             'teaching_method' => ['offline', 'group classes'],
             'availability' => ['Mon-Fri 6-9pm', 'Sat 9am-1pm'],

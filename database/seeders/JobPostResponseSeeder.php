@@ -19,9 +19,15 @@ class JobPostResponseSeeder extends Seeder
 
 
         foreach ($tutorProfiles as $profile) {
-            // Get corresponding tutor rating
+            // Skip if a seed record for this tutor already exists (no job_post_id)
+            if (JobPostResponse::whereNull('job_post_id')
+                    ->where('tutor_id', $profile->tutor_id)
+                    ->exists()) {
+                continue;
+            }
+
             $rating = $tutors[$profile->tutor_id]->ratings ?? null;
-            $gender = $tutors[$profile->tutor_id]->gender ?? "not specified";
+            $gender = $tutors[$profile->tutor_id]->gender ?? 'not specified';
 
             JobPostResponse::create([
                 'guardian_id' => $guardians->random()->guardian_id,
@@ -39,7 +45,7 @@ class JobPostResponseSeeder extends Seeder
                 'preferred_classes' => $profile->preferred_classes,
                 'expected_salary' => $profile->expected_salary,
                 'tutor_rating' => $rating,
-                'shortlisted' => rand(0,1), // random true/false
+                'shortlisted' => rand(0, 1),
             ]);
         }
 
