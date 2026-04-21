@@ -15,11 +15,12 @@ class AuthController extends Controller
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
+
             return redirect()->route('landing_page');
         }
         if ($action === 'login') {
             $credentials = $request->validate([
-                'email'    => 'required|email',
+                'email' => 'required|email',
                 'password' => 'required|min:2',
             ]);
 
@@ -41,14 +42,14 @@ class AuthController extends Controller
 
         if ($action === 'signup') {
             $credentials = $request->validate([
-                'name'              => 'required',
-                'email'             => 'required|email|unique:users,email',
-                'password'          => 'required|min:2|confirmed',
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|min:2|confirmed',
             ]);
 
             $user = User::create([
-                'name'     => $credentials['name'],
-                'email'    => $credentials['email'],
+                'name' => $credentials['name'],
+                'email' => $credentials['email'],
                 'password' => bcrypt($credentials['password']),
             ]);
 
@@ -61,9 +62,14 @@ class AuthController extends Controller
     }
 
     public function index() {}
+
     public function create(Request $request) {}
+
     public function show(string $id) {}
+
     public function edit(string $id) {}
+
     public function update(Request $request, string $id) {}
+
     public function destroy(string $id) {}
 }

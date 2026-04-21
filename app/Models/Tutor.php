@@ -15,6 +15,7 @@ class Tutor extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
+        'tutor_id',
         'gender',
         'nid_card',
         'cv_pdf',
@@ -70,6 +71,6 @@ class Tutor extends Model
     public function notifications()
     {
         return $this->hasMany(AppNotification::class, 'recipient_id', 'tutor_id')
-                    ->where('recipient_type', 'tutor');
+            ->where('recipient_type', 'tutor');
     }
 }

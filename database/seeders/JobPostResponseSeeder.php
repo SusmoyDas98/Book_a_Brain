@@ -17,12 +17,11 @@ class JobPostResponseSeeder extends Seeder
         $tutors = Tutor::all()->keyBy('tutor_id'); // key by tutor_id for easy lookup
         $guardians = Guardian::all(); // key by guardian id
 
-
         foreach ($tutorProfiles as $profile) {
             // Skip if a seed record for this tutor already exists (no job_post_id)
             if (JobPostResponse::whereNull('job_post_id')
-                    ->where('tutor_id', $profile->tutor_id)
-                    ->exists()) {
+                ->where('tutor_id', $profile->tutor_id)
+                ->exists()) {
                 continue;
             }
 

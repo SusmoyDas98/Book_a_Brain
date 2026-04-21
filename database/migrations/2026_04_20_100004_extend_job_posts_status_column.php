@@ -20,7 +20,7 @@ return new class extends Migration
     {
         Schema::table('job_posts', function (Blueprint $table) {
             $table->enum('status', ['Open', 'Shortlisting', 'Hired', 'Closed', 'Online', 'Completed', 'Cancelled'])
-                  ->default('Open')->change();
+                ->default('Open')->change();
         });
     }
 };

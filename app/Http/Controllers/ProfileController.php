@@ -16,10 +16,10 @@ class ProfileController extends Controller
 {
     public function show()
     {
-        $user                 = Auth::user();
-        $tutor                = Tutor::where('tutor_id', $user->id)->first();
-        $guardian             = Guardian::where('guardian_id', $user->id)->first();
-        $tutorProfile         = TutorProfile::where('tutor_id', $user->id)->first();
+        $user = Auth::user();
+        $tutor = Tutor::where('tutor_id', $user->id)->first();
+        $guardian = Guardian::where('guardian_id', $user->id)->first();
+        $tutorProfile = TutorProfile::where('tutor_id', $user->id)->first();
         $verificationDocuments = VerificationDocument::where('tutor_id', $user->id)->get();
         $completionPercentage = 0;
 
@@ -37,12 +37,12 @@ class ProfileController extends Controller
 
     public function edit()
     {
-        $user                  = Auth::user();
-        $tutor                 = Tutor::where('tutor_id', $user->id)->first();
-        $guardian              = Guardian::where('guardian_id', $user->id)->first();
-        $tutorProfile          = TutorProfile::where('tutor_id', $user->id)->first();
+        $user = Auth::user();
+        $tutor = Tutor::where('tutor_id', $user->id)->first();
+        $guardian = Guardian::where('guardian_id', $user->id)->first();
+        $tutorProfile = TutorProfile::where('tutor_id', $user->id)->first();
         $verificationDocuments = VerificationDocument::where('tutor_id', $user->id)->get()->keyBy('doc_type');
-        $completionPercentage  = 0;
+        $completionPercentage = 0;
 
         if (strtolower($user->role) === 'tutor') {
             $completionPercentage = $this->calculateTutorCompletion($user, $tutorProfile, $verificationDocuments->values());
@@ -60,22 +60,21 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         // LOG 1: Check if the request is even hitting the controller
-        Log::info('Update method reached for user: ' . $user->id);
+        Log::info('Update method reached for user: '.$user->id);
 
-        
         $request->validate([
-            'name'                => 'required|string|max:255',
-            'email'               => 'required|email|max:255|unique:users,email,' . $user->id,
-            'contact_no'          => 'nullable|string|max:50',
-            'gender'              => 'nullable|string|in:Male,Female,Other,Prefer not to say',
-            'profile_picture'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'cv'                  => 'nullable|mimes:pdf|max:2048',
-            'nid_document'        => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
+            'contact_no' => 'nullable|string|max:50',
+            'gender' => 'nullable|string|in:Male,Female,Other,Prefer not to say',
+            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'cv' => 'nullable|mimes:pdf|max:2048',
+            'nid_document' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
             'occupation_document' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
-            'guardian_nid'        => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
+            'guardian_nid' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        $user->name  = $request->name;
+        $user->name = $request->name;
         $user->email = $request->email;
         $user->save();
 
@@ -90,33 +89,32 @@ class ProfileController extends Controller
             if ($request->hasFile('cv')) {
                 $tutorProfile->cv = $request->file('cv')->store('cv_uploads', 'public');
             }
-            // updating the tutor table 
+            // updating the tutor table
             $tutor->tutor_id = $user->id;
             $tutor->gender = $request->gender;
             $tutor->cv_pdf = Storage::url($tutorProfile->cv);
             $tutor->save();
-            
-            
+
             // updating the tutor profile table
-            $tutorProfile->tutor_id                 = $user->id;
-            $tutorProfile->name                     = $request->name;
-            $tutorProfile->email                    = $request->email;
-            $tutorProfile->contact_no               = $request->contact_no;
-            $tutorProfile->gender                   = $request->gender;
+            $tutorProfile->tutor_id = $user->id;
+            $tutorProfile->name = $request->name;
+            $tutorProfile->email = $request->email;
+            $tutorProfile->contact_no = $request->contact_no;
+            $tutorProfile->gender = $request->gender;
             $tutorProfile->educational_institutions = $request->educational_institutions;
-            $tutorProfile->work_experience          = $request->work_experience;
-            $tutorProfile->teaching_method          = $request->teaching_method;
-            $available_time = array_map('trim', explode(',',$request->availability));
-            $tutorProfile->availability             = $available_time;
-            $tutorProfile->preferred_mediums        = $request->preferred_mediums;
-            $subjects_array = array_map('trim', explode(',', $request->preferred_subjects));
+            $tutorProfile->work_experience = $request->work_experience;
+            $tutorProfile->teaching_method = $request->teaching_method;
+            $available_time = array_map('trim', explode(',', $request->availability ?? ''));
+            $tutorProfile->availability = array_filter($available_time);
+            $tutorProfile->preferred_mediums = $request->preferred_mediums;
+            $subjects_array = array_map('trim', explode(',', $request->preferred_subjects ?? ''));
             $subjects = array_map(function ($subject) {
                 return ucfirst(strtolower($subject));
-            }, $subjects_array);
-            $tutorProfile->preferred_subjects       = $subjects;
-            $classes = array_map('trim', explode(',', $request->preferred_classes));
-            $tutorProfile->preferred_classes       = $classes;
-            $tutorProfile->expected_salary          = $request->expected_salary;
+            }, array_filter($subjects_array));
+            $tutorProfile->preferred_subjects = $subjects;
+            $classes = array_map('trim', explode(',', $request->preferred_classes ?? ''));
+            $tutorProfile->preferred_classes = array_filter($classes);
+            $tutorProfile->expected_salary = $request->expected_salary;
             $tutorProfile->save();
 
             if ($request->hasFile('nid_document')) {
@@ -124,9 +122,9 @@ class ProfileController extends Controller
                 VerificationDocument::updateOrCreate(
                     ['tutor_id' => $user->id, 'doc_type' => 'NID'],
                     ['file_path' => $path,
-                     'status' => 'PENDING', 'review_note' => null]
+                        'status' => 'PENDING', 'review_note' => null]
                 );
-                $tutor->nid_card =  Storage::url($path);
+                $tutor->nid_card = Storage::url($path);
                 $tutor->save();
             }
             // Reset verification status to PENDING when new docs uploaded
@@ -138,14 +136,12 @@ class ProfileController extends Controller
                 VerificationDocument::updateOrCreate(
                     ['tutor_id' => $user->id, 'doc_type' => 'OCCUPATION_CARD'],
                     ['file_path' => $path,
-                     'status' => 'PENDING', 'review_note' => null]
+                        'status' => 'PENDING', 'review_note' => null]
                 );
                 $tutor->student_id_card = Storage::url($path);
                 $tutor->save();
             }
-        }
-
-        elseif (strtolower($user->role) === 'guardian') {
+        } elseif (strtolower($user->role) === 'guardian') {
             $guardian = Guardian::firstOrNew(['guardian_id' => $user->id]);
             // dd($request->user_location);
             //  $guardian = User::firstOrNew(['guardian_id' => $user->id]);
@@ -155,12 +151,12 @@ class ProfileController extends Controller
                     ->store('profile_pictures', 'public');
             }
 
-            $guardian->guardian_id    = $user->id;
-            $guardian->name       = $request->guardian_name;
+            $guardian->guardian_id = $user->id;
+            $guardian->name = $request->guardian_name;
             $guardian->contact_no = $request->guardian_contact_no;
             $guardian->email = $request->email;
-            $guardian->gender     = $request->gender;
-            $guardian->address    = $request->address;
+            $guardian->gender = $request->gender;
+            $guardian->address = $request->address;
             // $guardian->location   = [
             //     'lat' => $request->lat,
             //     'lng' => $request->lng,
@@ -175,6 +171,7 @@ class ProfileController extends Controller
 
         return redirect()->route('profile.show')->with('success', 'Profile updated successfully.');
     }
+
     public function saveRole(Request $request)
     {
         $request->validate([
@@ -191,9 +188,9 @@ class ProfileController extends Controller
 
     public function confirmProfile()
     {
-        $user                 = Auth::user();
-        $tutorProfile         = \App\Models\TutorProfile::where('tutor_id', $user->id)->first();
-        $guardian             = \App\Models\Guardian::where('guardian_id', $user->id)->first();
+        $user = Auth::user();
+        $tutorProfile = \App\Models\TutorProfile::where('tutor_id', $user->id)->first();
+        $guardian = \App\Models\Guardian::where('guardian_id', $user->id)->first();
         $verificationDocuments = \App\Models\VerificationDocument::where('tutor_id', $user->id)->get();
 
         if (strtolower($user->role) === 'tutor') {
@@ -210,9 +207,10 @@ class ProfileController extends Controller
         // Teammate will build the dashboard — route is ready
         return redirect()->route('dashboard');
     }
+
     private function calculateTutorCompletion($user, $tutorProfile, $verificationDocuments)
     {
-        $nidDoc        = $verificationDocuments->firstWhere('doc_type', 'NID');
+        $nidDoc = $verificationDocuments->firstWhere('doc_type', 'NID');
         $occupationDoc = $verificationDocuments->firstWhere('doc_type', 'OCCUPATION_CARD');
 
         $fields = [
@@ -233,7 +231,8 @@ class ProfileController extends Controller
             optional($occupationDoc)->file_path,
         ];
 
-        $filled = collect($fields)->filter(fn($v) => !is_null($v) && $v !== '')->count();
+        $filled = collect($fields)->filter(fn ($v) => ! is_null($v) && $v !== '')->count();
+
         return round(($filled / count($fields)) * 100);
     }
 
@@ -252,7 +251,8 @@ class ProfileController extends Controller
             optional($guardian)->location,
         ];
 
-        $filled = collect($fields)->filter(fn($v) => !is_null($v) && $v !== '')->count();
+        $filled = collect($fields)->filter(fn ($v) => ! is_null($v) && $v !== '')->count();
+
         return round(($filled / count($fields)) * 100);
     }
 }

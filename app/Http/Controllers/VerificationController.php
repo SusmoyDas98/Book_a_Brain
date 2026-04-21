@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\TutorProfile;
 use App\Models\VerificationDocument;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,17 +26,26 @@ class VerificationController extends Controller
 
         $tutorProfile->update([
             'verification_status' => 'APPROVED',
-            'rejection_reason'    => null,
-            'verified_at'         => now(),
+            'rejection_reason' => null,
+            'verified_at' => now(),
         ]);
 
         VerificationDocument::where('tutor_id', $tutorId)
             ->where('status', 'PENDING')
             ->update([
-                'status'      => 'APPROVED',
+                'status' => 'APPROVED',
                 'reviewed_by' => Auth::id(),
                 'review_note' => $request->input('note'),
             ]);
+
+        \App\Models\AppNotification::create([
+            'recipient_type' => 'tutor',
+            'recipient_id' => $tutorId,
+            'title' => 'Verification Approved',
+            'message' => 'Congratulations! Your profile has been successfully verified.',
+            'type' => 'system',
+            'is_read' => false,
+        ]);
 
         return back()->with('success', 'Tutor verified successfully.');
     }
@@ -59,20 +67,26 @@ class VerificationController extends Controller
 
         $tutorProfile->update([
             'verification_status' => 'REJECTED',
-            'rejection_reason'    => $request->reason,
-            'verified_at'         => null,
+            'rejection_reason' => $request->reason,
+            'verified_at' => null,
         ]);
 
         VerificationDocument::where('tutor_id', $tutorId)
             ->where('status', 'PENDING')
             ->update([
-                'status'      => 'REJECTED',
+                'status' => 'REJECTED',
                 'reviewed_by' => Auth::id(),
                 'review_note' => $request->reason,
             ]);
 
-        // TODO: Send notification to tutor when notification system is built
-        // Notification::send($tutor, new DocumentRejectedNotification($request->reason));
+        \App\Models\AppNotification::create([
+            'recipient_type' => 'tutor',
+            'recipient_id' => $tutorId,
+            'title' => 'Verification Rejected',
+            'message' => 'Your profile verification was rejected. Reason: '.$request->reason,
+            'type' => 'system',
+            'is_read' => false,
+        ]);
 
         return back()->with('success', 'Tutor verification rejected. Tutor will be notified.');
     }
@@ -86,8 +100,8 @@ class VerificationController extends Controller
     {
         TutorProfile::where('tutor_id', $tutorId)->update([
             'verification_status' => 'PENDING',
-            'rejection_reason'    => null,
-            'verified_at'         => null,
+            'rejection_reason' => null,
+            'verified_at' => null,
         ]);
     }
 

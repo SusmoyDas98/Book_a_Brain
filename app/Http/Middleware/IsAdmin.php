@@ -16,10 +16,10 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (strtolower(Auth::user()->role )=== 'admin'){
+        if (strtolower(Auth::user()->role) === 'admin') {
             return $next($request);
-        }
-        else{
+        } else {
             return redirect()->route('login_or_signup_page_redirect');
-        }    }
+        }
+    }
 }

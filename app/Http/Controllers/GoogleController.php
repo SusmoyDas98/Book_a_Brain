@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use App\Models\User;
+use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
 {
@@ -30,11 +30,11 @@ class GoogleController extends Controller
             $existingUser = User::where('google_id', $googleUser->getId())->first();
 
             // If not found by Google ID, check email (manual signup)
-            if (!$existingUser) {
+            if (! $existingUser) {
                 $existingUser = User::where('email', $googleUser->getEmail())->first();
 
                 // If user exists by email but google_id is empty, update it
-                if ($existingUser && !$existingUser->google_id) {
+                if ($existingUser && ! $existingUser->google_id) {
                     $existingUser->google_id = $googleUser->getId();
                     $existingUser->google_token = $googleUser->token ?? null;
                     $existingUser->google_refresh_token = $googleUser->refreshToken ?? null;
@@ -45,8 +45,9 @@ class GoogleController extends Controller
             if ($existingUser) {
                 Auth::login($existingUser);
                 request()->session()->regenerate();
+
                 // return redirect()->route(''); // Replace with your dashboard route
-                return "User Dashboard";
+                return 'User Dashboard';
             }
 
             // Create new user if not exists
@@ -62,7 +63,8 @@ class GoogleController extends Controller
 
             Auth::login($user);
             request()->session()->regenerate();
-            return redirect()->route("select_role_redirect");
+
+            return redirect()->route('select_role_redirect');
 
         } catch (\Exception $e) {
             // Catch all errors (Socialite, DB, etc.)

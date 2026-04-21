@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\JobPostResponse;
 use Illuminate\Http\Request;
 
@@ -57,16 +56,30 @@ class JobResponseController extends Controller
         // return "Hello World";
         // return $request;
         $inputs = collect($request->all())->except(['_token', '_method']);
-        foreach ($inputs as $key => $value){
+        foreach ($inputs as $key => $value) {
             $post_id = $key;
             $post = JobPostResponse::find($post_id);
-            if (!$post){continue;}
-            $shortlist_val = $value;
-            $shortlist_val_str = (string)$shortlist_val;
-            if ($post->shortlisted != $shortlist_val_str){
-                    $post->shortlisted = $shortlist_val_str;
-                    $post->save();
+            if (! $post) {
+                continue;
             }
+            $shortlist_val = $value;
+            $shortlist_val_str = (string) $shortlist_val;
+            if ($post->shortlisted != $shortlist_val_str) {
+                $post->shortlisted = $shortlist_val_str;
+                $post->save();
+
+                $statusMsg = $shortlist_val_str === '1' ? 'shortlisted' : 'not shortlisted';
+                \App\Models\AppNotification::create([
+                    'recipient_type' => 'tutor',
+                    'recipient_id' => $post->tutor_id,
+                    'title' => 'Application Update',
+                    'message' => 'Your application has been '.$statusMsg.' by the guardian.',
+                    'type' => 'system',
+                    'related_job_id' => $post->job_post_id,
+                    'is_read' => false,
+                ]);
+            }
+
             return redirect()->back()->with('success', 'Changes saved successfully!');
 
         }

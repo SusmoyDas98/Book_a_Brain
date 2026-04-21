@@ -18,7 +18,7 @@ class ComplaintController extends Controller
         $contracts = TuitionContract::where('status', 'ACTIVE')
             ->where(function ($query) use ($user) {
                 $query->where('guardian_id', $user->id)
-                      ->orWhere('tutor_id', $user->id);
+                    ->orWhere('tutor_id', $user->id);
             })
             ->with(['guardian', 'tutor'])
             ->get();

@@ -31,7 +31,7 @@ class BkashAccountSeeder extends Seeder
             $isKiki = $kikiGuardian && $guardian->id === $kikiGuardian->id;
             $primary = $isKiki ? '01746478910' : '017'.str_pad($guardian->id.'1', 8, '0', STR_PAD_LEFT);
             $this->seedAccount('guardian', $guardian->id, $primary);
-            if (!$isKiki) {
+            if (! $isKiki) {
                 $this->seedAccount('guardian', $guardian->id, '018'.str_pad($guardian->id.'2', 8, '0', STR_PAD_LEFT));
             }
         }

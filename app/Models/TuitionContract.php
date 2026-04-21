@@ -21,7 +21,7 @@ class TuitionContract extends Model
 
     protected $casts = [
         'start_date' => 'date',
-        'ended_at'   => 'datetime',
+        'ended_at' => 'datetime',
     ];
 
     public function guardian()

@@ -22,11 +22,11 @@ class HireConfirmation extends Model
     ];
 
     protected $casts = [
-        'guardian_confirmed'    => 'boolean',
-        'tutor_confirmed'       => 'boolean',
+        'guardian_confirmed' => 'boolean',
+        'tutor_confirmed' => 'boolean',
         'guardian_confirmed_at' => 'datetime',
-        'tutor_confirmed_at'    => 'datetime',
-        'cancelled_at'          => 'datetime',
+        'tutor_confirmed_at' => 'datetime',
+        'cancelled_at' => 'datetime',
     ];
 
     public function job()

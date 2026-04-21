@@ -16,10 +16,9 @@ class IsTutor
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (strtolower(Auth::user()->role )=== 'tutor'){
+        if (strtolower(Auth::user()->role) === 'tutor') {
             return $next($request);
-        }
-        else{
+        } else {
             return redirect()->route('login_or_signup_page_redirect');
         }
     }

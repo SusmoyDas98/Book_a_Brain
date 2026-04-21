@@ -69,7 +69,106 @@
                     </a>
                 @endif
 
-                <button class="btn btn-upgrade">UPGRADE</button>
+                {{-- Notification bell with unread count --}}
+                @php
+                    $bellUser = Auth::user();
+                    $bellRole = strtolower($bellUser->role ?? '');
+                    $bellRecord = match($bellRole) {
+                        'guardian' => $bellUser->guardian ?? null,
+                        'tutor'    => \App\Models\Tutor::where('tutor_id', $bellUser->id)->first(),
+                        'admin'    => $bellUser->admin ?? null,
+                        default    => null,
+                    };
+                    $unreadCount = ($bellRecord && $bellRole)
+                        ? \App\Models\AppNotification::forRecipient($bellRole, $bellRecord->id)
+                            ->unread()->count()
+                        : 0;
+                @endphp
+                <div style="position: relative; display: inline-flex; align-items: center; margin: 0 4px; width:38px; height:38px; border-radius:12px; background:rgba(99,102,241,0.08); transition:0.2s;"
+                     onmouseover="this.style.background='rgba(99,102,241,0.15)'"
+                     onmouseout="this.style.background='rgba(99,102,241,0.08)'">
+                  <a href="{{ route('notifications.index') }}"
+                     style="display: inline-flex; align-items: center; justify-content: center; color: #6366f1; text-decoration: none; width:100%; height:100%;"
+                     title="Notifications">
+                    <svg width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                  </a>
+                  @if($unreadCount > 0)
+                    <span style="
+                      position: absolute;
+                      top: -4px;
+                      right: -4px;
+                      background: #E2136E;
+                      color: #ffffff;
+                      border-radius: 999px;
+                      min-width: 18px;
+                      height: 18px;
+                      font-size: 0.6rem;
+                      font-weight: 800;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      padding: 0 4px;
+                      border: 2px solid white;
+                      pointer-events: none;
+                    ">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>
+                  @endif
+                </div>
+
+                {{-- Dynamic UPGRADE Button --}}
+                @php
+                    $navRole  = strtolower(Auth::user()->role ?? '');
+                    $navSubscription = null;
+                    if ($navRole === 'guardian' && Auth::user()->guardian) {
+                        $navSubscription = \App\Models\Subscription::where('subscriber_type','guardian')
+                            ->where('subscriber_id', Auth::user()->guardian->id)
+                            ->where('status','active')
+                            ->where('expires_at','>=',\Carbon\Carbon::today())
+                            ->latest()->first();
+                    } elseif ($navRole === 'tutor') {
+                        $navTutor = \App\Models\Tutor::where('tutor_id', Auth::user()->id)->first();
+                        if ($navTutor) {
+                            $navSubscription = \App\Models\Subscription::where('subscriber_type','tutor')
+                                ->where('subscriber_id', $navTutor->id)
+                                ->where('status','active')
+                                ->where('expires_at','>=',\Carbon\Carbon::today())
+                                ->latest()->first();
+                        }
+                    }
+                @endphp
+
+                @if($navRole === 'guardian')
+                    @if($navSubscription)
+                        <a href="{{ route('guardian.payment.index') }}"
+                           class="btn btn-upgrade"
+                           style="background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 6px 15px rgba(16, 185, 129, 0.25);"
+                           title="Active until {{ $navSubscription->expires_at->format('d M Y') }}">
+                            ✓ Pro Member
+                        </a>
+                    @else
+                        <a href="{{ route('guardian.subscribe.plan') }}" class="btn btn-upgrade">
+                            Upgrade to Pro
+                        </a>
+                    @endif
+                @elseif($navRole === 'tutor')
+                    @if($navSubscription)
+                        <a href="{{ route('tutor.payment.index') }}"
+                           class="btn btn-upgrade"
+                           style="background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 6px 15px rgba(16, 185, 129, 0.25);"
+                           title="Active until {{ $navSubscription->expires_at->format('d M Y') }}">
+                            ✓ Subscribed
+                        </a>
+                    @else
+                        <a href="{{ route('tutor.subscribe.plan') }}" class="btn btn-upgrade">
+                            Upgrade
+                        </a>
+                    @endif
+                @endif
 
                 {{-- Profile dropdown --}}
                 <div style="position:relative;" id="profileDropdownWrapper">

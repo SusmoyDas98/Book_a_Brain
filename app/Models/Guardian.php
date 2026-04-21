@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Guardian extends Model
 {
+    protected $primaryKey = 'guardian_id';
+
+    public $incrementing = false;
+
+    protected $keyType = 'int';
+
     protected $fillable = [
         'guardian_id',
         'name',
@@ -58,6 +64,6 @@ class Guardian extends Model
     public function notifications()
     {
         return $this->hasMany(AppNotification::class, 'recipient_id')
-                    ->where('recipient_type', 'guardian');
+            ->where('recipient_type', 'guardian');
     }
 }

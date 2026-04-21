@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\JobPost;
 use App\Models\JobPostResponse;
 use App\Models\Subscription;
@@ -29,14 +28,14 @@ class JobPostController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'           => 'required|string|max:255',
-            'subject'         => 'required|string|max:255',
-            'class_level'     => 'required|string|max:100',
+            'title' => 'required|string|max:255',
+            'subject' => 'required|string|max:255',
+            'class_level' => 'required|string|max:100',
             'expected_salary' => 'required|numeric|min:1',
-            'location'        => 'required|string|max:255',
-            'medium'          => 'required|in:Bangla,English,Both',
-            'mode'            => 'required|in:Online,Offline,Both',
-            'description'     => 'nullable|string|max:1000',
+            'location' => 'required|string|max:255',
+            'medium' => 'required|in:Bangla,English,Both',
+            'mode' => 'required|in:Online,Offline,Both',
+            'description' => 'nullable|string|max:1000',
         ]);
 
         $duplicate = JobPost::where('guardian_id', Auth::id())
@@ -48,8 +47,8 @@ class JobPostController extends Controller
         }
 
         JobPost::create(array_merge($validated, [
-            'guardian_id'       => Auth::id(),
-            'status'            => 'Open',
+            'guardian_id' => Auth::id(),
+            'status' => 'Open',
             'shortlisted_count' => 0,
         ]));
 
@@ -103,14 +102,14 @@ class JobPostController extends Controller
         }
 
         $validated = $request->validate([
-            'title'           => 'required|string|max:255',
-            'subject'         => 'required|string|max:255',
-            'class_level'     => 'required|string|max:100',
+            'title' => 'required|string|max:255',
+            'subject' => 'required|string|max:255',
+            'class_level' => 'required|string|max:100',
             'expected_salary' => 'required|numeric|min:1',
-            'location'        => 'required|string|max:255',
-            'medium'          => 'required|in:Bangla,English,Both',
-            'mode'            => 'required|in:Online,Offline,Both',
-            'description'     => 'nullable|string|max:1000',
+            'location' => 'required|string|max:255',
+            'medium' => 'required|in:Bangla,English,Both',
+            'mode' => 'required|in:Online,Offline,Both',
+            'description' => 'nullable|string|max:1000',
         ]);
 
         $jobPost->update($validated);
@@ -165,6 +164,7 @@ class JobPostController extends Controller
             if ($limit === 5) {
                 $msg .= ' Upgrade to Pro to shortlist up to 20 tutors.';
             }
+
             return redirect()->back()->with('error', $msg);
         }
 

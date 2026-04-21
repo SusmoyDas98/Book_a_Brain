@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\JobPost;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,13 +11,19 @@ class JobPostResponse extends Model
 
     protected $table = 'job_post_responses';
 
-    const STATUS_PENDING     = 'Pending';
+    const STATUS_PENDING = 'Pending';
+
     const STATUS_SHORTLISTED = 'Shortlisted';
-    const STATUS_HIRED       = 'Hired';
-    const STATUS_CONFIRMED   = 'Confirmed';
-    const STATUS_DISCARDED   = 'Discarded';
-    const STATUS_REJECTED    = 'Rejected';
-    const STATUS_DECLINED    = 'Declined';
+
+    const STATUS_HIRED = 'Hired';
+
+    const STATUS_CONFIRMED = 'Confirmed';
+
+    const STATUS_DISCARDED = 'Discarded';
+
+    const STATUS_REJECTED = 'Rejected';
+
+    const STATUS_DECLINED = 'Declined';
 
     protected $fillable = [
         'guardian_id',
@@ -45,16 +49,16 @@ class JobPostResponse extends Model
 
     protected $casts = [
         'tutor_educational_institutions' => 'array',
-        'tutor_work_experience'          => 'array',
-        'teaching_method'                => 'array',
-        'availability'                   => 'array',
-        'preferred_mediums'              => 'array',
-        'preferred_subjects'             => 'array',
-        'preferred_classes'              => 'array',
-        'shortlisted'                    => 'boolean',
-        'expected_salary'                => 'decimal:2',
-        'tutor_rating'                   => 'float',
-        'job_post_id'                    => 'integer',
+        'tutor_work_experience' => 'array',
+        'teaching_method' => 'array',
+        'availability' => 'array',
+        'preferred_mediums' => 'array',
+        'preferred_subjects' => 'array',
+        'preferred_classes' => 'array',
+        'shortlisted' => 'boolean',
+        'expected_salary' => 'decimal:2',
+        'tutor_rating' => 'float',
+        'job_post_id' => 'integer',
     ];
 
     public function tutorProfile()

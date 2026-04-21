@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
@@ -17,10 +17,10 @@ class UserSeeder extends Seeder
             ['name' => 'Goku', 'password' => Hash::make('123'), 'role' => 'admin']
         );
 
-        if (!Admin::where('admin_id', $adminUser->id)->exists()) {
+        if (! Admin::where('admin_id', $adminUser->id)->exists()) {
             Admin::create([
-                'admin_id'    => $adminUser->id,
-                'department'  => 'Platform',
+                'admin_id' => $adminUser->id,
+                'department' => 'Platform',
                 'permissions' => ['verify_tutors', 'manage_users', 'approve_cancellations'],
             ]);
         }

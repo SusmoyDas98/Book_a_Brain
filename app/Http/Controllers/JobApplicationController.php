@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\JobPost;
 use App\Models\JobPostResponse;
 use App\Models\Tutor;
@@ -46,7 +45,7 @@ class JobApplicationController extends Controller
 
         $tutorProfile = TutorProfile::where('tutor_id', Auth::id())->first();
 
-        if (!$tutorProfile) {
+        if (! $tutorProfile) {
             return redirect()->back()
                 ->with('error', 'Please complete your tutor profile before applying.');
         }
@@ -54,25 +53,35 @@ class JobApplicationController extends Controller
         $tutor = Tutor::where('tutor_id', Auth::id())->first();
 
         JobPostResponse::create([
-            'job_post_id'                    => $jobPost->id,
-            'guardian_id'                    => $jobPost->guardian_id,
-            'tutor_id'                       => Auth::id(),
-            'application_message'            => $validated['application_message'],
-            'status'                         => 'Pending',
-            'shortlisted'                    => false,
-            'tutor_name'                     => $tutorProfile->name,
-            'gender'                         => $tutorProfile->gender,
-            'tutor_profile_pic'              => $tutorProfile->profile_picture,
-            'cv'                             => $tutorProfile->cv,
+            'job_post_id' => $jobPost->id,
+            'guardian_id' => $jobPost->guardian_id,
+            'tutor_id' => Auth::id(),
+            'application_message' => $validated['application_message'],
+            'status' => 'Pending',
+            'shortlisted' => false,
+            'tutor_name' => $tutorProfile->name,
+            'gender' => $tutorProfile->gender,
+            'tutor_profile_pic' => $tutorProfile->profile_picture,
+            'cv' => $tutorProfile->cv,
             'tutor_educational_institutions' => $tutorProfile->educational_institutions,
-            'tutor_work_experience'          => $tutorProfile->work_experience,
-            'teaching_method'                => $tutorProfile->teaching_method,
-            'availability'                   => $tutorProfile->availability,
-            'preferred_mediums'              => $tutorProfile->preferred_mediums,
-            'preferred_subjects'             => $tutorProfile->preferred_subjects,
-            'preferred_classes'              => $tutorProfile->preferred_classes,
-            'expected_salary'                => $tutorProfile->expected_salary,
-            'tutor_rating'                   => $tutor ? $tutor->ratings : 0,
+            'tutor_work_experience' => $tutorProfile->work_experience,
+            'teaching_method' => $tutorProfile->teaching_method,
+            'availability' => $tutorProfile->availability,
+            'preferred_mediums' => $tutorProfile->preferred_mediums,
+            'preferred_subjects' => $tutorProfile->preferred_subjects,
+            'preferred_classes' => $tutorProfile->preferred_classes,
+            'expected_salary' => $tutorProfile->expected_salary,
+            'tutor_rating' => $tutor ? $tutor->ratings : 0,
+        ]);
+
+        \App\Models\AppNotification::create([
+            'recipient_type' => 'guardian',
+            'recipient_id' => $jobPost->guardian_id,
+            'title' => 'New Job Application',
+            'message' => $tutorProfile->name.' has applied to your job post.',
+            'type' => 'system',
+            'related_job_id' => $jobPost->id,
+            'is_read' => false,
         ]);
 
         return redirect()->route('applications.index')

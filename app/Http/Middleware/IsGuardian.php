@@ -16,10 +16,9 @@ class IsGuardian
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (strtolower(Auth::user()->role )=== 'guardian'){
+        if (strtolower(Auth::user()->role) === 'guardian') {
             return $next($request);
-        }
-        else{
+        } else {
             return redirect()->route('login_or_signup_page_redirect');
         }
     }

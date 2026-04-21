@@ -42,7 +42,19 @@
         </div>
 
         {{-- FORM --}}
-        <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+        {{-- VALIDATION ERRORS --}}
+        @if ($errors->any())
+            <div class="mb-4 px-4 py-3" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);color:#ef4444;border-radius:16px;">
+                <h5 style="font-weight:700;margin-bottom:0.5rem;font-size:1rem;"><i class="bi bi-exclamation-octagon me-2"></i>Please fix the following errors:</h5>
+                <ul style="margin:0;padding-left:1.5rem;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('profile.update') }}" method="POST" id="mainProfileForm" enctype="multipart/form-data">
             @csrf
             {{-- ── CORE INFORMATION ── --}}
             <div class="bab-card">
@@ -421,13 +433,10 @@
 
                 {{-- Confirm → only appears when profile is 100% complete --}}
                 @if($completionPercentage >= 100)
-                    <form action="{{ route('profile.confirm') }}" method="POST" class="m-0">
-                        @csrf
-                        <button type="submit" class="bab-btn-primary"
-                            style="background:linear-gradient(90deg,#6366f1,#4f46e5);box-shadow:0 6px 20px rgba(99,102,241,0.35);">
-                            <i class="bi bi-patch-check-fill me-2"></i>Confirm & Continue
-                        </button>
-                    </form>
+                    <button type="submit" form="confirmProfileForm" class="bab-btn-primary"
+                        style="background:linear-gradient(90deg,#6366f1,#4f46e5);box-shadow:0 6px 20px rgba(99,102,241,0.35);">
+                        <i class="bi bi-patch-check-fill me-2"></i>Confirm & Continue
+                    </button>
                 @endif
 
             </div>
@@ -441,6 +450,12 @@
             @endif
 
                     </form>
+
+            @if($completionPercentage >= 100)
+                <form action="{{ route('profile.confirm') }}" method="POST" id="confirmProfileForm" class="d-none">
+                    @csrf
+                </form>
+            @endif
                 </div>
             </div>
             <script>

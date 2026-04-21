@@ -15,14 +15,14 @@ class AnalyticsController extends Controller
     public function index()
     {
         $stats = [
-            'total_users'     => User::count(),
-            'total_tutors'    => Tutor::count(),
+            'total_users' => User::count(),
+            'total_tutors' => Tutor::count(),
             'total_guardians' => Guardian::count(),
             'total_contracts' => TuitionContract::count(),
-            'active_contracts'=> TuitionContract::where('status', 'active')->count(),
-            'total_reviews'   => Review::count(),
-            'avg_rating'      => round(Review::avg('rating') ?? 0, 2),
-            'total_complaints'=> Complaint::count(),
+            'active_contracts' => TuitionContract::where('status', 'active')->count(),
+            'total_reviews' => Review::count(),
+            'avg_rating' => round(Review::avg('rating') ?? 0, 2),
+            'total_complaints' => Complaint::count(),
             'open_complaints' => Complaint::where('status', 'Open')->count(),
         ];
 
@@ -44,11 +44,11 @@ class AnalyticsController extends Controller
             ['Open Complaints',    Complaint::where('status', 'Open')->count()],
         ];
 
-        $csv = implode("\n", array_map(fn($row) => implode(',', $row), $stats));
+        $csv = implode("\n", array_map(fn ($row) => implode(',', $row), $stats));
 
         return Response::make($csv, 200, [
-            'Content-Type'        => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="analytics_' . now()->format('Y-m-d') . '.csv"',
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="analytics_'.now()->format('Y-m-d').'.csv"',
         ]);
     }
 }

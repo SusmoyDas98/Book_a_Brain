@@ -41,9 +41,9 @@ return new class extends Migration
 
             // Foreign key: ensures tutor exists
             $table->foreign('tutor_id')
-                  ->references('tutor_id')
-                  ->on('tutor_profiles')
-                  ->onDelete('cascade');
+                ->references('tutor_id')
+                ->on('tutor_profiles')
+                ->onDelete('cascade');
 
             // Guardian FK can be added later when the table exists
             $table->foreign('guardian_id')->references('guardian_id')->on('guardians')->onDelete('cascade');

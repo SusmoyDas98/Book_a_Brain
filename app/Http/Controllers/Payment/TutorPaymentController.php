@@ -81,7 +81,7 @@ class TutorPaymentController extends Controller
 
         if ($activeSub) {
             return redirect()->route('tutor.payment.index')
-                ->with('info', 'You already have an active subscription. Your current plan renews on ' . $activeSub->expires_at->format('d M Y') . '.');
+                ->with('info', 'You already have an active subscription. Your current plan renews on '.$activeSub->expires_at->format('d M Y').'.');
         }
 
         session([

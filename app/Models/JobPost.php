@@ -8,12 +8,17 @@ class JobPost extends Model
 {
     protected $table = 'job_posts';
 
-    const STATUS_OPEN         = 'Open';
+    const STATUS_OPEN = 'Open';
+
     const STATUS_SHORTLISTING = 'Shortlisting';
-    const STATUS_HIRED        = 'Hired';
-    const STATUS_ONLINE       = 'Online';
-    const STATUS_COMPLETED    = 'Completed';
-    const STATUS_CANCELLED    = 'Cancelled';
+
+    const STATUS_HIRED = 'Hired';
+
+    const STATUS_ONLINE = 'Online';
+
+    const STATUS_COMPLETED = 'Completed';
+
+    const STATUS_CANCELLED = 'Cancelled';
 
     protected $fillable = [
         'guardian_id',
@@ -30,7 +35,7 @@ class JobPost extends Model
     ];
 
     protected $casts = [
-        'expected_salary'   => 'decimal:2',
+        'expected_salary' => 'decimal:2',
         'shortlisted_count' => 'integer',
     ];
 

@@ -81,7 +81,7 @@ class GuardianPaymentController extends Controller
 
         if ($activeSub) {
             return redirect()->route('guardian.payment.index')
-                ->with('info', 'You already have an active subscription. Your current plan renews on ' . $activeSub->expires_at->format('d M Y') . '.');
+                ->with('info', 'You already have an active subscription. Your current plan renews on '.$activeSub->expires_at->format('d M Y').'.');
         }
 
         session([
@@ -128,7 +128,7 @@ class GuardianPaymentController extends Controller
             $nextPaymentDue = $lastPaidPayment->payment_date->copy()->addDays(30);
             if (Carbon::today()->lt($nextPaymentDue)) {
                 return redirect()->route('guardian.payment.index')
-                    ->with('info', 'Your next payment for this tutor is due on ' . $nextPaymentDue->format('d M Y') . '.');
+                    ->with('info', 'Your next payment for this tutor is due on '.$nextPaymentDue->format('d M Y').'.');
             }
         }
 

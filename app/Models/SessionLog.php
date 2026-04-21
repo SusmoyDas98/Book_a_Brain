@@ -32,8 +32,8 @@ class SessionLog extends Model
 
     public function sessionCount(): int
     {
-        return collect(['mon','tue','wed','thu','fri','sat','sun'])
-            ->filter(fn($d) => $this->$d)
+        return collect(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'])
+            ->filter(fn ($d) => $this->$d)
             ->count();
     }
 }

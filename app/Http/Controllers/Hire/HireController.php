@@ -52,23 +52,23 @@ class HireController extends Controller
             $job->update(['status' => JobPost::STATUS_HIRED]);
 
             HireConfirmation::create([
-                'job_id'                => $job->id,
-                'application_id'        => $application->id,
-                'guardian_id'           => $guardian->id,
-                'tutor_id'              => $application->tutor_id,
-                'guardian_confirmed'    => true,
+                'job_id' => $job->id,
+                'application_id' => $application->id,
+                'guardian_id' => $guardian->id,
+                'tutor_id' => $application->tutor_id,
+                'guardian_confirmed' => true,
                 'guardian_confirmed_at' => now(),
-                'tutor_confirmed'       => false,
-                'status'                => 'awaiting_tutor',
+                'tutor_confirmed' => false,
+                'status' => 'awaiting_tutor',
             ]);
 
             HireNotificationService::logEvent([
-                'event_type'     => 'guardian_hired',
-                'job_id'         => $job->id,
+                'event_type' => 'guardian_hired',
+                'job_id' => $job->id,
                 'application_id' => $application->id,
-                'guardian_id'    => $guardian->id,
-                'tutor_id'       => $application->tutor_id,
-                'performed_by'   => Auth::id(),
+                'guardian_id' => $guardian->id,
+                'tutor_id' => $application->tutor_id,
+                'performed_by' => Auth::id(),
                 'performed_role' => 'guardian',
                 'payment_status' => 'pending',
             ]);
@@ -115,9 +115,9 @@ class HireController extends Controller
 
         DB::transaction(function () use ($hireConfirmation, $tutor) {
             $hireConfirmation->update([
-                'tutor_confirmed'    => true,
+                'tutor_confirmed' => true,
                 'tutor_confirmed_at' => now(),
-                'status'             => 'both_confirmed',
+                'status' => 'both_confirmed',
             ]);
 
             JobPostResponse::where('id', $hireConfirmation->application_id)
@@ -127,22 +127,22 @@ class HireController extends Controller
                 ->update(['status' => JobPost::STATUS_ONLINE]);
 
             HireNotificationService::logEvent([
-                'event_type'     => 'tutor_confirmed',
-                'job_id'         => $hireConfirmation->job_id,
+                'event_type' => 'tutor_confirmed',
+                'job_id' => $hireConfirmation->job_id,
                 'application_id' => $hireConfirmation->application_id,
-                'guardian_id'    => $hireConfirmation->guardian_id,
-                'tutor_id'       => $tutor->tutor_id,
-                'performed_by'   => Auth::id(),
+                'guardian_id' => $hireConfirmation->guardian_id,
+                'tutor_id' => $tutor->tutor_id,
+                'performed_by' => Auth::id(),
                 'performed_role' => 'tutor',
             ]);
 
             HireNotificationService::logEvent([
-                'event_type'     => 'job_online',
-                'job_id'         => $hireConfirmation->job_id,
+                'event_type' => 'job_online',
+                'job_id' => $hireConfirmation->job_id,
                 'application_id' => $hireConfirmation->application_id,
-                'guardian_id'    => $hireConfirmation->guardian_id,
-                'tutor_id'       => $tutor->tutor_id,
-                'performed_by'   => Auth::id(),
+                'guardian_id' => $hireConfirmation->guardian_id,
+                'tutor_id' => $tutor->tutor_id,
+                'performed_by' => Auth::id(),
                 'performed_role' => 'tutor',
             ]);
 
@@ -209,12 +209,12 @@ class HireController extends Controller
                 ->update(['status' => $newJobStatus]);
 
             HireNotificationService::logEvent([
-                'event_type'     => 'tutor_declined',
-                'job_id'         => $hireConfirmation->job_id,
+                'event_type' => 'tutor_declined',
+                'job_id' => $hireConfirmation->job_id,
                 'application_id' => $hireConfirmation->application_id,
-                'guardian_id'    => $hireConfirmation->guardian_id,
-                'tutor_id'       => $tutor->tutor_id,
-                'performed_by'   => Auth::id(),
+                'guardian_id' => $hireConfirmation->guardian_id,
+                'tutor_id' => $tutor->tutor_id,
+                'performed_by' => Auth::id(),
                 'performed_role' => 'tutor',
             ]);
 
@@ -254,17 +254,17 @@ class HireController extends Controller
 
         DB::transaction(function () use ($hireConfirmation, $guardian, $request) {
             $hireConfirmation->update([
-                'status'              => 'cancellation_requested',
+                'status' => 'cancellation_requested',
                 'cancellation_reason' => $request->reason,
             ]);
 
             HireNotificationService::logEvent([
-                'event_type'     => 'cancellation_requested',
-                'job_id'         => $hireConfirmation->job_id,
+                'event_type' => 'cancellation_requested',
+                'job_id' => $hireConfirmation->job_id,
                 'application_id' => $hireConfirmation->application_id,
-                'guardian_id'    => $guardian->id,
-                'tutor_id'       => $hireConfirmation->tutor_id,
-                'performed_by'   => Auth::id(),
+                'guardian_id' => $guardian->id,
+                'tutor_id' => $hireConfirmation->tutor_id,
+                'performed_by' => Auth::id(),
                 'performed_role' => 'guardian',
             ]);
 
@@ -298,7 +298,7 @@ class HireController extends Controller
 
         DB::transaction(function () use ($hireConfirmation) {
             $hireConfirmation->update([
-                'status'       => 'cancelled',
+                'status' => 'cancelled',
                 'cancelled_by' => Auth::id(),
                 'cancelled_at' => now(),
             ]);
@@ -310,12 +310,12 @@ class HireController extends Controller
                 ->update(['status' => JobPost::STATUS_CANCELLED]);
 
             HireNotificationService::logEvent([
-                'event_type'     => 'job_cancelled',
-                'job_id'         => $hireConfirmation->job_id,
+                'event_type' => 'job_cancelled',
+                'job_id' => $hireConfirmation->job_id,
                 'application_id' => $hireConfirmation->application_id,
-                'guardian_id'    => $hireConfirmation->guardian_id,
-                'tutor_id'       => $hireConfirmation->tutor_id,
-                'performed_by'   => Auth::id(),
+                'guardian_id' => $hireConfirmation->guardian_id,
+                'tutor_id' => $hireConfirmation->tutor_id,
+                'performed_by' => Auth::id(),
                 'performed_role' => 'admin',
             ]);
 

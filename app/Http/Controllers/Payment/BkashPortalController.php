@@ -163,6 +163,24 @@ class BkashPortalController extends Controller
                     'payment_date' => Carbon::today()->toDateString(),
                 ]);
 
+                \App\Models\AppNotification::create([
+                    'recipient_type' => 'guardian',
+                    'recipient_id' => $session['payer_id'],
+                    'title' => 'Payment Successful',
+                    'message' => 'Your tuition payment of '.$payment->amount.' BDT has been successfully paid.',
+                    'type' => 'system',
+                    'is_read' => false,
+                ]);
+
+                \App\Models\AppNotification::create([
+                    'recipient_type' => 'tutor',
+                    'recipient_id' => $payment->tutor_id,
+                    'title' => 'Payment Received',
+                    'message' => 'You have received a tuition payment of '.$payment->amount.' BDT from a guardian.',
+                    'type' => 'system',
+                    'is_read' => false,
+                ]);
+
                 session()->flash('success', 'Your tuition payment was successful.');
             }
 
@@ -210,6 +228,15 @@ class BkashPortalController extends Controller
                 'payment_status' => 'paid',
                 'payment_date' => Carbon::today()->toDateString(),
                 'billing_period' => Carbon::today()->format('F Y'),
+            ]);
+
+            \App\Models\AppNotification::create([
+                'recipient_type' => $subscriberType,
+                'recipient_id' => $subscriberId,
+                'title' => 'Subscription Activated',
+                'message' => 'Your '.ucfirst($plan).' subscription is now active for '.$amount.' BDT.',
+                'type' => 'system',
+                'is_read' => false,
             ]);
 
             session()->flash('success', 'Your subscription is now active.');
