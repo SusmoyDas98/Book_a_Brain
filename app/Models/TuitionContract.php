@@ -44,4 +44,13 @@ class TuitionContract extends Model
     {
         return now()->greaterThan($this->start_date->addMonth());
     }
+    public function conversation()
+    {
+        return $this->hasOne(\App\Models\Conversation::class, 'contract_id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(\App\Models\Review::class, 'contract_id');
+    }
 }
