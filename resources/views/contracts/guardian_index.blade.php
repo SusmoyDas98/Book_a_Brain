@@ -49,9 +49,22 @@
                         @endif
                     </p>
                 </div>
-                <a href="{{ route('contracts.show', $contract) }}" class="bab-btn-primary" style="padding:0.6rem 1.4rem;font-size:0.85rem;">
-                    View Details →
-                </a>
+                <div class="d-flex gap-2 align-items-center">
+                    @if($contract->status === 'ACTIVE')
+                        <form action="{{ route('messages.start', $contract) }}" method="POST" class="m-0">
+                            @csrf
+                            <button type="submit" title="Open Chat"
+                                    style="background:rgba(99,102,241,0.08);color:#6366f1;border:none;border-radius:12px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:0.2s;"
+                                    onmouseover="this.style.background='rgba(99,102,241,0.15)'"
+                                    onmouseout="this.style.background='rgba(99,102,241,0.08)'">
+                                <i class="bi bi-chat-dots-fill" style="font-size:1rem;"></i>
+                            </button>
+                        </form>
+                    @endif
+                    <a href="{{ route('contracts.show', $contract) }}" class="bab-btn-primary" style="padding:0.6rem 1.4rem;font-size:0.85rem;">
+                        View Details →
+                    </a>
+                </div>
             </div>
         </div>
     @empty
