@@ -23,11 +23,12 @@
 
 /* RIGHT SIDE ACTIONS */
 .navbar-custom .navbar-actions{
+  /* background-color:  red; */
   display: flex;
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap; /* allows unlimited buttons */
-  gap: 10px;
+  gap: 5px;
 }
 
 /* Prevent shrinking */
