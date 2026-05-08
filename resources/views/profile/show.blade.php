@@ -150,13 +150,13 @@
                             </div>
                             <div class="col-md-6">
                                 <p class="bab-meta-label">Availability</p>
-                                {{-- <p class="bab-meta-value">{{ optional($tutorProfile)->availability ?: '—' }}</p> --}}
-                                @forelse ($tutorProfile->availability as $time)
-                                    <p class="tag">{{$time}}</p>
-                                    
-                                @empty
-                                    
-                                @endforelse
+                                @if($tutorProfile && $tutorProfile->availability)
+                                    @foreach ($tutorProfile->availability as $time)
+                                        <p class="tag">{{$time}}</p>
+                                    @endforeach
+                                @else
+                                    <p class="bab-meta-value">—</p>
+                                @endif
                             </div>
                             <div class="col-md-6">
                                 <p class="bab-meta-label">Preferred Mediums</p>
@@ -169,7 +169,15 @@
                             </div>
                             <div class="col-md-6">
                                 <p class="bab-meta-label">Preferred Subjects</p>
-                                {{-- <p class="bab-meta-value">{{ optional($tutorProfile)->preferred_subjects ?: '—' }}</p> --}}
+                                @if($tutorProfile && $tutorProfile->preferred_subjects)
+                                    @if(is_array($tutorProfile->preferred_subjects))
+                                        <p class="bab-meta-value">{{ implode(', ', $tutorProfile->preferred_subjects) }}</p>
+                                    @else
+                                        <p class="bab-meta-value">{{ $tutorProfile->preferred_subjects }}</p>
+                                    @endif
+                                @else
+                                    <p class="bab-meta-value">—</p>
+                                @endif
                             </div>
                             <div class="col-md-6">
                                 <p class="bab-meta-label">Expected Salary</p>
@@ -197,35 +205,32 @@
 
                         <p class="bab-meta-value mb-1">
                             <strong>School:</strong>
-                            {{ $tutorProfile->educational_institutions['School'] ?? '—' }}
+                            {{ optional($tutorProfile)->educational_institutions['School'] ?? '—' }}
                         </p>
 
                         <p class="bab-meta-value mb-1">
                             <strong>College:</strong>
-                            {{ $tutorProfile->educational_institutions['College'] ?? '—' }}
+                            {{ optional($tutorProfile)->educational_institutions['College'] ?? '—' }}
                         </p>
 
                         <p class="bab-meta-value mb-3">
                             <strong>University:</strong>
-                            {{ $tutorProfile->educational_institutions['University'] ?? '—' }}
+                            {{ optional($tutorProfile)->educational_institutions['University'] ?? '—' }}
                         </p>
                         <p class="bab-meta-label">Work Experience</p>
-                        {{-- <p class="bab-meta-value mb-0">{{ optional($tutorProfile)->work_experience ?: '—' }}</p> --}}
-                        @isset($tutorProfile->work_experience)
-                            @if ($tutorProfile->work_experience['status'] != 'unemployed')
-                                <strong>
-                                    Job Status:
-                                </strong>
+                        @if($tutorProfile && isset($tutorProfile->work_experience))
+                            @if(is_array($tutorProfile->work_experience) && isset($tutorProfile->work_experience['status']) && $tutorProfile->work_experience['status'] != 'unemployed')
+                                <strong>Job Status:</strong>
                                 <p class="tag">
-                                    {{$tutorProfile->work_experience['Currently']}}
+                                    {{ $tutorProfile->work_experience['Currently'] ?? 'Not specified' }}
                                 </p>
                             @else
-                            <strong>
-                                Job Status:
-                            </strong>
-                            <p class="tag"> Unemployed </p>
+                                <strong>Job Status:</strong>
+                                <p class="tag">Unemployed</p>
                             @endif
-                        @endisset
+                        @else
+                            <p class="bab-meta-value">—</p>
+                        @endif
 
                     </div>
 
