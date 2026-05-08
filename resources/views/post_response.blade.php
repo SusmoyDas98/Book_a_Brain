@@ -92,7 +92,7 @@
                 <a href="{{ url('/tutor_profile/' . $tutorInfo['tutor_id']) }}"   target = '_blank'  class="btn btn-outline-dark btn-modern mb-2 w-100">
                     <i class="bi bi-person-circle"></i> View Profile
                 </a>
-                <button class="btn btn-outline-secondary btn-modern mb-2 w-100"><i class="bi bi-chat-dots"></i> Message</button>
+                {{-- <button class="btn btn-outline-secondary btn-modern mb-2 w-100"><i class="bi bi-chat-dots"></i> Message</button> --}}
                 <input 
                     type="hidden" 
                     name="{{ $tutorInfo['id'] }}" 
