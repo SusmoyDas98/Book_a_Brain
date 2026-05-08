@@ -62,7 +62,7 @@
 @endphp
 
     <div class="tutor-card {{ $tutorInfo['shortlisted'] ? 'shortlisted' : '' }}"
-        data-rating="{{ $tutorInfo['tutor_rating'] }}"
+        data-rating="{{ $tutor_ratings_collection[$tutorInfo->tutor_id] }}"
         data-salary="{{ $tutorInfo['expected_salary'] }}">
         <div class="d-flex align-items-center">
             <div class="me-3">
@@ -72,7 +72,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <div class="tutor-name">{{ $tutorInfo['tutor_name'] }}</div>
-                        <div class="rating"><i class="bi bi-star-fill"></i> {{ $tutorInfo['tutor_rating'] }}</div>
+                        <div class="rating"><i class="bi bi-star-fill"></i> {{$tutor_ratings_collection[$tutorInfo->tutor_id] }}</div>
                     </div>
                     <div class="fw-bold text-primary">৳ {{ $tutorInfo['expected_salary'] }}/hr</div>
                 </div>

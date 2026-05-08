@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobPostResponse;
+use App\Models\Tutor;
+use App\Models\TutorProfile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Unique;
 
 class Page_Redirection_Controller extends Controller
 {
@@ -41,8 +44,10 @@ class Page_Redirection_Controller extends Controller
     {
         $guardian_id = Auth::id();
         $tutorInfos = JobPostResponse::query()->where('guardian_id', $guardian_id)->get();
-
+        // $tutorProfile = \App\Models\TutorProfile::where('tutor_id', $id)->firstOrFail();
+        $tutor_ids = $tutorInfos->pluck('tutor_id')->unique();
+        $tutor_ratings_collection = Tutor::whereIn('tutor_id', $tutor_ids)->pluck('ratings', 'tutor_id');
         // return $tutorInfos;
-        return view('post_response', compact('tutorInfos', 'guardian_id'));
+        return view('post_response', compact('tutorInfos', 'guardian_id', "tutor_ratings_collection"));
     }
 }
