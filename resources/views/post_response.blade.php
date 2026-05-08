@@ -82,7 +82,7 @@
                     <span class="info-badge"><b>Method:</b> {{ implode(', ', $tutorInfo['teaching_method'] ?? []) }}</span>
                 </div>
             </div>
-            <div class="ms-3 text-end">
+            <div class="ms-3 text-end button_holder">
                 {{-- <a class="btn btn-outline-dark btn-modern mb-2 w-100" href="{{ $data['cv_pdf'] }}" target="_blank"><i class="bi bi-eye-fill"></i> View CV</a> --}}
                {{-- <a class="btn btn-outline-dark btn-modern mb-2 w-100" 
                        href="{{ asset('storage/' . $tutorInfo['cv_pdf']) }}" 

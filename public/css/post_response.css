@@ -117,7 +117,8 @@ body {
 
 /* PROFILE CARD */
 .tutor-card {
-  width: 75%;
+  min-width: 75%;
+  max-width: 96%;
   /* max-width: 450px; */
   position: relative;
   overflow: hidden;
@@ -173,10 +174,19 @@ body {
 }
 
 /* BUTTONS */
+.button_holder{
+  /* background-color: red;; */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: fit-content;
+  
+
+}
 .btn-modern{
   border-radius:10px;
   font-weight:600;
-  padding:6px 12px;
+  padding:10px 16px;
   background-color: white;
   border: 2px solid black;
   font-size:0.85rem;
