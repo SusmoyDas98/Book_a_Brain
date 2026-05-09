@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\AppNotification;
+use App\Models\Tutor;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
     private function getRoleRecord()
     {
-        $role = Auth::user()->role;
+        $user = Auth::user();
 
-        return match ($role) {
-            'guardian' => Auth::user()->guardian,
-            'tutor' => Auth::user()->tutor,
-            'admin' => Auth::user()->admin,
+        return match ($user->role) {
+            'guardian' => $user->guardian,
+            'tutor' => Tutor::where('tutor_id', $user->id)->first(),
+            'admin' => $user->admin ?? null,
             default => null,
         };
     }
