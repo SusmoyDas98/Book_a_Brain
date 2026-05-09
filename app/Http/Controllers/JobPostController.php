@@ -16,7 +16,9 @@ class JobPostController extends Controller
         $jobPosts = JobPost::where('guardian_id', Auth::id())
             ->orderBy('created_at', 'desc')->get();
 
-        return view('job_posts.index', compact('jobPosts'));
+        $limit = Auth::user()->isPro() ? 20 : 3;
+
+        return view('job_posts.index', compact('jobPosts', 'limit'));
     }
 
     public function create()
@@ -67,7 +69,9 @@ class JobPostController extends Controller
             $profiles[$response->tutor_id] = TutorProfile::where('tutor_id', $response->tutor_id)->first();
         }
 
-        return view('job_posts.show', compact('jobPost', 'responses', 'profiles'));
+        $limit = Auth::user()->isPro() ? 20 : 3;
+
+        return view('job_posts.show', compact('jobPost', 'responses', 'profiles', 'limit'));
     }
 
     public function edit(JobPost $jobPost)

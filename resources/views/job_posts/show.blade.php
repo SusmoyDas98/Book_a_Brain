@@ -54,7 +54,7 @@
       <span><i class="bi bi-laptop me-1"></i>{{ $jobPost->mode }}</span>
     </div>
     <div class="mb-2" style="font-size:0.85rem;color:#475569">
-      <i class="bi bi-people me-1"></i>Shortlisted: {{ $jobPost->shortlisted_count }}/3 tutors
+      <i class="bi bi-people me-1"></i>Shortlisted: {{ $jobPost->shortlisted_count }}/{{ $limit }} tutors
     </div>
     @if($jobPost->description)
       <p class="mt-2 text-secondary small">{{ $jobPost->description }}</p>
@@ -195,7 +195,7 @@
             </span>
           @endif
 
-          @if($response->status === 'Pending' && !$response->shortlisted && $jobPost->shortlisted_count < 3 && in_array($jobPost->status, ['Open','Shortlisting']))
+          @if($response->status === 'Pending' && !$response->shortlisted && $jobPost->shortlisted_count < $limit && in_array($jobPost->status, ['Open','Shortlisting']))
           <form method="POST" action="{{ route('job_posts.shortlist', $jobPost) }}">
             @csrf
             <input type="hidden" name="response_id" value="{{ $response->id }}">

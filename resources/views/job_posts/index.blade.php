@@ -76,7 +76,7 @@
           <i class="bi bi-laptop me-1"></i>{{ $post->mode }}
         </div>
         <div class="col-auto">
-          <i class="bi bi-people me-1"></i>Shortlisted: {{ $post->shortlisted_count }}/3
+          <i class="bi bi-people me-1"></i>Shortlisted: {{ $post->shortlisted_count }}/{{ $limit }}
         </div>
         <div class="col-auto">
           <i class="bi bi-calendar3 me-1"></i>{{ $post->created_at->format('d M Y') }}
