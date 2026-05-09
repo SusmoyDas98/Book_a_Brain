@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
-use App\Models\BkashAccount;
 use App\Models\Subscription;
 use App\Models\SubscriptionPayment;
 use App\Models\TuitionPayment;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -51,18 +51,6 @@ class BkashPortalController extends Controller
         ]);
 
         $session = $this->getPaymentSession();
-
-        $account = BkashAccount::where('account_holder_type', $session['payer_type'])
-            ->where('account_holder_id', $session['payer_id'])
-            ->where('phone_number', $request->phone_number)
-            ->where('is_active', true)
-            ->first();
-
-        if (! $account) {
-            return back()->withErrors([
-                'phone_number' => 'This number is not registered. Please use a registered bKash number.',
-            ])->withInput();
-        }
 
         $updated = $session;
         $updated['phone'] = $request->phone_number;
@@ -240,6 +228,9 @@ class BkashPortalController extends Controller
             ]);
 
             session()->flash('success', 'Your subscription is now active.');
+
+            // Upgrade the user's plan column to 'pro'
+            User::where('id', $subscriberId)->update(['plan' => 'pro']);
         }
     }
 

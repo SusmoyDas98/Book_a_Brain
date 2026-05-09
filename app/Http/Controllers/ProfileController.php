@@ -182,6 +182,31 @@ class ProfileController extends Controller
         $user->role = $request->role;
         $user->save();
 
+        // Immediately create the role-specific profile records so all
+        // associated tables are populated from the moment role is chosen.
+        // Without this, Auth::user()->guardian returns null and payment
+        // controllers throw 403 errors before the profile is completed.
+        if ($request->role === 'guardian') {
+            Guardian::firstOrCreate(
+                ['guardian_id' => $user->id],
+                [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ]
+            );
+        }
+
+        if ($request->role === 'tutor') {
+            Tutor::firstOrCreate(['tutor_id' => $user->id]);
+            TutorProfile::firstOrCreate(
+                ['tutor_id' => $user->id],
+                [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ]
+            );
+        }
+
         // After picking role, always go to edit page
         return redirect()->route('profile.edit');
     }

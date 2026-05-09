@@ -22,7 +22,16 @@ class User extends Authenticatable
         'google_refresh_token',
         'avatar',
         'role',
+        'plan',
     ];
+
+    /**
+     * Returns true when this user is on the Pro plan.
+     */
+    public function isPro(): bool
+    {
+        return $this->plan === 'pro';
+    }
 
     /**
      * Hidden fields for serialization

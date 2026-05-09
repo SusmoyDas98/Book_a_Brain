@@ -17,7 +17,7 @@ class PaymentAndSubscriptionSeeder extends Seeder
         $counter = 1;
         $date = Carbon::now()->format('Ymd');
 
-        $guardians = Guardian::take(3)->get();
+        $guardians = Guardian::all();
         $tutors = Tutor::take(3)->get();
 
         if ($guardians->isEmpty()) {
@@ -39,7 +39,7 @@ class PaymentAndSubscriptionSeeder extends Seeder
                 if (! TuitionPayment::where('transaction_id', $txnId)->exists()) {
                     TuitionPayment::create([
                         'transaction_id' => $txnId,
-                        'guardian_id' => $guardian->id,
+                        'guardian_id' => $guardian->getKey(),
                         'tutor_id' => $tutors->first()->tutor_id,
                         'amount' => 4000.00,
                         'currency' => 'BDT',
@@ -56,7 +56,7 @@ class PaymentAndSubscriptionSeeder extends Seeder
                 if (! TuitionPayment::where('transaction_id', $txnId)->exists()) {
                     TuitionPayment::create([
                         'transaction_id' => $txnId,
-                        'guardian_id' => $guardian->id,
+                        'guardian_id' => $guardian->getKey(),
                         'tutor_id' => $tutors->first()->tutor_id,
                         'amount' => 4000.00,
                         'currency' => 'BDT',
@@ -72,12 +72,12 @@ class PaymentAndSubscriptionSeeder extends Seeder
             // --- GUARDIAN SUBSCRIPTION ---
             $txnId = 'TXN-'.$date.'-'.str_pad($counter++, 4, '0', STR_PAD_LEFT);
             if (! Subscription::where('subscriber_type', 'guardian')
-                ->where('subscriber_id', $guardian->id)
+                ->where('subscriber_id', $guardian->getKey())
                 ->exists()) {
                 $guardianSubscription = Subscription::create([
                     'transaction_id' => $txnId,
                     'subscriber_type' => 'guardian',
-                    'subscriber_id' => $guardian->id,
+                    'subscriber_id' => $guardian->getKey(),
                     'plan_name' => 'Pro',
                     'subscription_amount' => 500.00,
                     'currency' => 'BDT',
@@ -89,7 +89,7 @@ class PaymentAndSubscriptionSeeder extends Seeder
                 ]);
             } else {
                 $guardianSubscription = Subscription::where('subscriber_type', 'guardian')
-                    ->where('subscriber_id', $guardian->id)
+                    ->where('subscriber_id', $guardian->getKey())
                     ->latest()
                     ->first();
             }
@@ -100,7 +100,7 @@ class PaymentAndSubscriptionSeeder extends Seeder
                 SubscriptionPayment::create([
                     'transaction_id' => $txnId,
                     'subscriber_type' => 'guardian',
-                    'subscriber_id' => $guardian->id,
+                    'subscriber_id' => $guardian->getKey(),
                     'subscription_id' => $guardianSubscription->id,
                     'amount' => 500.00,
                     'currency' => 'BDT',

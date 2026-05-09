@@ -19,15 +19,15 @@ class GuardianPaymentController extends Controller
             abort(403, 'Guardian profile not found. Please complete your profile setup.');
         }
 
-        $tuitionPayments = TuitionPayment::forGuardian($guardian->id)
+        $tuitionPayments = TuitionPayment::forGuardian($guardian->getKey())
             ->orderBy('payment_date', 'desc')
             ->get();
 
-        $subscription = Subscription::forGuardian($guardian->id)
+        $subscription = Subscription::forGuardian($guardian->getKey())
             ->latest()
             ->first();
 
-        $subscriptionPayments = SubscriptionPayment::forGuardian($guardian->id)
+        $subscriptionPayments = SubscriptionPayment::forGuardian($guardian->getKey())
             ->orderBy('payment_date', 'desc')
             ->get();
 
@@ -58,7 +58,7 @@ class GuardianPaymentController extends Controller
 
         $role = 'guardian';
 
-        $activeSubscription = Subscription::forGuardian($guardian->id)
+        $activeSubscription = Subscription::forGuardian($guardian->getKey())
             ->where('status', 'active')
             ->where('expires_at', '>', Carbon::now())
             ->first();
@@ -74,7 +74,7 @@ class GuardianPaymentController extends Controller
             abort(403, 'Guardian profile not found. Please complete your profile setup.');
         }
 
-        $activeSub = Subscription::forGuardian($guardian->id)
+        $activeSub = Subscription::forGuardian($guardian->getKey())
             ->where('status', 'active')
             ->where('expires_at', '>', Carbon::now())
             ->first();
@@ -91,7 +91,7 @@ class GuardianPaymentController extends Controller
                 'plan' => 'Pro',
                 'role' => 'guardian',
                 'payer_type' => 'guardian',
-                'payer_id' => $guardian->id,
+                'payer_id' => $guardian->getKey(),
                 'amount' => 500.00,
                 'step' => 'phone',
                 'phone' => null,
@@ -109,7 +109,7 @@ class GuardianPaymentController extends Controller
             abort(403, 'Guardian profile not found. Please complete your profile setup.');
         }
 
-        if ((int) $tuitionPayment->guardian_id !== (int) $guardian->id) {
+        if ((int) $tuitionPayment->guardian_id !== (int) $guardian->getKey()) {
             abort(403, 'This payment does not belong to your account.');
         }
 
@@ -118,7 +118,7 @@ class GuardianPaymentController extends Controller
                 ->with('info', 'This payment has already been completed.');
         }
 
-        $lastPaidPayment = TuitionPayment::forGuardian($guardian->id)
+        $lastPaidPayment = TuitionPayment::forGuardian($guardian->getKey())
             ->where('tutor_id', $tuitionPayment->tutor_id)
             ->where('payment_status', 'paid')
             ->orderBy('payment_date', 'desc')
@@ -139,7 +139,7 @@ class GuardianPaymentController extends Controller
                 'plan' => null,
                 'role' => 'guardian',
                 'payer_type' => 'guardian',
-                'payer_id' => $guardian->id,
+                'payer_id' => $guardian->getKey(),
                 'amount' => $tuitionPayment->amount,
                 'step' => 'phone',
                 'phone' => null,
