@@ -179,7 +179,7 @@
                 </div>
                 @php
                     $recentPayments = $guardian
-                        ? \App\Models\TuitionPayment::forGuardian($guardian->id)
+                        ? \App\Models\TuitionPayment::forGuardian($guardian->getKey())
                             ->orderBy('payment_date', 'desc')
                             ->take(3)
                             ->get()

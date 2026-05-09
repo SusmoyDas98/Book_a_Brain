@@ -124,7 +124,7 @@
                     $navSubscription = null;
                     if ($navRole === 'guardian' && Auth::user()->guardian) {
                         $navSubscription = \App\Models\Subscription::where('subscriber_type','guardian')
-                            ->where('subscriber_id', Auth::user()->guardian->id)
+                            ->where('subscriber_id', Auth::user()->guardian->getKey())
                             ->where('status','active')
                             ->where('expires_at','>=',\Carbon\Carbon::today())
                             ->latest()->first();
@@ -132,7 +132,7 @@
                         $navTutor = \App\Models\Tutor::where('tutor_id', Auth::user()->id)->first();
                         if ($navTutor) {
                             $navSubscription = \App\Models\Subscription::where('subscriber_type','tutor')
-                                ->where('subscriber_id', $navTutor->id)
+                                ->where('subscriber_id', $navTutor->tutor_id)
                                 ->where('status','active')
                                 ->where('expires_at','>=',\Carbon\Carbon::today())
                                 ->latest()->first();

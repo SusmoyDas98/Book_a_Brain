@@ -54,7 +54,7 @@ class HireController extends Controller
             HireConfirmation::create([
                 'job_id' => $job->id,
                 'application_id' => $application->id,
-                'guardian_id' => $guardian->id,
+                'guardian_id' => $guardian->getKey(),
                 'tutor_id' => $application->tutor_id,
                 'guardian_confirmed' => true,
                 'guardian_confirmed_at' => now(),
@@ -66,7 +66,7 @@ class HireController extends Controller
                 'event_type' => 'guardian_hired',
                 'job_id' => $job->id,
                 'application_id' => $application->id,
-                'guardian_id' => $guardian->id,
+                'guardian_id' => $guardian->getKey(),
                 'tutor_id' => $application->tutor_id,
                 'performed_by' => Auth::id(),
                 'performed_role' => 'guardian',
@@ -244,7 +244,7 @@ class HireController extends Controller
 
         $hireConfirmation = HireConfirmation::findOrFail($hireConfirmationId);
 
-        if ((int) $hireConfirmation->guardian_id !== (int) $guardian->id) {
+        if ((int) $hireConfirmation->guardian_id !== (int) $guardian->getKey()) {
             abort(403);
         }
 
@@ -262,7 +262,7 @@ class HireController extends Controller
                 'event_type' => 'cancellation_requested',
                 'job_id' => $hireConfirmation->job_id,
                 'application_id' => $hireConfirmation->application_id,
-                'guardian_id' => $guardian->id,
+                'guardian_id' => $guardian->getKey(),
                 'tutor_id' => $hireConfirmation->tutor_id,
                 'performed_by' => Auth::id(),
                 'performed_role' => 'guardian',
