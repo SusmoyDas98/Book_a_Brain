@@ -17,7 +17,7 @@ class PaymentAndSubscriptionSeeder extends Seeder
         $counter = 1;
         $date = Carbon::now()->format('Ymd');
 
-        $guardians = Guardian::take(3)->get();
+        $guardians = Guardian::all();
         $tutors = Tutor::take(3)->get();
 
         if ($guardians->isEmpty()) {
