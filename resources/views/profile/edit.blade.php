@@ -203,7 +203,7 @@
                             <input placeholder="use comma (',') to separate"  type="text" name="preferred_subjects" value="{{ old('preferred_subjects', is_array(optional($tutorProfile)->preferred_subjects) ? implode(', ', $tutorProfile->preferred_subjects) : optional($tutorProfile)->preferred_subjects) }}" class="bab-input">
                         </div>
                         <div class="col-md-6">
-                            <label class="bab-label">Expected Salary (৳)/hour</label>
+                            <label class="bab-label">Expected Salary (৳)/Month</label>
                             <input placeholder="per hour" type="text" name="expected_salary" value="{{ old('expected_salary', is_array(optional($tutorProfile)->expected_salary) ? '' : optional($tutorProfile)->expected_salary) }}" class="bab-input">
                         </div>
                         
