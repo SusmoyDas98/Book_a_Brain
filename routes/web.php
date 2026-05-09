@@ -125,9 +125,9 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
     Route::middleware([IsAdmin::class])->group(function () {
         Route::post('/admin/verify/{tutorId}/approve', [VerificationController::class, 'approve'])->name('admin.verify.approve');
         Route::post('/admin/verify/{tutorId}/reject', [VerificationController::class, 'reject'])->name('admin.verify.reject');
-        Route::get('/dashboard', function () {
-            return 'Dashboard coming soon.';
-        })->name('dashboard');
+        // Route::get('/dashboard', function () {
+        //     return 'Dashboard coming soon.';
+        // })->name('dashboard');
         Route::get('/admin/tutors', function () {
             return view('admin.tutors');
         })->name('admin.tutors');
@@ -201,9 +201,9 @@ Route::middleware(['auth', ValidUser::class])->group(function () {
         Route::delete('/calendar/{event}', [CalendarController::class, 'destroy'])->name('calendar.destroy');
     });
 
-    Route::get('/dashboard', function () {
-        return 'Dashboard coming soon.';
-    })->name('dashboard');
+    // Route::get('/dashboard', function () {
+    //     return 'Dashboard coming soon.';
+    // })->name('dashboard');
 });
 
 Route::get('/login', function () {

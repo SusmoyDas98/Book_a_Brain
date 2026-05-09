@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TutorProfile;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -45,9 +46,12 @@ class GoogleController extends Controller
             if ($existingUser) {
                 Auth::login($existingUser);
                 request()->session()->regenerate();
-
+                if (Auth::user()->role == "tutor" && !TutorProfile::where('tutor_id', Auth::id())->exists()) {
+                    return redirect()->route('profile.edit');}
+                
+                return redirect()->route('dashboard');
                 // return redirect()->route(''); // Replace with your dashboard route
-                return 'User Dashboard';
+                // return 'User Dashboard';
             }
 
             // Create new user if not exists

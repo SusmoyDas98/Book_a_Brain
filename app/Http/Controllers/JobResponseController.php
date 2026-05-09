@@ -64,7 +64,7 @@ class JobResponseController extends Controller
             $shortlist_limit = 3;
         }
         else{
-            $shortlist_limit =  strtolower($subs_plan) === 'basic' ? 5 : 20;
+            $shortlist_limit =  strtolower($subs_plan) === 'basic' ? 3 : 20;
         }
         $shortlist_remaining =  max($shortlist_limit - JobPostResponse::where("guardian_id", Auth::id())->where('shortlisted', 1)->count(), 0);
 

@@ -81,7 +81,7 @@
                         <div class="tutor-name">{{ $tutorInfo['tutor_name'] }}</div>
                         <div class="rating"><i class="bi bi-star-fill"></i> {{$tutor_ratings_collection[$tutorInfo->tutor_id] }}</div>
                     </div>
-                    <div class="fw-bold text-primary">৳ {{ $tutorInfo['expected_salary'] }}/hr</div>
+                    <div class="fw-bold text-primary">৳ {{ $tutorInfo['expected_salary'] }}/month</div>
                 </div>
                 <div class="mt-2">
                     <span class="info-badge"><b>Education:</b> {{ $tutorInfo['tutor_educational_institutions']['university'] ?? 'N/A' }}</span>

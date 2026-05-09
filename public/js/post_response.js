@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveBtn.disabled = false;
     };
 
-    // ✅ EVENT DELEGATION: toggle shortlist
+    //  EVENT DELEGATION: toggle shortlist
     form.addEventListener('click', (e) => {
         const btn = e.target.closest('.btn-shortlist');
         if (!btn) return;
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setChangesMade();
     });
 
-    // ✅ Sorting
+    //  Sorting
     if (sortSelect) {
         sortSelect.addEventListener('change', () => {
             const cards = Array.from(container.querySelectorAll('.tutor-card'));
@@ -79,7 +79,7 @@ window.addEventListener('beforeunload', (e) => {
         e.returnValue = ''; 
     }
 });
-    // ✅ Filter: Show shortlisted only
+    //  Filter: Show shortlisted only
     window.showShortlisted = () => {
         container.querySelectorAll('.tutor-card').forEach(card => {
             card.style.display = card.classList.contains('shortlisted') ? '' : 'none';

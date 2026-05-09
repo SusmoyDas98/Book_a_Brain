@@ -432,12 +432,12 @@
                 </a>
 
                 {{-- Confirm → only appears when profile is 100% complete --}}
-                @if($completionPercentage >= 100)
+                {{-- @if($completionPercentage >= 100)
                     <button type="submit" form="confirmProfileForm" class="bab-btn-primary"
                         style="background:linear-gradient(90deg,#6366f1,#4f46e5);box-shadow:0 6px 20px rgba(99,102,241,0.35);">
                         <i class="bi bi-patch-check-fill me-2"></i>Confirm & Continue
                     </button>
-                @endif
+                @endif --}}
 
             </div>
 
