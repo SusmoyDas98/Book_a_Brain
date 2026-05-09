@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\JobPost;
 use App\Models\JobPostResponse;
-use App\Models\Subscription;
 use App\Models\TutorProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -149,15 +148,7 @@ class JobPostController extends Controller
             return redirect()->back()->with('error', 'This tutor is already shortlisted.');
         }
 
-        $guardian = Auth::user()->guardian;
-        $subscription = $guardian
-            ? Subscription::forGuardian($guardian->id)
-                ->where('status', 'active')
-                ->where('expires_at', '>=', now())
-                ->latest()
-                ->first()
-            : null;
-        $limit = ($subscription && $subscription->plan_name === 'Pro') ? 20 : 3;
+        $limit = Auth::user()->isPro() ? 20 : 3;
 
         if ($jobPost->shortlisted_count >= $limit) {
             $msg = "Shortlist limit of {$limit} reached.";
