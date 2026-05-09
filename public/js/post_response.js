@@ -76,7 +76,7 @@ form.addEventListener('submit', () => {
 window.addEventListener('beforeunload', (e) => {
     if (!isSubmitting && !saveBtn.disabled) {
         e.preventDefault();
-        e.returnValue = ''; // required for most browsers
+        e.returnValue = ''; 
     }
 });
     // ✅ Filter: Show shortlisted only
@@ -86,10 +86,13 @@ window.addEventListener('beforeunload', (e) => {
         });
     };
 
-    // ✅ Reset filters
+    // Reset filters
+    // window.resetFilters = () => {
+    //     container.querySelectorAll('.tutor-card').forEach(card => card.style.display = '');
+    //     if (sortSelect) sortSelect.value = '';
+    // };
     window.resetFilters = () => {
-        container.querySelectorAll('.tutor-card').forEach(card => card.style.display = '');
-        if (sortSelect) sortSelect.value = '';
+    window.location.reload();
     };
 
 });

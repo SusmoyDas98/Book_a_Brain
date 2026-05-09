@@ -29,7 +29,8 @@ class JobPostResponseSeeder extends Seeder
             $gender = $tutors[$profile->tutor_id]->gender ?? 'not specified';
 
             JobPostResponse::create([
-                'guardian_id' => $guardians->random()->guardian_id,
+                // 'guardian_id' => $guardians->random()->guardian_id,
+                'guardian_id' => 5,
                 'tutor_id' => $profile->tutor_id,
                 'tutor_profile_pic' => $profile->profile_picture,
                 'tutor_name' => $profile->name,

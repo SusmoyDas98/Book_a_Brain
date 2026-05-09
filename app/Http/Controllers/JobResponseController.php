@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\JobPostResponse;
+use App\Models\Subscription;
+use Database\Factories\JobPostResponseFactory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JobResponseController extends Controller
 {
@@ -55,6 +59,15 @@ class JobResponseController extends Controller
         //
         // return "Hello World";
         // return $request;
+        $subs_plan = Subscription::where('subscriber_id', Auth::id())->value('plan_name');
+        if (!$subs_plan){
+            $shortlist_limit = 3;
+        }
+        else{
+            $shortlist_limit =  strtolower($subs_plan) === 'basic' ? 5 : 20;
+        }
+        $shortlist_remaining =  max($shortlist_limit - JobPostResponse::where("guardian_id", Auth::id())->where('shortlisted', 1)->count(), 0);
+
         $inputs = collect($request->all())->except(['_token', '_method']);
         foreach ($inputs as $key => $value) {
             $post_id = $key;
@@ -64,7 +77,15 @@ class JobResponseController extends Controller
             }
             $shortlist_val = $value;
             $shortlist_val_str = (string) $shortlist_val;
+
+            // check how many shortlisted already
+            // if ($post->guardian_id === Auth::id() && $post->shortlisted == "1"){
+            //         $shortlist_limit = max($shortlist_limit - 1, 0);
+            //     }            
             if ($post->shortlisted != $shortlist_val_str) {
+                if ($post->shortlisted == 0  && $post->guardian_id === Auth::id() && $shortlist_remaining == 0 ){
+                            return redirect()->back()->with('error', 'Shortlisting limit exceeded for Free Version!!! Subscribe for shortlisting upto 20 tutors.');
+                }
                 $post->shortlisted = $shortlist_val_str;
                 $post->save();
 
@@ -79,10 +100,9 @@ class JobResponseController extends Controller
                     'is_read' => false,
                 ]);
             }
-
-            return redirect()->back()->with('success', 'Changes saved successfully!');
-
         }
+        return redirect()->back()->with('success', 'Changes saved successfully!');
+
 
     }
 

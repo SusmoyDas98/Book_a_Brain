@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             JobPostResponseSeeder::class,
             PaymentAndSubscriptionSeeder::class,
             BkashAccountSeeder::class,
+            JobPostSeeder::class,
         ]);
 
     }

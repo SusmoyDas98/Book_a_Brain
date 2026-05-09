@@ -48,6 +48,13 @@
     {{-- action = "{{ route('update_response.update') }}" method="POST" --}}
     @csrf
     @method('PATCH')
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show fw-bold" role="alert">
+            {{ session('error') }}
+        
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif    
 @forelse ($tutorInfos as $tutorInfo)
 @php
     $profilePic = $tutorInfo['tutor_profile_pic'];
@@ -99,9 +106,9 @@
                     value="{{ $tutorInfo['shortlisted'] ? 1 : 0 }}" 
                     class="shortlist-input">
 
-                <button type="button" 
+                <button type="button"  
                         class="btn btn-shortlist btn-modern w-100 {{ $tutorInfo['shortlisted'] ? 'remove' : '' }}" 
-                        onclick="toggleShortlist(this, {{ $tutorInfo['id'] }})">
+                        onclick=" (this, {{ $tutorInfo['id'] }})">
                     <i class="bi bi-check-circle"></i> {{ $tutorInfo['shortlisted'] ? 'Remove' : 'Shortlist' }}
                 </button>
             </div>
