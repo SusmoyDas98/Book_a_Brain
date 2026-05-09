@@ -28,11 +28,11 @@ class BkashAccountSeeder extends Seeder
         $kikiGuardian = $kikiUser ? Guardian::where('guardian_id', $kikiUser->id)->first() : null;
 
         foreach ($guardians as $guardian) {
-            $isKiki = $kikiGuardian && $guardian->id === $kikiGuardian->id;
-            $primary = $isKiki ? '01746478910' : '017'.str_pad($guardian->id.'1', 8, '0', STR_PAD_LEFT);
-            $this->seedAccount('guardian', $guardian->id, $primary);
+            $isKiki = $kikiGuardian && $guardian->guardian_id === $kikiGuardian->guardian_id;
+            $primary = $isKiki ? '01746478910' : '017'.str_pad($guardian->guardian_id.'1', 8, '0', STR_PAD_LEFT);
+            $this->seedAccount('guardian', $guardian->guardian_id, $primary);
             if (! $isKiki) {
-                $this->seedAccount('guardian', $guardian->id, '018'.str_pad($guardian->id.'2', 8, '0', STR_PAD_LEFT));
+                $this->seedAccount('guardian', $guardian->guardian_id, '018'.str_pad($guardian->guardian_id.'2', 8, '0', STR_PAD_LEFT));
             }
         }
 

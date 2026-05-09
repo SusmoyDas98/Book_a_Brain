@@ -157,11 +157,11 @@ class JobPostController extends Controller
                 ->latest()
                 ->first()
             : null;
-        $limit = ($subscription && $subscription->plan_name === 'Pro') ? 20 : 5;
+        $limit = ($subscription && $subscription->plan_name === 'Pro') ? 20 : 3;
 
         if ($jobPost->shortlisted_count >= $limit) {
             $msg = "Shortlist limit of {$limit} reached.";
-            if ($limit === 5) {
+            if ($limit === 3) {
                 $msg .= ' Upgrade to Pro to shortlist up to 20 tutors.';
             }
 

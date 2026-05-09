@@ -80,7 +80,7 @@
                         default    => null,
                     };
                     $unreadCount = ($bellRecord && $bellRole)
-                        ? \App\Models\AppNotification::forRecipient($bellRole, $bellRecord->id)
+                        ? \App\Models\AppNotification::forRecipient($bellRole, $bellRecord->getKey())
                             ->unread()->count()
                         : 0;
                 @endphp
@@ -98,26 +98,24 @@
                       <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                     </svg>
                   </a>
-                  @if($unreadCount > 0)
-                    <span style="
-                      position: absolute;
-                      top: -4px;
-                      right: -4px;
-                      background: #E2136E;
-                      color: #ffffff;
-                      border-radius: 999px;
-                      min-width: 18px;
-                      height: 18px;
-                      font-size: 0.6rem;
-                      font-weight: 800;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      padding: 0 4px;
-                      border: 2px solid white;
-                      pointer-events: none;
-                    ">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>
-                  @endif
+                  <span id="notif-badge" style="
+                    position: absolute;
+                    top: -4px;
+                    right: -4px;
+                    background: #E2136E;
+                    color: #ffffff;
+                    border-radius: 999px;
+                    min-width: 18px;
+                    height: 18px;
+                    font-size: 0.6rem;
+                    font-weight: 800;
+                    display: {{ $unreadCount > 0 ? 'flex' : 'none' }};
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0 4px;
+                    border: 2px solid white;
+                    pointer-events: none;
+                  ">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>
                 </div>
 
                 {{-- Dynamic UPGRADE Button --}}
@@ -321,4 +319,27 @@
     });
 </script>
 @endif
+@endauth
+{{-- Live notification count polling --}}
+@auth
+<script>
+(function () {
+    function updateNotifBadge() {
+        fetch('{{ route('notifications.unread.count') }}', {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            const badge = document.getElementById('notif-badge');
+            if (!badge) return;
+            const count = data.count || 0;
+            badge.textContent = count > 99 ? '99+' : count;
+            badge.style.display = count > 0 ? 'flex' : 'none';
+        })
+        .catch(() => {});
+    }
+    // Poll every 30 seconds
+    setInterval(updateNotifBadge, 30000);
+})();
+</script>
 @endauth
